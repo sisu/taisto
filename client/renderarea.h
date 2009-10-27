@@ -12,9 +12,9 @@ class RenderArea : public QWidget
 
 public:
     RenderArea(QWidget *parent = 0);
-    void draw(double, double, QList<Object*>&, QList<Object*>&);
-    QList<Object*> players;
-    QList<Object*> bots;
+    void draw(double, double, QList<Object>&, QList<Object>&);
+    QList<Object> players;
+    QList<Object> bots;
     double centerx,centery;
     double width, height;
 
