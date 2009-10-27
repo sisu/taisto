@@ -1,8 +1,8 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'renderarea.h'
 **
-** Created: Tue Oct 27 18:18:10 2009
-**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
+** Created: Tue Oct 27 18:21:57 2009
+**      by: The Qt Meta Object Compiler version 61 (Qt 4.5.3)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -10,8 +10,8 @@
 #include "renderarea.h"
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'renderarea.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 59
-#error "This file was generated using the moc from 4.4.3. It"
+#elif Q_MOC_OUTPUT_REVISION != 61
+#error "This file was generated using the moc from 4.5.3. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -20,12 +20,13 @@ QT_BEGIN_MOC_NAMESPACE
 static const uint qt_meta_data_RenderArea[] = {
 
  // content:
-       1,       // revision
+       2,       // revision
        0,       // classname
        0,    0, // classinfo
        0,    0, // methods
        0,    0, // properties
        0,    0, // enums/sets
+       0,    0, // constructors
 
        0        // eod
 };
