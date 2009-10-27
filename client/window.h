@@ -10,6 +10,7 @@
      Window();
  public slots:
      void draw(double, double, QList<Object>&, QList<Object>&);
+     void keyPressEvent(QKeyEvent*);
  private:
      RenderArea *renderArea;
 

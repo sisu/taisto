@@ -17,3 +17,12 @@
      //"Piirrä"
  }
 
+ void Window::keyPressEvent(QKeyEvent* event) {
+     switch(event->key()) {
+         case Qt::Key_Left:
+            qDebug("moro");
+            break;
+         default:
+            break;
+     }
+ }
