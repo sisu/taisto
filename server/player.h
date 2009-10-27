@@ -3,17 +3,20 @@
 
 #include <QTcpSocket>
 #include <QByteArray>
+#include <QDataStream>
 
-struct Player {
-
+class Player {
+public:
 	Player(QTcpSocket* s, double xx, double yy, int i): socket(s), x(xx), y(yy), id(i) {}
 	void update();
-	void handleMessage(QByteArray msg);
 
 	QTcpSocket* socket;
 	double x,y,angle;
 	int moveForward, moveSide, turn;
 	int id;
+
+private:
+	void readState(QDataStream& s);
 };
 
 #endif

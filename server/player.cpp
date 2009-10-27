@@ -7,8 +7,15 @@ const double FRAME_TIME = 0.02;
 
 void Player::update()
 {
-	while(socket->canReadLine()) {
-		handleMessage(socket->readLine());
+	while(socket->bytesAvailable()) {
+		QDataStream s(socket);
+		quint8 type;
+		s>>type;
+		switch(type) {
+			case MSG_STATE:
+				readState(s);
+				break;
+		}
 	}
 
 	double ca = cos(angle);
@@ -21,11 +28,8 @@ void Player::update()
 
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
-void Player::handleMessage(QByteArray msg)
+
+void Player::readState(QDataStream& s)
 {
-	char type = msg[0];
-	switch(type) {
-		default:
-			break;
-	}
+	s>>x>>y>>angle>>moveForward>>moveSide>>turn;
 }

@@ -13,6 +13,7 @@ public:
 	Connection(Object* pl);
 	void connect(QString);
 	void update(Engine& e);
+	void sendStatus();
 
 private:
 	Object* player;

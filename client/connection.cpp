@@ -31,7 +31,7 @@ void Connection::readInitial(QDataStream& s)
 {
 	int w,h;
 	s>>w>>h;
-	qDebug()<<w<<h;
+	qDebug()<<"map size"<<w<<h;
 	for(int i=0; i<h; ++i) {
 		for(int j=0; j<w; ++j) {
 			int a;
@@ -45,9 +45,16 @@ void Connection::readState(QDataStream& s, Engine& e)
 
 	int pl;
 	s>>pl;
+	qDebug()<<"players"<<pl;
 	for(int i=0; i<pl; ++i) {
 		Object pl;
 		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
 		e.players.append(pl);
 	}
+}
+void Connection::sendStatus()
+{
+	QDataStream s(this);
+	s << MSG_STATE;
+	s<<player->x<<player->y<<player->direction<<player->my<<player->mx<<player->turn;
 }
