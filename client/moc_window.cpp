@@ -1,8 +1,13 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'window.h'
 **
+<<<<<<< HEAD
 ** Created: Tue Oct 27 18:21:58 2009
 **      by: The Qt Meta Object Compiler version 61 (Qt 4.5.3)
+=======
+** Created: Tue Oct 27 21:35:56 2009
+**      by: The Qt Meta Object Compiler version 59 (Qt 4.4.3)
+>>>>>>> 050d80d042200044edab064e913a14e57b83b970
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -29,13 +34,13 @@ static const uint qt_meta_data_Window[] = {
        0,    0, // constructors
 
  // slots: signature, parameters, type, tag, flags
-       8,    7,    7,    7, 0x08,
+      10,    8,    7,    7, 0x0a,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_Window[] = {
-    "Window\0\0draw()\0"
+    "Window\0\0,\0draw(QList<Object*>&,QList<Object*>&)\0"
 };
 
 const QMetaObject Window::staticMetaObject = {
@@ -63,8 +68,12 @@ int Window::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
+<<<<<<< HEAD
         case 0: draw(); break;
         default: ;
+=======
+        case 0: draw((*reinterpret_cast< QList<Object*>(*)>(_a[1])),(*reinterpret_cast< QList<Object*>(*)>(_a[2]))); break;
+>>>>>>> 050d80d042200044edab064e913a14e57b83b970
         }
         _id -= 1;
     }

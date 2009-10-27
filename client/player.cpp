@@ -15,7 +15,6 @@ void Player::draw(QPainter& painter) {
 
 void Player::move(double t) {
 
-
 }
 
 

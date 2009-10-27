@@ -8,14 +8,12 @@
      QVBoxLayout *layout = new QVBoxLayout;
      layout->addWidget(renderArea);
      setLayout(layout);
-     setWindowTitle(tr("r"));
-     QTimer *timer = new QTimer(this);
-     connect(timer, SIGNAL(timeout()), this, SLOT(draw()));
-     timer->start(20);
+     setWindowTitle("simo");
 
  }
 
- void Window::draw() {
-     renderArea->next(1);
+ void Window::draw(QList<Object*> & players, QList<Object*>& bots) {
+     renderArea->draw(players,bots);
+     //"Piirrä"
  }
 

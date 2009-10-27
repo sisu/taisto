@@ -5,17 +5,18 @@
 #include <QPen>
 #include <QPixmap>
 #include <QWidget>
-#include "player.h"
+#include "object.h"
 class RenderArea : public QWidget
 {
     Q_OBJECT
 
 public:
     RenderArea(QWidget *parent = 0);
-    void next(double t);
+    void draw(QList<Object*>&, QList<Object*>&);
+    QList<Object*> players;
+    QList<Object*> bots;
 
 protected:
-    QList<Player*> players;
     void paintEvent(QPaintEvent *event);
 
 private:

@@ -8,13 +8,23 @@ RenderArea::RenderArea(QWidget *parent): QWidget(parent)
 void RenderArea::paintEvent(QPaintEvent * /* event */)
 {
     QPainter painter(this);
+
     painter.setRenderHint(painter.Antialiasing,true);
+
+    painter.setBrush(QBrush(QColor(90,240,90)));
     for(int i=0;i<players.size();i++) {
-        players[i]->draw(painter);
+        painter.drawEllipse(players[i]->x,players[i]->y,10,10);
+    }
+    painter.setBrush(QBrush(QColor(190,120,90)));
+    for(int i=0;i<bots.size();i++) {
+        painter.drawEllipse(players[i]->x,players[i]->y,10,10);
     }
 }
 
-void RenderArea::next(double t) {
+
+void RenderArea::draw(QList<Object*>& _players, QList<Object*>& _bots) {
+    players=_players;
+    bots=_bots;
     update();
 }
 
