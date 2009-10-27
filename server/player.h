@@ -2,12 +2,13 @@
 #define PLAYER_H
 
 #include <QTcpSocket>
+#include <QByteArray>
 
 struct Player {
 
 	Player(QTcpSocket* s, double xx, double yy): socket(s), x(xx), y(yy) {}
 	void update();
-	void handleMessage();
+	void handleMessage(QByteArray msg);
 
 	QTcpSocket* socket;
 	double x,y,angle;

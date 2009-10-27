@@ -1,13 +1,14 @@
 #include "player.h"
 #include "constants.h"
+#include "messages.h"
 #include <cmath>
 
 const double FRAME_TIME = 0.02;
 
 void Player::update()
 {
-	while(socket->bytesAvailable()) {
-		handleMessage();
+	while(socket->canReadLine()) {
+		handleMessage(socket->readLine());
 	}
 
 	double ca = cos(angle);
@@ -20,10 +21,9 @@ void Player::update()
 
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
-void Player::handleMessage()
+void Player::handleMessage(QByteArray msg)
 {
-	char type;
-	socket->getChar(&type);
+	char type = msg[0];
 	switch(type) {
 		default:
 			break;
