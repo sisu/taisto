@@ -11,6 +11,7 @@ void Player::update()
 		QDataStream s(socket);
 		quint8 type;
 		s>>type;
+//		qDebug()<<"msg"<<type;
 		switch(type) {
 			case MSG_STATE:
 				readState(s);

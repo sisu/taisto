@@ -48,6 +48,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 
 void RenderArea::draw(double x, double y, QList<Object>& _players, QList<Object>& _bots) {
+	qDebug()<<"jee"<<_players.size();
     centerx=x;
     centery=y;
     players=_players;
