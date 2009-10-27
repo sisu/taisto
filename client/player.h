@@ -10,4 +10,4 @@ public:
     void move(double t);
 };
 
-#endif // ISLAND_H
+#endif // PLAYER_H
