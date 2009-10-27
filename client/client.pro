@@ -4,7 +4,8 @@
 TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
-INCLUDEPATH += .
+INCLUDEPATH += . ../server
+QT += network
 
 # Input
 HEADERS += connection.h \

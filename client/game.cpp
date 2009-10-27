@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game() {
+Game::Game(): conn(&player), player(0,0,0,0,0) {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(40);
@@ -22,15 +22,9 @@ void Game::start() {
 }
 
 void Game::go() {
-    while(conn.hasdata()) {
-        process(conn.nextdata());
-    }
+	conn.update();
     engine.go();
     window.draw(engine.players,engine.bots);
 
-
-}
-
-void Game::process(QString data) {
 
 }

@@ -4,6 +4,7 @@
 #include "window.h"
 #include "connection.h"
 #include "engine.h"
+#include "object.h"
 #include <QTimer>
 #include<QString>
 class Game : public QObject {
@@ -14,8 +15,8 @@ public:
     Engine engine;
     Connection conn;
     Window window;
+	Object player;
     void start();
-    void process(QString);
     public slots:
         void go();
 
