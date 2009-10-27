@@ -6,10 +6,8 @@ class Engine : public QObject {
     Q_OBJECT
     public:
         Engine();
-        QList<Object*> players;
-        QList<Object*> bots;
+        QList<Object> players;
+        QList<Object> bots;
         void go();
-
-
 };
 #endif

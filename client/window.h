@@ -9,7 +9,7 @@
  public:
      Window();
  public slots:
-     void draw(QList<Object*>&, QList<Object*>&);
+     void draw(QList<Object>&, QList<Object>&);
  private:
      RenderArea *renderArea;
 

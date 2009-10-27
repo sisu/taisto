@@ -10,7 +10,7 @@ void Connection::connect(QString ip) {
 	bool res = waitForConnected(1000);
 	qDebug()<<"result"<<res;
 }
-void Connection::update()
+void Connection::update(Engine& e)
 {
 	while (bytesAvailable()) {
 		QDataStream s(this);
@@ -20,6 +20,9 @@ void Connection::update()
 		switch(type) {
 			case MSG_INITIAL:
 				readInitial(s);
+				break;
+			case MSG_STATE:
+				readState(s, e);
 				break;
 		}
 	}
@@ -34,5 +37,17 @@ void Connection::readInitial(QDataStream& s)
 			int a;
 			s>>a;
 		}
+	}
+}
+void Connection::readState(QDataStream& s, Engine& e)
+{
+	e.players.clear();
+
+	int pl;
+	s>>pl;
+	for(int i=0; i<pl; ++i) {
+		Object pl;
+		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
+		e.players.append(pl);
 	}
 }

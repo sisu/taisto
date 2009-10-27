@@ -12,7 +12,7 @@
 
  }
 
- void Window::draw(QList<Object*> & players, QList<Object*>& bots) {
+ void Window::draw(QList<Object> & players, QList<Object>& bots) {
      renderArea->draw(players,bots);
      //"Piirrä"
  }

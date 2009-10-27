@@ -4,6 +4,7 @@
 #include <QTcpServer>
 #include <QList>
 #include <QTimer>
+#include <QByteArray>
 #include "player.h"
 #include "area.h"
 
@@ -20,8 +21,10 @@ private:
 	Area area;
 	int curSpawn;
 	QTimer timer;
+	int nextID;
 
 	void sendInitialInfo(QTcpSocket* sock);
+	void sendToAll(QByteArray msg);
 };
 
 #endif

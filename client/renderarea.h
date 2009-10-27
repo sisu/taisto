@@ -12,9 +12,9 @@ class RenderArea : public QWidget
 
 public:
     RenderArea(QWidget *parent = 0);
-    void draw(QList<Object*>&, QList<Object*>&);
-    QList<Object*> players;
-    QList<Object*> bots;
+    void draw(QList<Object>&, QList<Object>&);
+    QList<Object> players;
+    QList<Object> bots;
 
 protected:
     void paintEvent(QPaintEvent *event);

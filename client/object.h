@@ -3,17 +3,15 @@
 #define PLR 1
 #define BOT 2
 
-#include <QObject>
-
-class Object : public QObject {
-    Q_OBJECT
+class Object {
     public:
         int type;
         int id;
         double x,y;
         double direction;
-        int mx, my;
+        int mx, my, turn;
         Object(int, int,double, double, double);
+		Object() {}
 
 };
 
