@@ -3,11 +3,14 @@
 
 Server::Server(int spawns): area(spawns), curSpawn(0)
 {
+	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
+	timer.start(50);
 }
 
 void Server::update()
 {
 	while(hasPendingConnections()) {
+		qDebug()<<"got connection";
 		QTcpSocket* sock = nextPendingConnection();
 		sendInitialInfo(sock);
 		QPair<int,int> p = area.getSpawnPoint(curSpawn);
@@ -27,4 +30,5 @@ void Server::sendInitialInfo(QTcpSocket* sock)
 	for(int i=0; i<area.parts.size(); ++i)
 		for(int j=0; j<area.parts[i].data.size(); ++j)
 			s<<area.parts[i].data[j];
+	sock->flush();
 }

@@ -3,9 +3,10 @@
 #include<QString>
 #include<QObject>
 #include <QTcpSocket>
+#include <QDataStream>
 #include "object.h"
 
-class Connection : public QObject {
+class Connection : public QTcpSocket {
 	Q_OBJECT
 public:
 	Connection(Object* pl);
@@ -14,6 +15,7 @@ public:
 
 private:
 	Object* player;
-	QTcpSocket socket;
+
+	void readInitial(QDataStream& s);
 };
 #endif

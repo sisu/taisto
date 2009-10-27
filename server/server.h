@@ -3,6 +3,7 @@
 
 #include <QTcpServer>
 #include <QList>
+#include <QTimer>
 #include "player.h"
 #include "area.h"
 
@@ -11,12 +12,14 @@ class Server: public QTcpServer {
 public:
 	Server(int spawns);
 
+public slots:
 	void update();
 
 private:
 	QList<Player> players;
 	Area area;
 	int curSpawn;
+	QTimer timer;
 
 	void sendInitialInfo(QTcpSocket* sock);
 };
