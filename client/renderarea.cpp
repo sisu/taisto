@@ -12,17 +12,16 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 {
     width=this->size().width();
     height=this->size().height();
-    qDebug()<<width<<height;
+//    qDebug()<<width<<height;
     QPainter painter(this);
     painter.setRenderHint(painter.Antialiasing,true);
     //painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(QColor(90,240,90)));
     for(int i=0;i<players.size();i++) {
 		double px = players[i].x * SQUARE, py = players[i].y * SQUARE;
-        double x=width/2 + centerx - px;
-        double y=height/2 + centery - py;
+        double x=width/2 - centerx + px;
+        double y=height/2 - centery + py;
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
-			qDebug()<<"asd"<<x<<y;
             painter.setBrush(QBrush(QColor(90,240,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
             painter.setBrush(QBrush(QColor(190,140,90)));

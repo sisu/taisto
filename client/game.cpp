@@ -4,6 +4,8 @@ Game::Game(): conn(&player, engine.area), player(0,0,0,0,0) {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(40);
+	 player.x=5, player.y=5;
+	 engine.players.append(player);
 }
 
 void Game::start() {
