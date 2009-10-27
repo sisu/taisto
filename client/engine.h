@@ -8,7 +8,7 @@ class Engine : public QObject {
         Engine();
         QList<Object*> players;
         QList<Object*> bots;
-
+        void go();
 
 
 };

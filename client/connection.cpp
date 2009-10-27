@@ -6,7 +6,11 @@ Connection::Connection() {
 
 void Connection::connect(QString ip) {
     // connect ip
+}
+QString Connection::nextdata() {
 
 }
 
+bool Connection::hasdata() {
 
+}
