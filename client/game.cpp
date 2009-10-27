@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game(): conn(&player, area), player(0,0,0,0,0) {
+Game::Game(): conn(&player, engine.area), player(0,0,0,0,0) {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(40);

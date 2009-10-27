@@ -7,7 +7,6 @@
 #include "connection.h"
 #include "engine.h"
 #include "object.h"
-#include "area.h"
 class Game : public QObject {
 Q_OBJECT
 public:
@@ -17,7 +16,6 @@ public:
     Connection conn;
     Window window;
 	Object player;
-	Area area;
 
     void start();
     public slots:
