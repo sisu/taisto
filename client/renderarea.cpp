@@ -16,7 +16,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     painter.setRenderHint(painter.Antialiasing,true);
     //painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(QColor(90,240,90)));
-    for(int i=0;i<players.size();i+s+) {
+    for(int i=0;i<players.size();i++) {
         double x=width/2 + centerx - players[i].x;
         double y=height/2 +centery - players[i].y;
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {

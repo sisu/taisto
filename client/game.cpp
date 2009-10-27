@@ -22,9 +22,9 @@ void Game::start() {
 }
 
 void Game::go() {
-	conn.update();
+	conn.update(engine);
     engine.go();
-    window.draw(engine.players,engine.bots);
+    window.draw(player.x,player.y,engine.players,engine.bots);
 
 
 }
