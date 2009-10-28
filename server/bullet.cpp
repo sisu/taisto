@@ -23,10 +23,9 @@ double distToPlayer(double x, double y, double px, double py, double vx, double 
 	return ax*vx + ay*vy;
 }
 
-bool Bullet::update(Server& s)
+bool Bullet::update(Server& s, QList<Unit*>& plrs)
 	//QList<Player> plrs, const Area& a)
 {
-	QList<Player>& plrs = s.players;
 	Area& a = s.area;
 	double v = sqrt(vx*vx + vy*vy);
 	double len = v * FRAME_TIME;
@@ -37,7 +36,7 @@ bool Bullet::update(Server& s)
 	int nearest=-1;
 	double nDist=1e200;
 	for(int i=0; i<plrs.size(); ++i) {
-		double px = plrs[i].x, py = plrs[i].y;
+		double px = plrs[i]->x, py = plrs[i]->y;
 		double d;
 		if ((d=distToPlayer(x,y,px,py,vx0,vy0))<nDist && dist(x,y,ex,ey,px,py) < PLAYER_RADIUS) {
 			nearest = i;
@@ -51,7 +50,7 @@ bool Bullet::update(Server& s)
 	double dy = vy/v * step;
 	for(int i=0; i<count; ++i) {
 		if ((i+1)*step > nDist) {
-			s.hitPlayer(plrs[nearest], type);
+			s.hitPlayer(*plrs[nearest], type);
 			return 1;
 		}
 		x += dx;

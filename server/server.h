@@ -17,7 +17,7 @@ public:
 	Server(int spawns);
 
 	void sendToAll(QByteArray msg);
-	void hitPlayer(Player& pl, int weapon);
+	void hitPlayer(Unit& pl, int weapon);
 
 	Area area;
 	QList<Bullet> bullets;
@@ -36,7 +36,7 @@ private:
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);
-	void spawnPlayer(Player& p);
+	void spawnPlayer(Unit& p, bool bot=0);
 };
 
 #endif

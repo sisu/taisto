@@ -50,9 +50,7 @@ void Server::update()
         bots.append(b);
     }
 
-	{
-	QByteArray stateMsg;
-	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
+	stateMsg.clear();
     stream << 1 + 4 + bots.size()*(8+8+8+4+4+4);
     stream << MSG_ENEMY << bots.size();
 
@@ -62,16 +60,31 @@ void Server::update()
         stream << bot.x << bot.y << bot.angle << bot.moveForward << bot.moveSide << bot.turn;
     }
 	sendToAll(stateMsg);
-	}
 
+	QList<Unit*> common;
+	for(int i=0; i<players.size(); ++i)
+		common.append(&players[i]);
+	for(int i=0; i<bots.size(); ++i)
+		common.append(&bots[i]);
 
 	for(int i=0; i<bullets.size(); ) {
-		if (bullets[i].update(*this)) {
+		if (bullets[i].update(*this, common)) {
 			qDebug()<<"removing bullet"<<bullets[i].x<<bullets[i].y;
 			sendHit(bullets[i]);
 			bullets[i] = bullets.back();
 			bullets.pop_back();
 		} else ++i;
+	}
+	for(int i=0; i<players.size(); ++i)
+		if (players[i].health<=0) spawnPlayer(players[i],0);
+	for(int i=0; i<bots.size(); ++i)
+		if (bots[i].health<=0) spawnPlayer(bots[i],1);
+
+
+	// Handle spawn changes
+	for(int i=0; i<players.size(); ++i) {
+		if (players[i].y >= area.startPlaces[curSpawn+1])
+			++curSpawn;
 	}
 }
 
@@ -110,20 +123,17 @@ void Server::sendHit(const Bullet& b)
 }
 
 double damages[] = {0,0.1};
-void Server::hitPlayer(Player& p, int weapon)
+void Server::hitPlayer(Unit& p, int weapon)
 {
 	p.health -= damages[weapon];
 	qDebug()<<"hit"<<p.health;
-	if (p.health < 0) {
-		spawnPlayer(p);
-	}
 }
 
-void Server::spawnPlayer(Player& p)
+void Server::spawnPlayer(Unit& p, bool bot)
 {
-	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
+	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+bot);
 	p.x = spawn.first+.5;
 	p.y = spawn.second+.5;
 	p.health = 1;
-	p.angle = -M_PI/2;
+	p.angle = bot ? M_PI/2 : -M_PI/2;
 }
