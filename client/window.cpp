@@ -18,11 +18,11 @@ void Window::draw(double x, double y, QList<Object> & players, QList<Object>& bo
 }
 
 void Window::keyPressEvent(QKeyEvent* event) {
+    this->keysHeld.append(event->key());
 	switch(event->key()) {
 		case Qt::Key_Right:
 		    break;
 		case Qt::Key_Left:
-			qDebug("moro");
 			break;
 		case Qt::Key_Up:
 			break;
@@ -31,4 +31,9 @@ void Window::keyPressEvent(QKeyEvent* event) {
 		default:
 			break;
 	}
+}
+
+void Window::keyReleaseEvent(QKeyEvent* event) {
+	this->keysHeld.removeAll(event->key());
+    qDebug("Key released");
 }
