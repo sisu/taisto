@@ -13,10 +13,11 @@ class Server;
 
 class Player : public Unit {
     public:
-        Player(QTcpSocket* s, double xx, double yy, int i): Unit(s,xx,yy,i) {
-        
-        }
+        Player(QTcpSocket* s, double xx, double yy, int i): Unit(xx,yy), socket(s), id(i) {}
+
+        QTcpSocket* socket;
         void update(Server& s);
+        int id;
 
     private:
         void readState(QDataStream& s);

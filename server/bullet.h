@@ -3,10 +3,10 @@
 
 #include <QList>
 #include "constants.h"
-#include "area.h"
-#include "player.h"
 
 const double STEP = 0.2;
+
+class Server;
 
 struct Bullet {
 	int id,type;
@@ -15,7 +15,7 @@ struct Bullet {
 	Bullet(int i, int t, double xx, double yy, double vxx, double vyy):
 		id(i), type(t), x(xx), y(yy), vx(vxx), vy(vyy) {}
 
-	bool update(QList<Player> plrs, const Area& a);
+	bool update(Server& s);
 };
 
 #endif

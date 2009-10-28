@@ -16,16 +16,17 @@ public:
 	Server(int spawns);
 
 	void sendToAll(QByteArray msg);
+	void hitPlayer(Player& pl, int weapon);
 
 	Area area;
 	QList<Bullet> bullets;
+	QList<Player> players;
 	int bulletID;
 
 public slots:
 	void update();
 
 private:
-	QList<Player> players;
 	//QList<Bot> bots;
 	int curSpawn;
 	QTimer timer;
@@ -33,6 +34,7 @@ private:
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);
+	void spawnPlayer(Player& p);
 };
 
 #endif
