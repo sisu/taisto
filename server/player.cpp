@@ -1,8 +1,9 @@
+#include <cmath>
+#include <cstdlib>
 #include "player.h"
 #include "constants.h"
 #include "messages.h"
 #include "server.h"
-#include <cmath>
 #include "utils.h"
 #include "unit.h"
 
@@ -25,6 +26,9 @@ void Player::update(Server& s)
 			case MSG_SHOOT:
 				readShoot(is, s);
 				break;
+			default:
+				qDebug()<<type;
+				abort();
 		}
 	}
 
