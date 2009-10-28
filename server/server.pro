@@ -9,5 +9,5 @@ INCLUDEPATH += .
 QT += network
 
 # Input
-HEADERS += area.h player.h server.h bullet.h
-SOURCES += area.cpp main.cpp player.cpp server.cpp bullet.cpp
+HEADERS += area.h player.h server.h unit.h utils.h bullet.h
+SOURCES += area.cpp main.cpp player.cpp server.cpp unit.cpp bullet.cpp
