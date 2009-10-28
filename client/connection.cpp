@@ -107,6 +107,7 @@ void Connection::readEnemy(QDataStream& s) {
 	for(int i=0; i<pl; ++i) {
 		Object pl;
 		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
+//		qDebug()<<"aaa"<<pl.x<<pl.y;
 		engine.bots.append(pl);
 	}
 }

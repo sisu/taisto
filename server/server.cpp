@@ -39,16 +39,20 @@ void Server::update()
 //		qDebug()<<"pl1"<<pl.x<<pl.y;
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn<<pl.health;
 	}
+	sendToAll(stateMsg);
 
 	// Bot stuff
 
     if(bots.size() == 0) {
         QPair<int,int> pt = this->area.getSpawnPoint(this->curSpawn + 1);
 		qDebug()<<"spawning bot to"<<pt.first<<pt.second;
-        Bot b(pt.first,pt.second);
+        Bot b(pt.first+.5,pt.second+.5);
         bots.append(b);
     }
 
+	{
+	QByteArray stateMsg;
+	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
     stream << 1 + 4 + bots.size()*(8+8+8+4+4+4);
     stream << MSG_ENEMY << bots.size();
 
@@ -57,8 +61,8 @@ void Server::update()
         bot.updatePhysics(*this);
         stream << bot.x << bot.y << bot.angle << bot.moveForward << bot.moveSide << bot.turn;
     }
-
 	sendToAll(stateMsg);
+	}
 
 
 	for(int i=0; i<bullets.size(); ) {

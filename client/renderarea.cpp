@@ -93,6 +93,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
 
     for(int i=0;i<engine.bots.size();i++) {
+//		qDebug()<<"drawing bot"<<engine.bots[i].x<<engine.bots[i].y;
         double px = engine.bots[i].x * SQUARE, py = engine.bots[i].y * SQUARE;
         double x=width/2 - centerx + px;
         double y=height/2 - centery + py;
