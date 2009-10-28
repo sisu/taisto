@@ -48,11 +48,17 @@ void Window::updatePlayerMovement(Player& player) {
 			case Qt::Key_Right:
 				player.turn = 1;
 				break;
-			case Qt::Key_Down:
+			case Qt::Key_S:
 				player.my = -1;
 				break;
-			case Qt::Key_Up:
+			case Qt::Key_W:
 				player.my = 1;
+				break;
+			case Qt::Key_A:
+				player.mx = -1;
+				break;
+			case Qt::Key_D:
+				player.mx = 1;
 				break;
 			case Qt::Key_Space:
 				player.shooting = 1;
