@@ -5,9 +5,10 @@ Connection::Connection(Player* obj, Engine& e): player(obj), engine(e) {
 	packetSize=-1;
 }
 
-void Connection::connect(QString ip) {
-	qDebug()<<"Connecting...";
-	connectToHost(ip, 32096);
+void Connection::connect(QString ip, int port) {
+	qDebug()<<"Connecting..."<<ip<<port;
+    
+	connectToHost(ip, port);
 	bool res = waitForConnected(1000);
 	qDebug()<<"result"<<res;
 }

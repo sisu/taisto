@@ -9,14 +9,14 @@ Game::Game(): conn(&player, engine), window(engine), player() {
 	 startTime.start();
 }
 
-void Game::start() {
+void Game::start(QString ip, int port) {
     
     //Moottori
     
     
     // Luo verkko
     
-    conn.connect("127.0.0.1");
+    conn.connect(ip,port);
     
 
     //Luo ikkuna + piirtopinta
