@@ -32,5 +32,6 @@ void Player::update()
 
 void Player::readState(QDataStream& s)
 {
-	s>>x>>y>>angle>>moveForward>>moveSide>>turn;
+	s>>angle>>moveForward>>moveSide>>turn;
+//	qDebug()<<"got"<<x<<y<<moveForward<<moveSide<<turn;
 }

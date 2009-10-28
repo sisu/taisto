@@ -47,16 +47,18 @@ void Connection::readState(QDataStream& s, Engine& e)
 
 	int pl;
 	s>>pl;
-	qDebug()<<"players"<<pl;
+//	qDebug()<<"players"<<pl;
 	for(int i=0; i<pl; ++i) {
 		Object pl;
 		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
+//		qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
 		e.players.append(pl);
 	}
 }
 void Connection::sendStatus()
 {
+//	qDebug()<<"send"<<player->x<<player->y<<player->my<<player->mx;
 	QDataStream s(this);
 	s << MSG_STATE;
-	s<<player->x<<player->y<<player->direction<<player->my<<player->mx<<player->turn;
+	s<<player->direction<<player->my<<player->mx<<player->turn;
 }

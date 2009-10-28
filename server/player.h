@@ -7,7 +7,9 @@
 
 class Player {
 public:
-	Player(QTcpSocket* s, double xx, double yy, int i): socket(s), x(xx), y(yy), id(i) {}
+	Player(QTcpSocket* s, double xx, double yy, int i): socket(s), x(xx), y(yy), id(i) {
+		moveForward=moveSide=turn=angle=0;
+	}
 	void update();
 
 	QTcpSocket* socket;

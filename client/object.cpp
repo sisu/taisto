@@ -7,5 +7,6 @@ Object::Object(int _id, int _type, double _x, double _y, double _direction) {
     direction=_direction;
     id=_id;
     type=_type;
+	mx=my=turn=0;
 }
 

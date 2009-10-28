@@ -15,11 +15,12 @@ void Server::update()
 		QTcpSocket* sock = nextPendingConnection();
 		sendInitialInfo(sock);
 		QPair<int,int> p = area.getSpawnPoint(curSpawn);
+//		qDebug()<<"spawn"<<p.first<<p.second;
 		Player pl(sock, p.first+.5, p.second+.5, nextID++);
 		players.append(pl);
 	}
 	for(int i=0; i<players.size(); ) {
-		if (!players[i].socket->isValid())
+		if (players[i].socket->state() != QAbstractSocket::ConnectedState)
 			players.erase(players.begin()+i);
 		else ++i;
 	}
@@ -31,6 +32,7 @@ void Server::update()
 	for(int i=0; i<players.size(); ++i) {
 		Player& pl = players[i];
 		pl.update();
+//		qDebug()<<"pl1"<<pl.x<<pl.y;
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn;
 	}
 
