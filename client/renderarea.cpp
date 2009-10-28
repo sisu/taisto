@@ -80,6 +80,18 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         }
 
     }
+    //Bullets
+    QMap<int,Bullet>::Iterator it;
+    painter.setBrush(QBrush(QColor(220,40,35)));
+    for(it = engine.bullets.begin(); it != engine.bullets.end(); it++) {
+        double px = it.value().x * SQUARE, py = it.value().y * SQUARE;
+
+        double x = width/2 - centerx + px;
+        double y = height/2 - centery + py;
+
+        painter.drawEllipse(x-2,y-2,4,4);
+    }
+
 }
 
 
@@ -88,4 +100,7 @@ void RenderArea::draw(double x, double y) {
     centery=(y)*SQUARE;
     update();
 }
+
+
+
 
