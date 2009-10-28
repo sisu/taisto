@@ -8,6 +8,7 @@
 #include "connection.h"
 #include "engine.h"
 #include "player.h"
+
 class Game : public QObject {
 Q_OBJECT
 public:

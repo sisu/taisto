@@ -93,6 +93,16 @@ void Server::updateBots()
 		}
     }
 	sendToAll(stateMsg);
+
+	stateMsg.clear();
+    stream << 1 + 4 + items.size()*(8+8+4);
+    stream << MSG_ITEM << items.size();
+
+    for(int i = 0; i < items.size(); ++i) {
+        Item& it = items[i];
+        stream << it.x << it.y << it.itemNo;
+    }
+	sendToAll(stateMsg);
 }
 void Server::updateBullets()
 {
