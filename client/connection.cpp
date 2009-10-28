@@ -55,6 +55,7 @@ void Connection::readInitial(QDataStream& s)
 			engine.area.data.append(a);
 		}
 	}
+	s>>engine.area.partH>>engine.area.spawnH;
 	s>>player->id;
 	qDebug()<<"got player id"<<player->id;
 }

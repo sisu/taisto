@@ -61,12 +61,13 @@ void Server::update()
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
 {
 	QDataStream s(sock);
-	s << 1 + 4+4 + area.w*area.h*4 + 4;
+	s << 1 + 4+4 + area.w*area.h*4 + 4+4 + 4;
 	s<<MSG_INITIAL;
 	s<<area.w<<area.h;
 	for(int i=0; i<area.parts.size(); ++i)
 		for(int j=0; j<area.parts[i].data.size(); ++j)
 			s<<area.parts[i].data[j];
+	s<<area.parts[0].data.size()/area.w<<area.parts[0].spawnH;
 	s<<id;
 	qDebug()<<"sent player id"<<id;
 	sock->flush();
