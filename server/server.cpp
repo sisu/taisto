@@ -44,6 +44,7 @@ void Server::update()
 
     if(bots.size() == 0) {
         QPair<int,int> pt = this->area.getSpawnPoint(this->curSpawn + 1);
+		qDebug()<<"spawning bot to"<<pt.first<<pt.second;
         Bot b(pt.first,pt.second);
         bots.append(b);
     }

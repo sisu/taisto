@@ -25,8 +25,8 @@ QPair<int,int> Area::getSpawnPoint(int spawn)
 {
 	int x,y;
 	do {
-		x = startPlaces[spawn] + rand() % w;
+		x = rand() % w;
 		y = startPlaces[spawn] + rand() % parts[spawn].spawnH;
-	} while(parts[spawn].data[y*w+x]!=0);
+	} while(data[y*w+x]!=0);
 	return QPair<int,int>(x,y);
 }
