@@ -19,6 +19,7 @@ public:
 
 	Area area;
 	QList<Bullet> bullets;
+	int bulletID;
 
 public slots:
 	void update();
@@ -31,6 +32,7 @@ private:
 	int nextID;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
+	void sendHit(const Bullet& b);
 };
 
 #endif

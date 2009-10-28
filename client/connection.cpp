@@ -36,6 +36,9 @@ void Connection::update()
 			case MSG_SHOOT:
 				readShoot(s);
 				break;
+			case MSG_HIT:
+				readHit(s);
+				break;
 		}
 	}
 }
@@ -82,6 +85,12 @@ void Connection::readShoot(QDataStream& s)
 	s>>id>>weapon>>x>>y>>vx>>vy;
     engine.bullets.insert(id,Bullet(weapon,x,y,vx,vy));
 	qDebug()<<"got shoot"<<weapon<<x<<y<<vx<<vy;
+}
+void Connection::readHit(QDataStream& s)
+{
+	int id;
+	s>>id;
+	engine.bullets.remove(id);
 }
 void Connection::sendStatus()
 {

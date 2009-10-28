@@ -7,6 +7,7 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 {
 	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
 	timer.start(1000/FPS);
+	bulletID=1;
 }
 
 void Server::update()
@@ -50,6 +51,7 @@ void Server::update()
 	for(int i=0; i<bullets.size(); ) {
 		if (bullets[i].update(players, area)) {
 			qDebug()<<"removing bullet"<<bullets[i].x<<bullets[i].y;
+			sendHit(bullets[i]);
 			bullets[i] = bullets.back();
 			bullets.pop_back();
 		} else ++i;
@@ -76,4 +78,15 @@ void Server::sendToAll(QByteArray msg)
 		players[i].socket->write(msg);
 	for(int i=0; i<players.size(); ++i)
 		players[i].socket->flush();
+}
+
+void Server::sendHit(const Bullet& b)
+{
+	QByteArray msg;
+	QDataStream s(&msg, QIODevice::WriteOnly);
+
+	s << 1+sizeof(b.id);
+	s << MSG_HIT << b.id;
+
+	sendToAll(msg);
 }
