@@ -36,7 +36,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
    // qDebug()<<centerx+width/2<<engine.area.w*SQUARE;
     //   qDebug()<<centerx<<centery;
-    painter.drawEllipse(centerx+width/2,100,10,10);
+//    painter.drawEllipse(centerx+width/2,100,10,10);
     if(centerx+width/2>engine.area.w*SQUARE) {
         double over=centerx+width/2-engine.area.w*SQUARE;
         painter.drawRect((int)(width-over),0,(int)(over),(int)(height));
