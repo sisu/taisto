@@ -22,14 +22,13 @@ public:
 	Area area;
 	QList<Bullet> bullets;
 	QList<Player> players;
+	QList<Bot> bots;
 	int bulletID;
 
 public slots:
 	void update();
 
 private:
-	QList<Player> players;
-	QList<Bot> bots;
 	int curSpawn;
 	QTimer timer;
 	int nextID;
