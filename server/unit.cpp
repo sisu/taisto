@@ -52,7 +52,7 @@ void Unit::shoot(int weap, Server& serv)
 			break;
 		case 2:
 			for(int i=0; i<4; ++i) {
-				makeBullet(serv, weap, angle+((i-1.5)*.1), 0.03);
+				makeBullet(serv, weap, angle+((i-1.5)*.05), 0.03);
 			}
 			break;
 		default:
@@ -63,7 +63,7 @@ void Unit::shoot(int weap, Server& serv)
 void Unit::makeBullet(Server& serv, int weap, double a, double distr)
 {
 	a += distr*(rndf()-.5);
-	double dx=cos(angle), dy=-sin(angle);
+	double dx=cos(a), dy=-sin(a);
 	double px=x+dx*PLAYER_RADIUS*1.5, py=y+dy*PLAYER_RADIUS*1.5;
 	serv.addBullet(weap,px,py,dx,dy,bulletSpeeds[weap]);
 }

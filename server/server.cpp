@@ -172,7 +172,6 @@ void Server::sendHit(const Bullet& b)
 	sendToAll(msg);
 }
 
-double damages[] = {0,0.1};
 void Server::hitPlayer(Unit& p, int weapon)
 {
 	p.health -= damages[weapon];
