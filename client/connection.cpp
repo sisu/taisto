@@ -5,9 +5,10 @@ Connection::Connection(Player* obj, Engine& e): player(obj), engine(e) {
 	packetSize=-1;
 }
 
-void Connection::connect(QString ip) {
-	qDebug()<<"Connecting...";
-	connectToHost(ip, 32096);
+void Connection::connect(QString ip, int port) {
+	qDebug()<<"Connecting..."<<ip<<port;
+    
+	connectToHost(ip, port);
 	bool res = waitForConnected(1000);
 	qDebug()<<"result"<<res;
 }
@@ -76,9 +77,10 @@ void Connection::readState(QDataStream& s)
 }
 void Connection::readShoot(QDataStream& s)
 {
-	int weapon;
+	int id,weapon;
 	double x,y,vx,vy;
 	s>>weapon>>x>>y>>vx>>vy;
+    engine.bullets.insert(x*y+vx*vy,Bullet(weapon,x,y,vx,vy));
 	qDebug()<<"got shoot"<<weapon<<x<<y<<vx<<vy;
 }
 void Connection::sendStatus()

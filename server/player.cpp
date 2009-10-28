@@ -66,14 +66,22 @@ void Player::readShoot(QDataStream& s, Server& serv)
 	int weapon;
 	s>>weapon;
 
+	shoot(weapon, serv);
+}
+
+void Player::shoot(int weapon, Server& serv)
+{
 	double a = angle + .1*(rndf()-.5);
-	double dx = sin(a);
-	double dy = -cos(a);
+	double dx = cos(a);
+	double dy = -sin(a);
 	double px = x + dx*PLAYER_RADIUS*1.5;
 	double py = y + dy*PLAYER_RADIUS*1.5;
 	double v = 20;
 	double vx = dx * v;
 	double vy = dy * v;
+
+	Bullet bullet(0,weapon,px,py,vx,vy);
+	serv.bullets.append(bullet);
 
 	QByteArray msg;
 	QDataStream os(&msg, QIODevice::WriteOnly);

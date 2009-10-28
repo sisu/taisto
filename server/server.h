@@ -8,6 +8,7 @@
 #include "unit.h"
 #include "player.h"
 #include "area.h"
+#include "bullet.h"
 
 class Server: public QTcpServer {
 	Q_OBJECT
@@ -17,6 +18,7 @@ public:
 	void sendToAll(QByteArray msg);
 
 	Area area;
+	QList<Bullet> bullets;
 
 public slots:
 	void update();

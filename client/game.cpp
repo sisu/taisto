@@ -3,20 +3,25 @@
 Game::Game(): conn(&player, engine), window(engine), player() {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
-     timer->start(40);
+     timer->start(FRAME_TIME*1000);
 	 player.x=5, player.y=5;
 	 engine.players.append(player);
 	 startTime.start();
 }
 
-void Game::start() {
+void Game::start(QString ip, int port) {
     
     //Moottori
     
     
     // Luo verkko
     
+<<<<<<< HEAD
     conn.connect("127.0.0.1");
+=======
+    conn.connect(ip,port);
+    
+>>>>>>> c19e3efd9e5306e391fefb4aae3d5bf61cbd109d
 
     //Luo ikkuna + piirtopinta
     window.show();

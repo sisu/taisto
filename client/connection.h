@@ -12,7 +12,7 @@ class Connection : public QTcpSocket {
 	Q_OBJECT
 public:
 	Connection(Player* pl, Engine& e);
-	void connect(QString);
+	void connect(QString,int);
 	void update();
 	void sendStatus();
 	void sendShoot();

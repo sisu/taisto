@@ -10,5 +10,6 @@ const double TURN_SPEED = 2.0;
 const double PLAYER_RADIUS = 0.25;
 
 const int FPS = 50;
+const double FRAME_TIME = 1./FPS;
 
 #endif

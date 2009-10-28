@@ -19,7 +19,7 @@ public:
 	Player player;
 	QTime startTime;
 
-    void start();
+    void start(QString, int);
     public slots:
         void go();
 
