@@ -5,6 +5,7 @@
 #include <QList>
 #include <QTimer>
 #include <QByteArray>
+#include "unit.h"
 #include "player.h"
 #include "area.h"
 
@@ -22,6 +23,7 @@ public slots:
 
 private:
 	QList<Player> players;
+	//QList<Bot> bots;
 	int curSpawn;
 	QTimer timer;
 	int nextID;

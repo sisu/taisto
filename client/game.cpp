@@ -17,7 +17,6 @@ void Game::start() {
     // Luo verkko
     
     conn.connect("127.0.0.1");
-    
 
     //Luo ikkuna + piirtopinta
     window.show();

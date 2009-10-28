@@ -3,19 +3,10 @@
 #include "messages.h"
 #include "server.h"
 #include <cmath>
+#include "utils.h"
+#include "unit.h"
 
 const double FRAME_TIME = 1.0/FPS;
-
-inline void Player::fix(double px, double py, double d)
-{
-	double dx=x-px, dy=y-py;
-	double r2 = dx*dx + dy*dy;
-	if (r2 < d*d) {
-		double a = d / sqrt(r2);
-		x = px + dx*a;
-		y = py + dy*a;
-	}
-}
 
 void Player::update(Server& s)
 {
@@ -68,10 +59,6 @@ void Player::readState(QDataStream& s)
 {
 	s>>moveForward>>moveSide>>turn;
 //	qDebug()<<"got"<<x<<y<<moveForward<<moveSide<<turn;
-}
-static double rndf()
-{
-	return double(rand())/RAND_MAX;
 }
 void Player::readShoot(QDataStream& s, Server& serv)
 {

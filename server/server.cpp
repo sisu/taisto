@@ -38,6 +38,12 @@ void Server::update()
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn;
 	}
 
+    /*
+    for(int i = 0; i < bots.size(); ++i) {
+        
+    }
+    */
+
 	sendToAll(stateMsg);
 }
 
