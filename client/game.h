@@ -6,7 +6,7 @@
 #include "window.h"
 #include "connection.h"
 #include "engine.h"
-#include "object.h"
+#include "player.h"
 class Game : public QObject {
 Q_OBJECT
 public:
@@ -15,7 +15,7 @@ public:
     Engine engine;
     Connection conn;
     Window window;
-	Object player;
+	Player player;
 
     void start();
     public slots:

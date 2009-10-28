@@ -38,21 +38,24 @@ void Window::keyReleaseEvent(QKeyEvent* event) {
     qDebug("Key released");
 }
 
-void Window::updatePlayerMovement(Object& player) {
-	player.mx = player.my = 0;
+void Window::updatePlayerMovement(Player& player) {
+	player.mx = player.my = player.shooting = 0;
 	for(int i = 0; i < this->keysHeld.size(); ++i) {
 		switch(this->keysHeld[i]) {
 			case Qt::Key_Left:
-				player.mx = -1;
+				player.turn = -1;
 				break;
 			case Qt::Key_Right:
-				player.mx = 1;
+				player.turn = 1;
 				break;
 			case Qt::Key_Down:
 				player.my = -1;
 				break;
 			case Qt::Key_Up:
 				player.my = 1;
+				break;
+			case Qt::Key_Space:
+				player.shooting = 1;
 				break;
 			default:
 				break;
