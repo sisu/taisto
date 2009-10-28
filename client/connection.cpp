@@ -70,6 +70,7 @@ void Connection::readState(QDataStream& s)
 		if (pl.id==player->id) {
 			player->x = pl.x;
 			player->y = pl.y;
+			player->direction = pl.direction;
 		}
 	}
 }

@@ -39,7 +39,7 @@ void Window::keyReleaseEvent(QKeyEvent* event) {
 }
 
 void Window::updatePlayerMovement(Player& player) {
-	player.mx = player.my = player.shooting = 0;
+	player.mx = player.my = player.shooting = player.turn = 0;
 	for(int i = 0; i < this->keysHeld.size(); ++i) {
 		switch(this->keysHeld[i]) {
 			case Qt::Key_Left:

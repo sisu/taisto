@@ -49,7 +49,6 @@ void Player::update(Server& s)
 	x += moveSide*sa * spd;
 	y -= moveSide*ca * spd;
 
-	/*
 	Area& a = s.area;
 	int ix=x, iy=y;
     
@@ -61,7 +60,6 @@ void Player::update(Server& s)
 	if (a.blocked(ix+1,iy-1)) fix(ix+1,iy);
 	if (a.blocked(ix+1,iy+1)) fix(ix+1,iy+1);
 	if (a.blocked(ix-1,iy+1)) fix(ix,iy+1);
-*/
 
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
