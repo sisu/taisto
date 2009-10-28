@@ -8,8 +8,6 @@ struct Area {
 	int h() {
 		return w > 0 ? data.size()/w : 0;
 	}
-
-	int partH,spawnH;
 };
 
 #endif

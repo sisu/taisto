@@ -44,12 +44,9 @@ void Connection::update()
 }
 void Connection::readInitial(QDataStream& s)
 {
-	int w,h,p,b;
+	int w,h;
 	s>>w>>h;
-    s>>p>>b;
 	engine.area.w = w;
-    engine.area.part=p;
-    engine.area.spawn=b;
 	qDebug()<<"map size"<<w<<h;
 	for(int i=0; i<h; ++i) {
 		for(int j=0; j<w; ++j) {
@@ -58,7 +55,10 @@ void Connection::readInitial(QDataStream& s)
 			engine.area.data.append(a);
 		}
 	}
-	s>>engine.area.partH>>engine.area.spawnH;
+	int p,b;
+    s>>p>>b;
+    engine.area.part=p;
+    engine.area.spawn=b;
 	s>>player->id;
 	qDebug()<<"got player id"<<player->id;
 }
