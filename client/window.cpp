@@ -9,7 +9,7 @@ Window::Window(Engine& engine)
 	layout->addWidget(renderArea);
 	setLayout(layout);
 	setWindowTitle("simo");
-
+    selectedWeapon = 0;
 }
 
 void Window::draw(Player* player) {
@@ -19,6 +19,9 @@ void Window::draw(Player* player) {
 
 void Window::keyPressEvent(QKeyEvent* event) {
     this->keysHeld.append(event->key());
+    if(event->key() >= Qt::Key_1 && event->key() <= Qt::Key_9) {
+        selectedWeapon = event->key() - Qt::Key_1;
+    }
 	switch(event->key()) {
 		case Qt::Key_Right:
 		    break;

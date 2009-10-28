@@ -13,6 +13,7 @@ class Window : public QWidget
         void keyPressEvent(QKeyEvent*);
         void keyReleaseEvent(QKeyEvent*);
         void updatePlayerMovement(Player&);
+        int selectedWeapon;
     public slots:
         void draw(Player*);
     private:
