@@ -7,7 +7,7 @@ class Window : public QWidget
 {
     Q_OBJECT
     public:
-        QList<Key> keysHeld;
+        QList<int> keysHeld;
         Window();
         void keyPressEvent(QKeyEvent*);
         void keyReleaseEvent(QKeyEvent*);
