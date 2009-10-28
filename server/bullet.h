@@ -3,6 +3,7 @@
 
 #include <QList>
 #include "constants.h"
+#include "unit.h"
 
 const double STEP = 0.2;
 
@@ -15,7 +16,7 @@ struct Bullet {
 	Bullet(int i, int t, double xx, double yy, double vxx, double vyy):
 		id(i), type(t), x(xx), y(yy), vx(vxx), vy(vyy) {}
 
-	bool update(Server& s);
+	bool update(Server& s, QList<Unit*>& obj);
 };
 
 #endif
