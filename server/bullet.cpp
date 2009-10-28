@@ -26,7 +26,7 @@ double distToPlayer(double x, double y, double px, double py, double vx, double 
 bool Bullet::update(Server& s)
 	//QList<Player> plrs, const Area& a)
 {
-	QList<Player> plrs = s.players;
+	QList<Player>& plrs = s.players;
 	Area& a = s.area;
 	double v = sqrt(vx*vx + vy*vy);
 	double len = v * FRAME_TIME;
