@@ -33,7 +33,7 @@ void Server::update()
 	stream << MSG_STATE << players.size();
 	for(int i=0; i<players.size(); ++i) {
 		Player& pl = players[i];
-		pl.update(area);
+		pl.update(*this);
 //		qDebug()<<"pl1"<<pl.x<<pl.y;
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn;
 	}

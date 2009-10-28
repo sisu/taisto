@@ -7,13 +7,15 @@
 #include "area.h"
 #include "constants.h"
 
+class Server;
+
 class Player {
 public:
 	Player(QTcpSocket* s, double xx, double yy, int i): socket(s), x(xx), y(yy), id(i) {
 		moveForward=moveSide=turn=angle=0;
 		packetSize=-1;
 	}
-	void update(const Area& a);
+	void update(Server& s);
 
 	QTcpSocket* socket;
 	double x,y,angle;
@@ -22,6 +24,7 @@ public:
 
 private:
 	void readState(QDataStream& s);
+	void readShoot(QDataStream& s, Server& serv);
 	void fix(double px, double py, double d=PLAYER_RADIUS);
 
 	int packetSize;

@@ -1,7 +1,7 @@
 #include "connection.h"
 #include "messages.h"
 
-Connection::Connection(Object* obj, Area& a): player(obj), area(a) {
+Connection::Connection(Player* obj, Engine& e): player(obj), engine(e) {
 	packetSize=-1;
 }
 
@@ -11,7 +11,7 @@ void Connection::connect(QString ip) {
 	bool res = waitForConnected(1000);
 	qDebug()<<"result"<<res;
 }
-void Connection::update(Engine& e)
+void Connection::update()
 {
 	while(bytesAvailable()) {
 		QDataStream s(this);
@@ -30,7 +30,10 @@ void Connection::update(Engine& e)
 				readInitial(s);
 				break;
 			case MSG_STATE:
-				readState(s, e);
+				readState(s);
+				break;
+			case MSG_SHOOT:
+				readShoot(s);
 				break;
 		}
 	}
@@ -39,21 +42,21 @@ void Connection::readInitial(QDataStream& s)
 {
 	int w,h;
 	s>>w>>h;
-	area.w = w;
+	engine.area.w = w;
 	qDebug()<<"map size"<<w<<h;
 	for(int i=0; i<h; ++i) {
 		for(int j=0; j<w; ++j) {
 			int a;
 			s>>a;
-			area.data.append(a);
+			engine.area.data.append(a);
 		}
 	}
 	s>>player->id;
 	qDebug()<<"got player id"<<player->id;
 }
-void Connection::readState(QDataStream& s, Engine& e)
+void Connection::readState(QDataStream& s)
 {
-	e.players.clear();
+	engine.players.clear();
 
 	int pl;
 	s>>pl;
@@ -62,13 +65,20 @@ void Connection::readState(QDataStream& s, Engine& e)
 		Object pl;
 		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
 //		qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
-		e.players.append(pl);
+		engine.players.append(pl);
 //		qDebug()<<pl.id<<player->id;
 		if (pl.id==player->id) {
 			player->x = pl.x;
 			player->y = pl.y;
 		}
 	}
+}
+void Connection::readShoot(QDataStream& s)
+{
+	int weapon;
+	double x,y,vx,vy;
+	s>>weapon>>x>>y>>vx>>vy;
+	qDebug()<<"got shoot"<<weapon<<x<<y<<vx<<vy;
 }
 void Connection::sendStatus()
 {
@@ -77,4 +87,14 @@ void Connection::sendStatus()
 	s << 1 + 8 + 4+4+4;
 	s << MSG_STATE;
 	s<<player->direction<<player->my<<player->mx<<player->turn;
+	flush();
+}
+void Connection::sendShoot()
+{
+	qDebug()<<"sending shoot";
+	QDataStream s(this);
+	s << 1 + 4;
+	s << MSG_SHOOT;
+	s << player->weapon;
+	flush();
 }
