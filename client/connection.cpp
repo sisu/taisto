@@ -66,8 +66,8 @@ void Connection::readState(QDataStream& s)
 	s>>pl;
 //	qDebug()<<"players"<<pl;
 	for(int i=0; i<pl; ++i) {
-		Object pl;
-		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
+		Player pl;
+		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health;
 //		qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
 		engine.players.append(pl);
 //		qDebug()<<pl.id<<player->id;

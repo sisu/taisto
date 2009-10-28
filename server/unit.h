@@ -20,6 +20,7 @@ class Unit {
 
         double x,y,angle;
         int moveForward, moveSide, turn;
+		double health;
 
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);
