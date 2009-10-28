@@ -34,6 +34,8 @@ void Game::go() {
     window.draw(player.x,player.y);
 	conn.sendStatus();
 
+//	qDebug()<<player.x<<player.y;
+
 	int t = startTime.elapsed();
 //	qDebug()<<player.shooting<<startTime.elapsed()<<player.shootTime+loadTimes[player.weapon];
 	if (player.shooting && t>player.shootTime+loadTimes[player.weapon]) {

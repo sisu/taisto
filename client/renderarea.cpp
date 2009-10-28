@@ -21,20 +21,21 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     //    qDebug()<<width<<height;
     QPainter painter(this);
     painter.setRenderHint(painter.Antialiasing,true);
+	painter.translate(0, height);
+	painter.scale(1,-1);
     //painter.setPen(Qt::NoPen);
 
     //Borders
+	painter.setBrush(QBrush(QColor(40,40,40)));
 
     if(centerx-width/2<0) {
-        painter.setBrush(QBrush(QColor(40,40,40)));
         double over=width/2-centerx;
         painter.drawRect(0,0,(int)(over),(int)(height));
     }
-    qDebug()<<centerx+width/2<<engine.area.w*SQUARE;
+   // qDebug()<<centerx+width/2<<engine.area.w*SQUARE;
     //   qDebug()<<centerx<<centery;
     painter.drawEllipse(centerx+width/2,100,10,10);
     if(centerx+width/2>engine.area.w*SQUARE) {
-        painter.setBrush(QBrush(QColor(40,40,40)));
         double over=centerx+width/2-engine.area.w*SQUARE;
         painter.drawRect((int)(width-over),0,(int)(over),(int)(height));
     }
@@ -44,6 +45,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
     //Boxes
 
+	/*
     double sx= centerx/SQUARE;
     double sy= centery/SQUARE;
     int topx=max(0,(int)( sx - width/2/SQUARE));
@@ -59,7 +61,23 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
                 (ya-topy)*SQUARE + (sy-(int)(sy))*SQUARE ,
                 SQUARE,SQUARE);
         }
-    }
+    }*/
+//	qDebug()<<centerx<<centery;
+	Area& a = engine.area;
+	double w2=width/2, h2=height/2;
+	int startx = max(0, (centerx-w2)/SQUARE);
+	int endx = min(a.w-1, (centerx+w2)/SQUARE);
+	int starty = max(0, (centery-h2)/SQUARE);
+	int endy = min(a.h()-1, (centery+h2)/SQUARE);
+	for(int y=starty; y<endy; ++y) {
+		for(int x=startx; x<endx; ++x) {
+			if (a.data[y*a.w+x]) {
+				double x0 = w2 + x*SQUARE - centerx;
+				double y0 = h2 + y*SQUARE - centery;
+				painter.drawRect(x0, y0, SQUARE, SQUARE);
+			}
+		}
+	}
 
     /*
        qDebug()<<"Topleft "<<max(0,(int)((centerx-width/2)/SQUARE))<<max(0,(int)((centery-height/2)/SQUARE));
