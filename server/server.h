@@ -34,6 +34,7 @@ private:
 	QTimer timer;
 	int nextID;
 	QTime curT;
+	int prevSec, frames;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);

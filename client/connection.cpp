@@ -4,6 +4,7 @@
 
 Connection::Connection(Player* obj, Engine& e): player(obj), engine(e) {
 	packetSize=-1;
+	packetCount=0;
 }
 
 void Connection::connect(QString ip, int port) {
@@ -20,6 +21,7 @@ void Connection::update()
 		if (packetSize<0) {
 			if (bytesAvailable()<4) break;
 			s>>packetSize;
+			if (packetSize>100) qDebug()<<"big packet"<<packetSize;
 		}
 		if (bytesAvailable()<packetSize) break;
 //		qDebug()<<"packet size"<<packetSize;
@@ -47,6 +49,7 @@ void Connection::update()
 				qDebug()<<type;
 				abort();
 		}
+		++packetCount;
 	}
 }
 void Connection::readInitial(QDataStream& s)

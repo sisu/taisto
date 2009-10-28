@@ -1,5 +1,6 @@
 #include <QDataStream>
 #include <cmath>
+#include <qglobal.h>
 #include "server.h"
 #include "messages.h"
 #include "constants.h"
@@ -11,12 +12,13 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 	timer.start(1000/FPS);
 	bulletID=1;
 	curT.start();
+	prevSec=frames=0;
 }
 
 void Server::update()
 {
 	while(hasPendingConnections()) {
-		qDebug()<<"got connection";
+		qDebug()<<"got connection; assigning"<<nextID;
 		QTcpSocket* sock = nextPendingConnection();
 		Player pl(sock,0,0,nextID++);
 		spawnPlayer(pl);
@@ -24,8 +26,10 @@ void Server::update()
 		sendInitialInfo(sock, pl.id);
 	}
 	for(int i=0; i<players.size(); ) {
-		if (players[i].socket->state() != QAbstractSocket::ConnectedState)
+		if (players[i].socket->state() != QAbstractSocket::ConnectedState) {
+			qDebug()<<"dropping client"<<players[i].id;
 			players.erase(players.begin()+i);
+		}
 		else ++i;
 	}
 
@@ -93,6 +97,15 @@ void Server::update()
 		if (players[i].y >= area.startPlaces[curSpawn+1])
 			++curSpawn;
 	}
+
+
+	++frames;
+	int t = curT.elapsed();
+	if (t/1000 > prevSec) {
+		qDebug()<<"fps:"<<frames;
+		frames=0;
+		prevSec=t/1000;
+	}
 }
 
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
@@ -112,6 +125,13 @@ void Server::sendInitialInfo(QTcpSocket* sock, int id)
 
 void Server::sendToAll(QByteArray msg)
 {
+#if 1
+	QByteArray m2(msg);
+//	int size;
+	QDataStream tmp(m2);
+//	tmp>>size;
+//	Q_ASSERT(size+4 == msg.size());
+#endif
 	for(int i=0; i<players.size(); ++i)
 		players[i].socket->write(msg);
 	for(int i=0; i<players.size(); ++i)

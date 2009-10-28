@@ -17,6 +17,8 @@ public:
 	void sendStatus();
 	void sendShoot();
 
+	int packetCount;
+
 private:
 	Player* player;
 	Engine& engine;

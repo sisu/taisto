@@ -1,4 +1,5 @@
 #include "game.h"
+#include "constants.h"
 
 Game::Game(): conn(&player, engine), window(engine), player() {
      timer = new QTimer(this);
@@ -7,6 +8,7 @@ Game::Game(): conn(&player, engine), window(engine), player() {
 	 player.x=5, player.y=5;
 	 engine.players.append(player);
 	 startTime.start();
+	 prevSec=0;
 }
 
 void Game::start(QString ip, int port) {
@@ -23,9 +25,6 @@ void Game::start(QString ip, int port) {
 
 }
 
-/** Weapon load times in ms. */
-int loadTimes[] = {0,200};
-
 void Game::go() {
 	conn.update();
     engine.go();
@@ -40,5 +39,10 @@ void Game::go() {
 	if (player.shooting && t>player.shootTime+loadTimes[player.weapon]) {
 		conn.sendShoot();
 		player.shootTime = t;
+	}
+	if (t/1000>prevSec) {
+		prevSec = t/1000;
+		qDebug()<<"packet count:"<<conn.packetCount;
+		conn.packetCount = 0;
 	}
 }
