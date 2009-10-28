@@ -18,7 +18,8 @@ inline double dist(double ax, double ay, double bx, double by, double px, double
 }
 double distToPlayer(double x, double y, double px, double py, double vx, double vy)
 {
-	return (px+py-x-y)/(vx+vy);
+	double ax=px-x, ay=py-y;
+	return (ax*vx + ay*vy) / (vy*vy + vx*vx);
 }
 
 bool Bullet::update(QList<Player> plrs, const Area& a)
