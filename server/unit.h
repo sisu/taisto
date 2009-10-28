@@ -16,6 +16,7 @@ class Unit {
             moveForward=moveSide=turn=0;
             angle=-M_PI/2;
             packetSize=-1;
+			health=1;
         }
 
         double x,y,angle;
