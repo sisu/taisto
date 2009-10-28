@@ -44,9 +44,12 @@ void Connection::update()
 }
 void Connection::readInitial(QDataStream& s)
 {
-	int w,h;
+	int w,h,p,b;
 	s>>w>>h;
+    s>>p>>b;
 	engine.area.w = w;
+    engine.area.part=p;
+    engine.area.spawn=b;
 	qDebug()<<"map size"<<w<<h;
 	for(int i=0; i<h; ++i) {
 		for(int j=0; j<w; ++j) {
