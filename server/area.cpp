@@ -10,8 +10,12 @@ AreaPart::AreaPart(int w, int h)
 
 Area::Area(int count): w(32)
 {
-	for(int i=0; i<count; ++i)
-		parts.append(AreaPart(w, 128));
+	h=0;
+	for(int i=0; i<count; ++i) {
+		parts.append(AreaPart(w, 128)), h+=128;
+		for(int j=0; j<parts[i].data.size(); ++j)
+			data.append(parts[i].data[j]);
+	}
 }
 
 QPair<int,int> Area::getSpawnPoint(int spawn)

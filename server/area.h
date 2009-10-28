@@ -15,9 +15,15 @@ struct Area {
 	Area(int count);
 
 	QList<AreaPart> parts;
-	int w;
+	QList<int> data;
+	int w,h;
 
 	QPair<int,int> getSpawnPoint(int spawn);
+
+	bool blocked(int x, int y) const {
+		if (x<0 || x>=w || y<0 || y>=h) return 1;
+		return data[y*w+x];
+	}
 };
 
 #endif
