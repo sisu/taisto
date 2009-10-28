@@ -13,7 +13,8 @@ HEADERS += connection.h \
     game.h \
     object.h \
     renderarea.h \
-    window.h
+    window.h \
+	player.h
 SOURCES += connection.cpp \
     engine.cpp \
     game.cpp \

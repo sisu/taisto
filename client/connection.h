@@ -22,5 +22,6 @@ private:
 
 	void readInitial(QDataStream& s);
 	void readState(QDataStream& s, Engine& e);
+	int packetSize;
 };
 #endif

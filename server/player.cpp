@@ -20,6 +20,12 @@ void Player::update(const Area& a)
 {
 	while(socket->bytesAvailable()) {
 		QDataStream s(socket);
+		if (packetSize<0) {
+			if (socket->bytesAvailable()<4) break;
+			s>>packetSize;
+		}
+		if (socket->bytesAvailable()<packetSize) break;
+		packetSize=-1;
 		quint8 type;
 		s>>type;
 //		qDebug()<<"msg"<<type;

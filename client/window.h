@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 #include <QWidget>
-#include "object.h"
+#include "player.h"
 #include "engine.h"
 class RenderArea;
 class Window : public QWidget
@@ -12,7 +12,7 @@ class Window : public QWidget
         Window(Engine& engine);
         void keyPressEvent(QKeyEvent*);
         void keyReleaseEvent(QKeyEvent*);
-        void updatePlayerMovement(Object&);
+        void updatePlayerMovement(Player&);
     public slots:
         void draw(double, double);
     private:
