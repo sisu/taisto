@@ -5,6 +5,7 @@
 #include <QPen>
 #include <QPixmap>
 #include <QWidget>
+#include <QMap>
 #include "object.h"
 #include "engine.h"
 class RenderArea : public QWidget
@@ -15,8 +16,6 @@ public:
     Engine& engine;
     RenderArea(Engine&, QWidget* parent=0);
     void draw(double, double);
-    QList<Object> players;
-    QList<Object> bots;
     double centerx,centery;
     double width, height;
 

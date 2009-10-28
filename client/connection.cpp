@@ -77,9 +77,10 @@ void Connection::readState(QDataStream& s)
 }
 void Connection::readShoot(QDataStream& s)
 {
-	int weapon;
+	int id,weapon;
 	double x,y,vx,vy;
 	s>>weapon>>x>>y>>vx>>vy;
+    engine.bullets.insert(x*y+vx*vy,Bullet(weapon,x,y,vx,vy));
 	qDebug()<<"got shoot"<<weapon<<x<<y<<vx<<vy;
 }
 void Connection::sendStatus()
