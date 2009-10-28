@@ -1,11 +1,12 @@
 #include <QDataStream>
 #include "server.h"
 #include "messages.h"
+#include "constants.h"
 
 Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 {
 	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
-	timer.start(50);
+	timer.start(FPS);
 }
 
 void Server::update()
@@ -31,7 +32,7 @@ void Server::update()
 	stream << MSG_STATE << players.size();
 	for(int i=0; i<players.size(); ++i) {
 		Player& pl = players[i];
-		pl.update();
+		pl.update(area);
 //		qDebug()<<"pl1"<<pl.x<<pl.y;
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn;
 	}
@@ -43,10 +44,7 @@ void Server::sendInitialInfo(QTcpSocket* sock, int id)
 {
 	QDataStream s(sock);
 	s<<MSG_INITIAL;
-	int h=0;
-	for(int i=0; i<area.parts.size(); ++i)
-		h += area.parts[i].data.size()/area.w;
-	s<<area.w<<h;
+	s<<area.w<<area.h;
 	for(int i=0; i<area.parts.size(); ++i)
 		for(int j=0; j<area.parts[i].data.size(); ++j)
 			s<<area.parts[i].data[j];
