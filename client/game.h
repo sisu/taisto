@@ -19,6 +19,7 @@ public:
     Window window;
 	Player player;
 	QTime startTime;
+	int prevSec;
 
     void start(QString, int);
     public slots:

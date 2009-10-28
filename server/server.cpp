@@ -1,5 +1,6 @@
 #include <QDataStream>
 #include <cmath>
+#include <qglobal.h>
 #include "server.h"
 #include "messages.h"
 #include "constants.h"
@@ -11,12 +12,13 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 	timer.start(1000/FPS);
 	bulletID=1;
 	curT.start();
+	prevSec=frames=0;
 }
 
 void Server::update()
 {
 	while(hasPendingConnections()) {
-		qDebug()<<"got connection";
+		qDebug()<<"got connection; assigning"<<nextID;
 		QTcpSocket* sock = nextPendingConnection();
 		Player pl(sock,0,0,nextID++);
 		spawnPlayer(pl);
@@ -24,11 +26,34 @@ void Server::update()
 		sendInitialInfo(sock, pl.id);
 	}
 	for(int i=0; i<players.size(); ) {
-		if (players[i].socket->state() != QAbstractSocket::ConnectedState)
+		if (players[i].socket->state() != QAbstractSocket::ConnectedState) {
+			qDebug()<<"dropping client"<<players[i].id;
 			players.erase(players.begin()+i);
+		}
 		else ++i;
 	}
 
+	updatePlayers();
+	updateBots();
+	updateBullets();
+
+	// Handle spawn changes
+	for(int i=0; i<players.size(); ++i) {
+		if (players[i].y >= area.startPlaces[curSpawn+1])
+			++curSpawn;
+	}
+
+	++frames;
+	int t = curT.elapsed();
+	if (t/1000 > prevSec) {
+		qDebug()<<"fps:"<<frames;
+		frames=0;
+		prevSec=t/1000;
+	}
+}
+
+void Server::updatePlayers()
+{
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
@@ -41,17 +66,18 @@ void Server::update()
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn<<pl.health;
 	}
 	sendToAll(stateMsg);
-
-	// Bot stuff
-
+}
+void Server::updateBots()
+{
     if(bots.size() == 0) {
         QPair<int,int> pt = this->area.getSpawnPoint(this->curSpawn + 1);
 		qDebug()<<"spawning bot to"<<pt.first<<pt.second;
         Bot b(pt.first+.5,pt.second+.5);
         bots.append(b);
     }
+	QByteArray stateMsg;
+	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
-	stateMsg.clear();
     stream << 1 + 4 + bots.size()*(8+8+8+4+4+4);
     stream << MSG_ENEMY << bots.size();
 
@@ -77,7 +103,9 @@ void Server::update()
         stream << it.x << it.y << it.itemNo;
     }
 	sendToAll(stateMsg);
-
+}
+void Server::updateBullets()
+{
 	QList<Unit*> common;
 	for(int i=0; i<players.size(); ++i)
 		common.append(&players[i]);
@@ -96,13 +124,6 @@ void Server::update()
 		if (players[i].health<=0) spawnPlayer(players[i],0);
 	for(int i=0; i<bots.size(); ++i)
 		if (bots[i].health<=0) spawnPlayer(bots[i],1);
-
-
-	// Handle spawn changes
-	for(int i=0; i<players.size(); ++i) {
-		if (players[i].y >= area.startPlaces[curSpawn+1])
-			++curSpawn;
-	}
 }
 
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
@@ -122,6 +143,12 @@ void Server::sendInitialInfo(QTcpSocket* sock, int id)
 
 void Server::sendToAll(QByteArray msg)
 {
+#if 1
+	int size;
+	QDataStream tmp(msg);
+	tmp>>size;
+	Q_ASSERT(size+4 == msg.size());
+#endif
 	for(int i=0; i<players.size(); ++i)
 		players[i].socket->write(msg);
 	for(int i=0; i<players.size(); ++i)

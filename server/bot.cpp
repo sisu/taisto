@@ -18,7 +18,7 @@ void Bot::runAI(Server& s)
 		if (l < 8) {
 			double a = acos((vx*dx+vy*dy)/(l*v));
 			if (a>-A && a<A) {
-				qDebug()<<"YYYAAAAARRRRRRRR";
+//				qDebug()<<"YYYAAAAARRRRRRRR";
 				double dir = vx*dy - vy*dx;
 				if (dir>0) turn=-1;
 				else turn=1;
