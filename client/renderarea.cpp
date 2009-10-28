@@ -9,6 +9,7 @@
 #endif
 #define SQUARE 20
 #define RADIUS PLAYER_RADIUS*SQUARE
+RenderArea::RenderArea(Engine& _engine, QWidget* parent): engine(_engine), QWidget(parent)
 {
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
