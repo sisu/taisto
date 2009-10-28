@@ -39,26 +39,23 @@ void Window::keyReleaseEvent(QKeyEvent* event) {
 }
 
 void Window::updatePlayerMovement(Object& player) {
-    if(this->keysHeld.size() != 0) {
-        for(int i = 0; i < this->keysHeld.size(); ++i) {
-            switch(this->keysHeld[i]) {
-                case Qt::Key_Left:
-                    player.mx = -1;
-                    break;
-                case Qt::Key_Right:
-                    player.mx = 1;
-                    break;
-                case Qt::Key_Down:
-                    player.my = -1;
-                    break;
-                case Qt::Key_Up:
-                    player.my = 1;
-                    break;
-                default:
-                    break;
-            }
-        }
-    } else {
-        player.mx = player.my = 0;
-    }
+	player.mx = player.my = 0;
+	for(int i = 0; i < this->keysHeld.size(); ++i) {
+		switch(this->keysHeld[i]) {
+			case Qt::Key_Left:
+				player.mx = -1;
+				break;
+			case Qt::Key_Right:
+				player.mx = 1;
+				break;
+			case Qt::Key_Down:
+				player.my = -1;
+				break;
+			case Qt::Key_Up:
+				player.my = 1;
+				break;
+			default:
+				break;
+		}
+	}
 }

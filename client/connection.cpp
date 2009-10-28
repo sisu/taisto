@@ -64,8 +64,10 @@ void Connection::readState(QDataStream& s, Engine& e)
 //		qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
 		e.players.append(pl);
 //		qDebug()<<pl.id<<player->id;
-		if (pl.id==player->id)
-			*player = pl;
+		if (pl.id==player->id) {
+			player->x = pl.x;
+			player->y = pl.y;
+		}
 	}
 }
 void Connection::sendStatus()
