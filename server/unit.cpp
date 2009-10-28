@@ -37,6 +37,10 @@ void Unit::updatePhysics(Server& s) {
 	if (a.blocked(ix+1,iy+1)) fix(ix+1,iy+1);
 	if (a.blocked(ix-1,iy+1)) fix(ix,iy+1);
 
+	for(int i=0; i<s.players.size(); ++i)
+		if (this!=&s.players[i]) fix(s.players[i].x,s.players[i].y,2*PLAYER_RADIUS);
+	for(int i=0; i<s.bots.size(); ++i)
+		if (this!=&s.bots[i]) fix(s.bots[i].x,s.bots[i].y,2*PLAYER_RADIUS);
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
 

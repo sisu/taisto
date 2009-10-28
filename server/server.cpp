@@ -10,6 +10,7 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
 	timer.start(1000/FPS);
 	bulletID=1;
+	curT.start();
 }
 
 void Server::update()
@@ -56,8 +57,14 @@ void Server::update()
 
     for(int i = 0; i < bots.size(); ++i) {
         Bot& bot = bots[i];
+		bot.runAI(*this);
         bot.updatePhysics(*this);
         stream << bot.x << bot.y << bot.angle << bot.moveForward << bot.moveSide << bot.turn;
+		int t = curT.elapsed();
+		if (bot.shooting && t>bot.lastShoot+200) {
+			bot.shoot(1, *this);
+			bot.lastShoot=t;
+		}
     }
 	sendToAll(stateMsg);
 

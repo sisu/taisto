@@ -5,6 +5,7 @@
 #include <QList>
 #include <QTimer>
 #include <QByteArray>
+#include <QTime>
 #include "unit.h"
 #include "player.h"
 #include "area.h"
@@ -33,6 +34,7 @@ private:
 	int curSpawn;
 	QTimer timer;
 	int nextID;
+	QTime curT;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);

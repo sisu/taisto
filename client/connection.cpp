@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "connection.h"
 #include "messages.h"
 
@@ -42,6 +43,9 @@ void Connection::update()
 			case MSG_ENEMY:
 			    readEnemy(s);
 			    break;
+			default:
+				qDebug()<<type;
+				abort();
 		}
 	}
 }
