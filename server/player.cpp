@@ -46,10 +46,9 @@ void Player::update(Server& s)
 	const double spd = MOVE_SPEED * FRAME_TIME;
 	x += moveForward*ca * spd;
 	y -= moveForward*sa * spd;
-	x += moveSide*sa * spd;
+	x -= moveSide*sa * spd;
 	y -= moveSide*ca * spd;
 
-	/*
 	Area& a = s.area;
 	int ix=x, iy=y;
     
@@ -61,14 +60,13 @@ void Player::update(Server& s)
 	if (a.blocked(ix+1,iy-1)) fix(ix+1,iy);
 	if (a.blocked(ix+1,iy+1)) fix(ix+1,iy+1);
 	if (a.blocked(ix-1,iy+1)) fix(ix,iy+1);
-*/
 
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
 
 void Player::readState(QDataStream& s)
 {
-	s>>angle>>moveForward>>moveSide>>turn;
+	s>>moveForward>>moveSide>>turn;
 //	qDebug()<<"got"<<x<<y<<moveForward<<moveSide<<turn;
 }
 static double rndf()

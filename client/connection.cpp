@@ -71,6 +71,7 @@ void Connection::readState(QDataStream& s)
 		if (pl.id==player->id) {
 			player->x = pl.x;
 			player->y = pl.y;
+			player->direction = pl.direction;
 		}
 	}
 }
@@ -85,9 +86,9 @@ void Connection::sendStatus()
 {
 //	qDebug()<<"send"<<player->x<<player->y<<player->my<<player->mx;
 	QDataStream s(this);
-	s << 1 + 8 + 4+4+4;
+	s << 1 + 4+4+4;
 	s << MSG_STATE;
-	s<<player->direction<<player->my<<player->mx<<player->turn;
+	s<<player->my<<player->mx<<player->turn;
 	flush();
 }
 void Connection::sendShoot()

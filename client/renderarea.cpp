@@ -8,7 +8,9 @@
     #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #endif
 #define SQUARE 20
-#define RADIUS PLAYER_RADIUS*SQUARE
+#define RADIUS (PLAYER_RADIUS*SQUARE)
+const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
+const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
 RenderArea::RenderArea(Engine& _engine, QWidget* parent): engine(_engine), QWidget(parent)
 {
     setBackgroundRole(QPalette::Base);
@@ -34,7 +36,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
    // qDebug()<<centerx+width/2<<engine.area.w*SQUARE;
     //   qDebug()<<centerx<<centery;
-    painter.drawEllipse(centerx+width/2,100,10,10);
+//    painter.drawEllipse(centerx+width/2,100,10,10);
     if(centerx+width/2>engine.area.w*SQUARE) {
         double over=centerx+width/2-engine.area.w*SQUARE;
         painter.drawRect((int)(width-over),0,(int)(over),(int)(height));
@@ -69,8 +71,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 	int endx = min(a.w-1, (centerx+w2)/SQUARE);
 	int starty = max(0, (centery-h2)/SQUARE);
 	int endy = min(a.h()-1, (centery+h2)/SQUARE);
-	for(int y=starty; y<endy; ++y) {
-		for(int x=startx; x<endx; ++x) {
+	for(int y=starty; y<=endy; ++y) {
+		for(int x=startx; x<=endx; ++x) {
 			if (a.data[y*a.w+x]) {
 				double x0 = w2 + x*SQUARE - centerx;
 				double y0 = h2 + y*SQUARE - centery;
@@ -112,7 +114,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             painter.setBrush(QBrush(QColor(90,240,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
             painter.setBrush(QBrush(QColor(190,140,90)));
-            painter.drawEllipse(x+(RADIUS-8)*cos(engine.players[i].direction),y+(RADIUS-8)*sin(engine.players[i].direction),3,3);
+			double a=engine.players[i].direction;
+            painter.drawEllipse(
+					x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
+					y+(RADIUS-EYE_DIST-EYE_SIZE)*-sin(a)-EYE_SIZE,
+					2*EYE_SIZE,
+					2*EYE_SIZE);
         }
 
     }
