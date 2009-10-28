@@ -29,5 +29,5 @@ void Bot::runAI(Server& s)
 		}
 	}
 	moveForward=1;
-	turn = rand()%2-1;
+	turn = rand()%3-1;
 }
