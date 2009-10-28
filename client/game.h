@@ -3,6 +3,7 @@
 #include<QObject>
 #include <QTimer>
 #include<QString>
+#include <QTime>
 #include "window.h"
 #include "connection.h"
 #include "engine.h"
@@ -16,6 +17,7 @@ public:
     Connection conn;
     Window window;
 	Player player;
+	QTime startTime;
 
     void start();
     public slots:

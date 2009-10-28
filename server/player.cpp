@@ -1,6 +1,7 @@
 #include "player.h"
 #include "constants.h"
 #include "messages.h"
+#include "server.h"
 #include <cmath>
 
 const double FRAME_TIME = 1.0/FPS;
@@ -16,22 +17,25 @@ inline void Player::fix(double px, double py, double d)
 	}
 }
 
-void Player::update(const Area& a)
+void Player::update(Server& s)
 {
 	while(socket->bytesAvailable()) {
-		QDataStream s(socket);
+		QDataStream is(socket);
 		if (packetSize<0) {
 			if (socket->bytesAvailable()<4) break;
-			s>>packetSize;
+			is>>packetSize;
 		}
 		if (socket->bytesAvailable()<packetSize) break;
 		packetSize=-1;
 		quint8 type;
-		s>>type;
+		is>>type;
 //		qDebug()<<"msg"<<type;
 		switch(type) {
 			case MSG_STATE:
-				readState(s);
+				readState(is);
+				break;
+			case MSG_SHOOT:
+				readShoot(is, s);
 				break;
 		}
 	}
@@ -44,6 +48,7 @@ void Player::update(const Area& a)
 	x += moveSide*sa * spd;
 	y -= moveSide*ca * spd;
 
+	Area& a = s.area;
 	int ix=x, iy=y;
 	if (a.blocked(ix-1,iy)) fix(ix, y);
 	if (a.blocked(ix+1,iy)) fix(ix+1, y);
@@ -61,4 +66,30 @@ void Player::readState(QDataStream& s)
 {
 	s>>angle>>moveForward>>moveSide>>turn;
 //	qDebug()<<"got"<<x<<y<<moveForward<<moveSide<<turn;
+}
+static double rndf()
+{
+	return double(rand())/RAND_MAX;
+}
+void Player::readShoot(QDataStream& s, Server& serv)
+{
+	qDebug()<<"got shoot";
+	int weapon;
+	s>>weapon;
+
+	double a = angle + .1*(rndf()-.5);
+	double dx = sin(a);
+	double dy = -cos(a);
+	double px = x + dx*PLAYER_RADIUS*1.5;
+	double py = y + dy*PLAYER_RADIUS*1.5;
+	double v = 20;
+	double vx = dx * v;
+	double vy = dy * v;
+
+	QByteArray msg;
+	QDataStream os(&msg, QIODevice::WriteOnly);
+	os << 1 + 4 + 4*8;
+	os << MSG_SHOOT << weapon;
+	os << px<<py<<vx<<vy;
+	serv.sendToAll(msg);
 }

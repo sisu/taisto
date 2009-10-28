@@ -1,11 +1,12 @@
 #include "game.h"
 
-Game::Game(): conn(&player, engine.area), window(engine), player() {
+Game::Game(): conn(&player, engine), window(engine), player() {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(40);
 	 player.x=5, player.y=5;
 	 engine.players.append(player);
+	 startTime.start();
 }
 
 void Game::start() {
@@ -23,10 +24,20 @@ void Game::start() {
 
 }
 
+/** Weapon load times in ms. */
+int loadTimes[] = {0,200};
+
 void Game::go() {
-	conn.update(engine);
+	conn.update();
     engine.go();
     window.updatePlayerMovement(player);
     window.draw(player.x,player.y);
 	conn.sendStatus();
+
+	int t = startTime.elapsed();
+//	qDebug()<<player.shooting<<startTime.elapsed()<<player.shootTime+loadTimes[player.weapon];
+	if (player.shooting && t>player.shootTime+loadTimes[player.weapon]) {
+		conn.sendShoot();
+		player.shootTime = t;
+	}
 }

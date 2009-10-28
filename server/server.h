@@ -13,18 +13,20 @@ class Server: public QTcpServer {
 public:
 	Server(int spawns);
 
+	void sendToAll(QByteArray msg);
+
+	Area area;
+
 public slots:
 	void update();
 
 private:
 	QList<Player> players;
-	Area area;
 	int curSpawn;
 	QTimer timer;
 	int nextID;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
-	void sendToAll(QByteArray msg);
 };
 
 #endif

@@ -4,24 +4,26 @@
 #include<QObject>
 #include <QTcpSocket>
 #include <QDataStream>
-#include "object.h"
+#include "player.h"
 #include "engine.h"
 #include "area.h"
 
 class Connection : public QTcpSocket {
 	Q_OBJECT
 public:
-	Connection(Object* pl, Area& a);
+	Connection(Player* pl, Engine& e);
 	void connect(QString);
-	void update(Engine& e);
+	void update();
 	void sendStatus();
+	void sendShoot();
 
 private:
-	Object* player;
-	Area& area;
+	Player* player;
+	Engine& engine;
 
 	void readInitial(QDataStream& s);
-	void readState(QDataStream& s, Engine& e);
+	void readState(QDataStream& s);
+	void readShoot(QDataStream& s);
 	int packetSize;
 };
 #endif
