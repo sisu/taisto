@@ -155,6 +155,7 @@ void Server::hitPlayer(Unit& p, int weapon)
 	p.health -= damages[weapon];
 	qDebug()<<"hit"<<p.health;
 }
+
 void Server::spawnPlayer(Unit& p, bool bot)
 {
 	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+bot);

@@ -25,6 +25,7 @@ public:
 	QList<Player> players;
 	QList<Bot> bots;
 	int bulletID;
+    void hitBot(Bot& b, int weapon);
 
 public slots:
 	void update();

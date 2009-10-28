@@ -89,6 +89,7 @@ void Connection::readState(QDataStream& s)
 			player->x = pl.x;
 			player->y = pl.y;
 			player->direction = pl.direction;
+			player->health = pl.health;
 		}
 	}
 }
