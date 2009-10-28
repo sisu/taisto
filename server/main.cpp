@@ -6,7 +6,7 @@
 int main(int argc, char* argv[])
 {
 	QCoreApplication a(argc, argv);
-	Server s(20);
+	Server s(16);
 	s.listen(QHostAddress::Any, 32096);
 
 	return a.exec();

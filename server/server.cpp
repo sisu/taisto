@@ -13,6 +13,7 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 	bulletID=1;
 	curT.start();
 	prevSec=frames=0;
+	lastSpawn=-1e9;
 }
 
 void Server::update()
@@ -51,6 +52,16 @@ void Server::update()
 		frames=0;
 		prevSec=t/1000;
 	}
+
+//	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
+	if (t > lastSpawn + area.spawnIntervals[curSpawn] && bots.size()<area.maxBots[curSpawn]) {
+		qDebug()<<"spawning"<<area.spawnCounts[curSpawn]<<"bots";
+		int s = players.size();
+		if (!s) s=1;
+		for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
+			createBot();
+		lastSpawn = t;
+	}
 }
 
 void Server::updatePlayers()
@@ -70,12 +81,14 @@ void Server::updatePlayers()
 }
 void Server::updateBots()
 {
+#if 0
     if(bots.size() == 0) {
         QPair<int,int> pt = this->area.getSpawnPoint(this->curSpawn + 1);
 		qDebug()<<"spawning bot to"<<pt.first<<pt.second;
         Bot b(pt.first+.5,pt.second+.5);
         bots.append(b);
     }
+#endif
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
@@ -199,4 +212,10 @@ void Server::addBullet(int weap, double x, double y, double vx, double vy, doubl
 	os << MSG_SHOOT << bullet.id << weap;
 	os << x<<y<<vx<<vy;
 	sendToAll(msg);
+}
+void Server::createBot()
+{
+	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+1);
+	Bot b(spawn.first + .5, spawn.second+.5);
+	bots.append(b);
 }

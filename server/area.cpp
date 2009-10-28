@@ -19,6 +19,17 @@ Area::Area(int count): w(16)
 		}
 		startPlaces.append(startPlaces.back() + parts.back().data.size()/w);
 	}
+	int si0 = 10*1000;
+	int sc0 = 2;
+	int mb0 = 5;
+	int sin = 5*1000;
+	int scn = 8;
+	int mbn = 40;
+	for(int i=0; i<count; ++i) {
+		spawnIntervals.append(si0 + i*(sin-si0)/count);
+		spawnCounts.append(sc0 + i*(scn-sc0)/count);
+		maxBots.append(mb0 + i*(mbn-mb0)/count);
+	}
 }
 
 QPair<int,int> Area::getSpawnPoint(int spawn)

@@ -2,7 +2,7 @@
 
 Engine::Engine() {
 //    players.append(Object(0,PLR,10,10,2));
-    bullets.insert(0,Bullet(0,0,0,1,1));
+//    bullets.insert(0,Bullet(0,0,0,1,1));
 }
 
 void Engine::go() {

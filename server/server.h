@@ -39,10 +39,12 @@ private:
 	int nextID;
 	QTime curT;
 	int prevSec, frames;
+	int lastSpawn;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);
 	void spawnPlayer(Unit& p, bool bot=0);
+	void createBot();
 	void updatePlayers();
 	void updateBots();
 	void updateBullets();
