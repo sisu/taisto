@@ -82,8 +82,8 @@ void Player::readShoot(QDataStream& s, Server& serv)
 void Player::shoot(int weapon, Server& serv)
 {
 	double a = angle + .1*(rndf()-.5);
-	double dx = sin(a);
-	double dy = -cos(a);
+	double dx = cos(a);
+	double dy = -sin(a);
 	double px = x + dx*PLAYER_RADIUS*1.5;
 	double py = y + dy*PLAYER_RADIUS*1.5;
 	double v = 20;
