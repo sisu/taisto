@@ -11,6 +11,7 @@ class Player {
 public:
 	Player(QTcpSocket* s, double xx, double yy, int i): socket(s), x(xx), y(yy), id(i) {
 		moveForward=moveSide=turn=angle=0;
+		packetSize=-1;
 	}
 	void update(const Area& a);
 
@@ -22,6 +23,8 @@ public:
 private:
 	void readState(QDataStream& s);
 	void fix(double px, double py, double d=PLAYER_RADIUS);
+
+	int packetSize;
 };
 
 #endif

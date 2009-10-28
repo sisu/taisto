@@ -29,6 +29,7 @@ void Server::update()
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
+	stream << 1 + 4 + players.size()*(4+8+8+8+4+4+4);
 	stream << MSG_STATE << players.size();
 	for(int i=0; i<players.size(); ++i) {
 		Player& pl = players[i];
@@ -43,12 +44,14 @@ void Server::update()
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
 {
 	QDataStream s(sock);
+	s << 1 + 4+4 + area.w*area.h*4 + 4;
 	s<<MSG_INITIAL;
 	s<<area.w<<area.h;
 	for(int i=0; i<area.parts.size(); ++i)
 		for(int j=0; j<area.parts[i].data.size(); ++j)
 			s<<area.parts[i].data[j];
 	s<<id;
+	qDebug()<<"sent player id"<<id;
 	sock->flush();
 }
 
