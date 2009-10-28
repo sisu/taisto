@@ -46,22 +46,24 @@ void Unit::updatePhysics(Server& s) {
 
 void Unit::shoot(int weapon, Server& serv)
 {
-	double a = angle + .1*(rndf()-.5);
-	double dx = cos(a);
-	double dy = -sin(a);
-	double px = x + dx*PLAYER_RADIUS*1.5;
-	double py = y + dy*PLAYER_RADIUS*1.5;
-	double v = 20;
-	double vx = dx * v;
-	double vy = dy * v;
-
-	Bullet bullet(serv.bulletID++,weapon,px,py,vx,vy);
-	serv.bullets.append(bullet);
-
-	QByteArray msg;
-	QDataStream os(&msg, QIODevice::WriteOnly);
-	os << 1 + 4 + 4*8;
-	os << MSG_SHOOT << bullet.id << weapon;
-	os << px<<py<<vx<<vy;
-	serv.sendToAll(msg);
+	switch(weapon) {
+		case 1:
+			makeBullet(serv, weap, angle, 0.1);
+			break;
+		case 2:
+			for(int i=0; i<4; ++i) {
+				makeBullet(serv, weap, angle+((i-1.5)*.1), 0.03);
+			}
+			break;
+		default:
+			qDebug()<<"unknown weapon"<<weapon;
+			break;
+	}
+}
+void Unit::makeBullet(Server& serv, int weap, double a, double distr)
+{
+	a += distr*(rndf()-.5);
+	double dx=cos(angle), dy=-sin(angle);
+	double px=x+dx*PLAYER_RADIUS*1.5, py=y+dy*PLAYER_RADIUS*1.5;
+	serv.addBullet(weap,px,py,dx,dy,bulletSpeeds[weap]);
 }

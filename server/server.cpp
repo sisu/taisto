@@ -181,3 +181,17 @@ void Server::spawnPlayer(Unit& p, bool bot)
 	p.health = 1;
 	p.angle = bot ? M_PI/2 : -M_PI/2;
 }
+
+void Server::addBullet(int weap, double x, double y, double vx, double vy, double v)
+{
+	vx *= v, vy*=v;
+	Bullet bullet(bulletID++,weapon,x,y,vx,vy);
+	bullets.append(bullet);
+
+	QByteArray msg;
+	QDataStream os(&msg, QIODevice::WriteOnly);
+	os << 1 + 4 + 4*8;
+	os << MSG_SHOOT << bullet.id << weapon;
+	os << x<<y<<vx<<vy;
+	sendToAll(msg);
+}

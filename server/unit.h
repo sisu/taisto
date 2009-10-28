@@ -27,6 +27,9 @@ class Unit {
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);
         int packetSize;
+
+	private:
+		void makeBullet(Server& s, int weap, double a, double distr);
 };
 
 #endif
