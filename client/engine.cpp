@@ -9,8 +9,8 @@ void Engine::go() {
     //Bullets
     QMap<int,Bullet>::Iterator it;
     for(it = bullets.begin(); it != bullets.end(); it++) {
-        it->x+=it->vx*FRAME_TIME;
-        it->y+=it->vy*FRAME_TIME;
+        it->x+=it->vx*FRAMETIME;
+        it->y+=it->vy*FRAMETIME;
     }
 
 }

@@ -3,7 +3,7 @@
 Game::Game(): conn(&player, engine), window(engine), player() {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
-     timer->start(FRAME_TIME*1000);
+     timer->start(FRAMETIME*1000);
 	 player.x=5, player.y=5;
 	 engine.players.append(player);
 	 startTime.start();

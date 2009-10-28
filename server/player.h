@@ -21,6 +21,7 @@ class Player : public Unit {
     private:
         void readState(QDataStream& s);
         void readShoot(QDataStream& s, Server& serv);
+        void shoot(int, Server&);
 };
 
 #endif

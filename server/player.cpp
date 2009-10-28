@@ -6,8 +6,6 @@
 #include "utils.h"
 #include "unit.h"
 
-const double FRAME_TIME = 1.0/FPS;
-
 void Player::update(Server& s)
 {
 //	qDebug()<<moveForward;

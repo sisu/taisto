@@ -5,7 +5,7 @@
 #include "object.h"
 #include "area.h"
 #include "bullet.h"
-const double FRAME_TIME=0.040;
+const double FRAMETIME=0.040;
 class Engine : public QObject {
     Q_OBJECT
     public:
