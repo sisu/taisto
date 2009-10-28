@@ -25,6 +25,7 @@ private:
 	void readState(QDataStream& s);
 	void readShoot(QDataStream& s);
 	void readHit(QDataStream& s);
+	void readEnemy(QDataStream& s);
 	int packetSize;
 };
 #endif

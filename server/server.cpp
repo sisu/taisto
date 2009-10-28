@@ -2,6 +2,7 @@
 #include "server.h"
 #include "messages.h"
 #include "constants.h"
+#include "bot.h"
 
 Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 {
@@ -39,11 +40,22 @@ void Server::update()
 		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn;
 	}
 
-    /*
-    for(int i = 0; i < bots.size(); ++i) {
-        
+	// Bot stuff
+
+    if(bots.size() == 0) {
+        QPair<int,int> pt = this->area.getSpawnPoint(this->curSpawn + 1);
+        Bot b(pt.first,pt.second);
+        bots.append(b);
     }
-    */
+
+    stream << 1 + 4 + bots.size()*(8+8+8+4+4+4);
+    stream << MSG_ENEMY << bots.size();
+
+    for(int i = 0; i < bots.size(); ++i) {
+        Bot& bot = bots[i];
+        bot.updatePhysics(*this);
+        stream << bot.x << bot.y << bot.angle << bot.moveForward << bot.moveSide << bot.turn;
+    }
 
 	sendToAll(stateMsg);
 
