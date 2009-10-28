@@ -12,16 +12,14 @@ class Server;
 
 class Unit {
     public:
-        Unit(QTcpSocket* s, double xx, double yy, int i): socket(s), x(xx), y(yy), id(i) {
+        Unit(double xx, double yy): x(xx), y(yy) {
             moveForward=moveSide=turn=0;
             angle=-M_PI/2;
             packetSize=-1;
         }
 
-        QTcpSocket* socket;
         double x,y,angle;
         int moveForward, moveSide, turn;
-        int id;
 
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);
