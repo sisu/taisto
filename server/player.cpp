@@ -78,13 +78,13 @@ void Player::shoot(int weapon, Server& serv)
 	double vx = dx * v;
 	double vy = dy * v;
 
-	Bullet bullet(0,weapon,px,py,vx,vy);
+	Bullet bullet(serv.bulletID++,weapon,px,py,vx,vy);
 	serv.bullets.append(bullet);
 
 	QByteArray msg;
 	QDataStream os(&msg, QIODevice::WriteOnly);
 	os << 1 + 4 + 4*8;
-	os << MSG_SHOOT << weapon;
+	os << MSG_SHOOT << bullet.id << weapon;
 	os << px<<py<<vx<<vy;
 	serv.sendToAll(msg);
 }
