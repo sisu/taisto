@@ -45,6 +45,7 @@ void Player::update(const Area& a)
 	y -= moveSide*ca * spd;
 
 	int ix=x, iy=y;
+    
 	if (a.blocked(ix-1,iy)) fix(ix, y);
 	if (a.blocked(ix+1,iy)) fix(ix+1, y);
 	if (a.blocked(ix,iy-1)) fix(x, iy);
