@@ -95,6 +95,7 @@ double damages[] = {0,0.1};
 void Server::hitPlayer(Player& p, int weapon)
 {
 	p.health -= damages[weapon];
+	qDebug()<<"hit"<<p.health;
 	if (p.health < 0) {
 		spawnPlayer(p);
 	}
