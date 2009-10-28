@@ -28,6 +28,7 @@ public:
 	QList<Bot> bots;
 	int bulletID;
     void hitBot(Bot& b, int weapon);
+	void addBullet(int w, double x, double y, double dx, double dy, double v);
 
 public slots:
 	void update();
@@ -45,6 +46,7 @@ private:
 	void updatePlayers();
 	void updateBots();
 	void updateBullets();
+	void updateItems();
 };
 
 #endif

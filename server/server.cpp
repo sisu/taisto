@@ -36,6 +36,7 @@ void Server::update()
 	updatePlayers();
 	updateBots();
 	updateBullets();
+	updateItems();
 
 	// Handle spawn changes
 	for(int i=0; i<players.size(); ++i) {
@@ -93,8 +94,12 @@ void Server::updateBots()
 		}
     }
 	sendToAll(stateMsg);
+}
 
-	stateMsg.clear();
+void Server::updateItems()
+{
+	QByteArray stateMsg;
+	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
     stream << 1 + 4 + items.size()*(8+8+4);
     stream << MSG_ITEM << items.size();
 
@@ -147,6 +152,7 @@ void Server::sendToAll(QByteArray msg)
 	int size;
 	QDataStream tmp(msg);
 	tmp>>size;
+	if (size+4 != msg.size()) qDebug()<<"asd"<<size+4<<msg.size();
 	Q_ASSERT(size+4 == msg.size());
 #endif
 	for(int i=0; i<players.size(); ++i)
@@ -185,13 +191,13 @@ void Server::spawnPlayer(Unit& p, bool bot)
 void Server::addBullet(int weap, double x, double y, double vx, double vy, double v)
 {
 	vx *= v, vy*=v;
-	Bullet bullet(bulletID++,weapon,x,y,vx,vy);
+	Bullet bullet(bulletID++,weap,x,y,vx,vy);
 	bullets.append(bullet);
 
 	QByteArray msg;
 	QDataStream os(&msg, QIODevice::WriteOnly);
-	os << 1 + 4 + 4*8;
-	os << MSG_SHOOT << bullet.id << weapon;
+	os << 1 + 4+4 + 4*8;
+	os << MSG_SHOOT << bullet.id << weap;
 	os << x<<y<<vx<<vy;
 	sendToAll(msg);
 }

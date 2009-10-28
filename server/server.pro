@@ -7,7 +7,8 @@ TARGET =
 DEPENDPATH += .
 INCLUDEPATH += .
 QT += network
+CONFIG += qt debug
 
 # Input
-HEADERS += area.h player.h server.h unit.h utils.h bullet.h bot.h
+HEADERS += area.h player.h server.h unit.h utils.h bullet.h bot.h item.h
 SOURCES += area.cpp main.cpp player.cpp server.cpp unit.cpp bullet.cpp bot.cpp

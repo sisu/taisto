@@ -44,9 +44,9 @@ void Unit::updatePhysics(Server& s) {
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
 
-void Unit::shoot(int weapon, Server& serv)
+void Unit::shoot(int weap, Server& serv)
 {
-	switch(weapon) {
+	switch(weap) {
 		case 1:
 			makeBullet(serv, weap, angle, 0.1);
 			break;
@@ -56,7 +56,7 @@ void Unit::shoot(int weapon, Server& serv)
 			}
 			break;
 		default:
-			qDebug()<<"unknown weapon"<<weapon;
+			qDebug()<<"unknown weapon"<<weap;
 			break;
 	}
 }
