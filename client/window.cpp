@@ -40,7 +40,7 @@ void Window::keyReleaseEvent(QKeyEvent* event) {
 
 void Window::updatePlayerMovement(Object& player) {
     for(int i = 0; i < this->keysHeld.size(); ++i) {
-        switch(window.keysHeld[i]) {
+        switch(this->keysHeld[i]) {
             case Qt::Key_Left:
                 player.mx = -1;
                 break;
