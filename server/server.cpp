@@ -118,6 +118,7 @@ void Server::hitPlayer(Player& p, int weapon)
 		spawnPlayer(p);
 	}
 }
+
 void Server::spawnPlayer(Player& p)
 {
 	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
