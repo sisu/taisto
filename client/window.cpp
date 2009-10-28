@@ -12,8 +12,8 @@ Window::Window(Engine& engine)
 
 }
 
-void Window::draw(double x, double y) {
-	renderArea->draw(x, y);
+void Window::draw(Player* player) {
+	renderArea->draw(player);
 	//"Piirrä"
 }
 

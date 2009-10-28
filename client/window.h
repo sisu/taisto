@@ -14,7 +14,7 @@ class Window : public QWidget
         void keyReleaseEvent(QKeyEvent*);
         void updatePlayerMovement(Player&);
     public slots:
-        void draw(double, double);
+        void draw(Player*);
     private:
         RenderArea *renderArea;
 };

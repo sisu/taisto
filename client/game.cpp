@@ -30,7 +30,7 @@ void Game::go() {
 	conn.update();
     engine.go();
     window.updatePlayerMovement(player);
-    window.draw(player.x,player.y);
+    window.draw(&player); //(player.x,player.y);
 	conn.sendStatus();
 
 //	qDebug()<<player.x<<player.y;

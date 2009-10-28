@@ -8,21 +8,24 @@
 #include <QMap>
 #include "object.h"
 #include "engine.h"
+#include "player.h"
+
 class RenderArea : public QWidget
 {
     Q_OBJECT
 
-public:
-    Engine& engine;
-    RenderArea(Engine&, QWidget* parent=0);
-    void draw(double, double);
-    double centerx,centery;
-    double width, height;
+    public:
+        Engine& engine;
+        RenderArea(Engine&, QWidget* parent=0);
+        void draw(Player*);
+        double centerx,centery;
+        double width, height;
 
-protected:
-    void paintEvent(QPaintEvent *event);
+    protected:
+        void paintEvent(QPaintEvent *event);
 
-private:
+    private:
+        Player* player;
 };
 
 #endif

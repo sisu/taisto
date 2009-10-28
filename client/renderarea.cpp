@@ -11,7 +11,7 @@
 #define RADIUS (PLAYER_RADIUS*SQUARE)
 const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
-RenderArea::RenderArea(Engine& _engine, QWidget* parent): engine(_engine), QWidget(parent)
+RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
@@ -66,9 +66,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
                 painter.setPen(Qt::NoPen);
                 painter.setBrush(QBrush(QColor(230,250,230)));
                 double x0 = w2 + x*SQUARE - centerx;
-                double y0 = h2 + y*SQUARE - centery;
-                painter.drawRect(x0,y0,SQUARE,SQUARE);
-            }
+                double y0 = h2 + y*SQUARE - centery; painter.drawRect(x0,y0,SQUARE,SQUARE); }
         }
     }
     painter.setPen(QPen(QColor(0,0,0)));
@@ -122,15 +120,19 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawEllipse(x-2,y-2,4,4);
     }
 
+    // Health bar
+
+    if(player != NULL) {
+        painter.setBrush(QBrush(QColor(255,0,0)));
+        painter.drawRect(10, 5, 100*player->health, 5);
+    }
 }
 
 
-void RenderArea::draw(double x, double y) {
-    centerx=(x)*SQUARE;
-    centery=(y)*SQUARE;
+void RenderArea::draw(Player* player) {
+    //qDebug()<<"Health: "<<player->health;
+    this->player = player;
+    centerx=player->x*SQUARE;
+    centery=player->y*SQUARE;
     update();
 }
-
-
-
-
