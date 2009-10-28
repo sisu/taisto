@@ -1,10 +1,10 @@
 #include <QtGui>
 #include "renderarea.h"
 #include "window.h"
-Window::Window()
+Window::Window(Engine& engine)
 {      
 	setFixedSize(600,600);
-	renderArea = new RenderArea;
+	renderArea = new RenderArea(engine);
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->addWidget(renderArea);
 	setLayout(layout);
@@ -12,8 +12,8 @@ Window::Window()
 
 }
 
-void Window::draw(double x, double y, QList<Object> & players, QList<Object>& bots) {
-	renderArea->draw(x, y, players,bots);
+void Window::draw(double x, double y) {
+	renderArea->draw(x, y);
 	//"Piirrä"
 }
 

@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game(): conn(&player, engine.area), player(0,0,0,0,0) {
+Game::Game(): conn(&player, engine.area), player(0,0,0,0,0), window(engine) {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(40);
@@ -26,7 +26,7 @@ void Game::start() {
 void Game::go() {
 	conn.update(engine);
     engine.go();
-    window.draw(player.x,player.y,engine.players,engine.bots);
+    window.draw(player.x,player.y);
 	conn.sendStatus();
 
 

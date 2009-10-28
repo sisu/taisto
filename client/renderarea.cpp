@@ -2,9 +2,8 @@
 #include "renderarea.h"
 #define RADIUS 20
 #define SQUARE 10
-RenderArea::RenderArea(QWidget *parent): QWidget(parent)
+RenderArea::RenderArea(Engine& _engine,QWidget* parent): engine(_engine), QWidget(parent)
 {
-
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
 }
@@ -17,15 +16,15 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     painter.setRenderHint(painter.Antialiasing,true);
     //painter.setPen(Qt::NoPen);
     painter.setBrush(QBrush(QColor(90,240,90)));
-    for(int i=0;i<players.size();i++) {
-		double px = players[i].x * SQUARE, py = players[i].y * SQUARE;
+    for(int i=0;i<engine.players.size();i++) {
+		double px = engine.players[i].x * SQUARE, py = engine.players[i].y * SQUARE;
         double x=width/2 - centerx + px;
         double y=height/2 - centery + py;
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(90,240,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
             painter.setBrush(QBrush(QColor(190,140,90)));
-            painter.drawEllipse(x+(RADIUS-8)*sin(players[i].direction),y+(RADIUS-8)*cos(players[i].direction),3,3);
+            painter.drawEllipse(x+(RADIUS-8)*sin(engine.players[i].direction),y+(RADIUS-8)*cos(engine.players[i].direction),3,3);
         }
 
     }
@@ -44,11 +43,9 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 }
 
 
-void RenderArea::draw(double x, double y, QList<Object>& _players, QList<Object>& _bots) {
-    centerx=x*SQUARE;
-    centery=y*SQUARE;
-    players=_players;
-    bots=_bots;
+void RenderArea::draw(double x, double y) {
+    centerx=(x)*SQUARE;
+    centery=(y)*SQUARE;
     update();
 }
 
