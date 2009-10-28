@@ -16,12 +16,7 @@ void Game::start(QString ip, int port) {
     
     // Luo verkko
     
-<<<<<<< HEAD
-    conn.connect("127.0.0.1");
-=======
     conn.connect(ip,port);
-    
->>>>>>> c19e3efd9e5306e391fefb4aae3d5bf61cbd109d
 
     //Luo ikkuna + piirtopinta
     window.show();
