@@ -50,9 +50,7 @@ void Server::update()
         bots.append(b);
     }
 
-	{
-	QByteArray stateMsg;
-	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
+	stateMsg.clear();
     stream << 1 + 4 + bots.size()*(8+8+8+4+4+4);
     stream << MSG_ENEMY << bots.size();
 
@@ -62,7 +60,6 @@ void Server::update()
         stream << bot.x << bot.y << bot.angle << bot.moveForward << bot.moveSide << bot.turn;
     }
 	sendToAll(stateMsg);
-	}
 
 
 	for(int i=0; i<bullets.size(); ) {
@@ -72,6 +69,13 @@ void Server::update()
 			bullets[i] = bullets.back();
 			bullets.pop_back();
 		} else ++i;
+	}
+
+
+	// Handle spawn changes
+	for(int i=0; i<players.size(); ++i) {
+		if (players[i].y >= area.startPlaces[curSpawn+1])
+			++curSpawn;
 	}
 }
 
