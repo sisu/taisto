@@ -2,7 +2,7 @@
 #include "renderarea.h"
 #define RADIUS 20
 #define SQUARE 10
-RenderArea::RenderArea(Engine& _engine,QWidget* parent): engine(_engine), QWidget(parent)
+RenderArea::RenderArea(Engine& _engine,QWidget* parent): QWidget(parent), engine(_engine)
 {
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
