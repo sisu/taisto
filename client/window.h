@@ -12,6 +12,7 @@ class Window : public QWidget
         Window(Engine& engine);
         void keyPressEvent(QKeyEvent*);
         void keyReleaseEvent(QKeyEvent*);
+        void updatePlayerMovement(Object&);
     public slots:
         void draw(double, double);
     private:
