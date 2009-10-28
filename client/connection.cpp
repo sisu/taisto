@@ -116,8 +116,8 @@ void Connection::readEnemy(QDataStream& s) {
 	int p;
 	s>>p;
 	for(int i=0; i<p; ++i) {
-		Object pl;
-		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
+		Player pl;
+		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health;
 //		qDebug()<<"aaa"<<pl.x<<pl.y;
 		engine.bots.append(pl);
 	}

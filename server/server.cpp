@@ -92,14 +92,16 @@ void Server::updateBots()
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
-    stream << 1 + 4 + bots.size()*(8+8+8+4+4+4);
+    stream << 1 + 4 + bots.size()*(8+8+8+4+4+4+8);
     stream << MSG_ENEMY << bots.size();
 
     for(int i = 0; i < bots.size(); ++i) {
         Bot& bot = bots[i];
 		bot.runAI(*this);
         bot.updatePhysics(*this);
-        stream << bot.x << bot.y << bot.angle << bot.moveForward << bot.moveSide << bot.turn;
+        stream << bot.x << bot.y << bot.angle << bot.moveForward <<
+            bot.moveSide << bot.turn << bot.health;
+
 		int t = curT.elapsed();
 		if (bot.shooting && t>bot.lastShoot+200) {
 			bot.shoot(1, *this);

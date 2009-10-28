@@ -5,6 +5,7 @@
 #include "object.h"
 #include "area.h"
 #include "bullet.h"
+#include "player.h"
 #include "item.h"
 
 const double FRAMETIME=0.040;
@@ -14,8 +15,8 @@ class Engine : public QObject {
         Engine();
         void go();
 
-        QList<Object> players;
-        QList<Object> bots;
+        QList<Player> players;
+        QList<Player> bots;
         QList<Item> items;
         QMap<int,Bullet> bullets;
         

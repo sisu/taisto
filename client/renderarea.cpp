@@ -45,7 +45,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 
     //Boxes
-                painter.setPen(Qt::NoPen);
+    painter.setPen(Qt::NoPen);
 
     Area& a = engine.area;
     double w2=width/2, h2=height/2;
@@ -95,6 +95,10 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         double px = engine.bots[i].x * SQUARE, py = engine.bots[i].y * SQUARE;
         double x=width/2 - centerx + px;
         double y=height/2 - centery + py;
+
+        painter.setBrush(QBrush(QColor(255,0,0)));
+        painter.drawRect(x-5, y+5, 10*engine.bots[i].health, 3);
+
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(190,140,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
