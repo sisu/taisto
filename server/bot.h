@@ -12,8 +12,13 @@
 class Server;
 
 class Bot : public Unit {
-    public:
-        Bot(double xx, double yy): Unit(xx,yy) {}
+public:
+	Bot(double xx, double yy): Unit(xx,yy) {shooting=lastShoot=0;}
+
+	void runAI(Server& s);
+
+	bool shooting;
+	int lastShoot;
 };
 
 #endif
