@@ -43,6 +43,9 @@ void Connection::update()
 			case MSG_ENEMY:
 			    readEnemy(s);
 			    break;
+			case MSG_ITEM:
+			    readItem(s);
+			    break;
 			default:
 				qDebug()<<type;
 				abort();
@@ -73,10 +76,10 @@ void Connection::readState(QDataStream& s)
 {
 	engine.players.clear();
 
-	int pl;
-	s>>pl;
+	int p;
+	s>>p;
 //	qDebug()<<"players"<<pl;
-	for(int i=0; i<pl; ++i) {
+	for(int i=0; i<p; ++i) {
 		Player pl;
 		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health;
 //		qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
@@ -107,15 +110,28 @@ void Connection::readHit(QDataStream& s)
 void Connection::readEnemy(QDataStream& s) {
 	engine.bots.clear();
 
-	int pl;
-	s>>pl;
-	for(int i=0; i<pl; ++i) {
+	int p;
+	s>>p;
+	for(int i=0; i<p; ++i) {
 		Object pl;
 		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
 //		qDebug()<<"aaa"<<pl.x<<pl.y;
 		engine.bots.append(pl);
 	}
 }
+
+void Connection::readItem(QDataStream& s) {
+    engine.items.clear();
+
+	int p;
+	s>>p;
+	for(int i=0; i<p; ++i) {
+		Item it;
+		s>>it.x>>it.y>>it.itemNo;
+		engine.items.append(it);
+	}
+}
+
 void Connection::sendStatus()
 {
 //	qDebug()<<"send"<<player->x<<player->y<<player->my<<player->mx;

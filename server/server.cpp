@@ -68,6 +68,16 @@ void Server::update()
     }
 	sendToAll(stateMsg);
 
+	stateMsg.clear();
+    stream << 1 + 4 + items.size()*(8+8+4);
+    stream << MSG_ITEM << items.size();
+
+    for(int i = 0; i < items.size(); ++i) {
+        Item& it = items[i];
+        stream << it.x << it.y << it.itemNo;
+    }
+	sendToAll(stateMsg);
+
 	QList<Unit*> common;
 	for(int i=0; i<players.size(); ++i)
 		common.append(&players[i]);

@@ -11,6 +11,7 @@
 #include "area.h"
 #include "bullet.h"
 #include "bot.h"
+#include "item.h"
 
 class Server: public QTcpServer {
 	Q_OBJECT
@@ -23,6 +24,7 @@ public:
 	Area area;
 	QList<Bullet> bullets;
 	QList<Player> players;
+	QList<Item> items;
 	QList<Bot> bots;
 	int bulletID;
     void hitBot(Bot& b, int weapon);
