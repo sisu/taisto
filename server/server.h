@@ -23,7 +23,7 @@ private:
 	QTimer timer;
 	int nextID;
 
-	void sendInitialInfo(QTcpSocket* sock);
+	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendToAll(QByteArray msg);
 };
 

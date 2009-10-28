@@ -40,6 +40,7 @@ void Connection::readInitial(QDataStream& s)
 			area.data.append(a);
 		}
 	}
+	s>>player->id;
 }
 void Connection::readState(QDataStream& s, Engine& e)
 {

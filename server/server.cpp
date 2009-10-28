@@ -13,11 +13,11 @@ void Server::update()
 	while(hasPendingConnections()) {
 		qDebug()<<"got connection";
 		QTcpSocket* sock = nextPendingConnection();
-		sendInitialInfo(sock);
 		QPair<int,int> p = area.getSpawnPoint(curSpawn);
 //		qDebug()<<"spawn"<<p.first<<p.second;
 		Player pl(sock, p.first+.5, p.second+.5, nextID++);
 		players.append(pl);
+		sendInitialInfo(sock, pl.id);
 	}
 	for(int i=0; i<players.size(); ) {
 		if (players[i].socket->state() != QAbstractSocket::ConnectedState)
@@ -39,7 +39,7 @@ void Server::update()
 	sendToAll(stateMsg);
 }
 
-void Server::sendInitialInfo(QTcpSocket* sock)
+void Server::sendInitialInfo(QTcpSocket* sock, int id)
 {
 	QDataStream s(sock);
 	s<<MSG_INITIAL;
@@ -50,6 +50,7 @@ void Server::sendInitialInfo(QTcpSocket* sock)
 	for(int i=0; i<area.parts.size(); ++i)
 		for(int j=0; j<area.parts[i].data.size(); ++j)
 			s<<area.parts[i].data[j];
+	s<<id;
 	sock->flush();
 }
 
