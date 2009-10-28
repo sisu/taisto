@@ -39,6 +39,9 @@ void Connection::update()
 			case MSG_HIT:
 				readHit(s);
 				break;
+			case MSG_ENEMY:
+			    readEnemy(s);
+			    break;
 		}
 	}
 }
@@ -95,6 +98,17 @@ void Connection::readHit(QDataStream& s)
 	int id;
 	s>>id;
 	engine.bullets.remove(id);
+}
+void Connection::readEnemy(QDataStream& s) {
+	engine.bots.clear();
+
+	int pl;
+	s>>pl;
+	for(int i=0; i<pl; ++i) {
+		Object pl;
+		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn;
+		engine.bots.append(pl);
+	}
 }
 void Connection::sendStatus()
 {

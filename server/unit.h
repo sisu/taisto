@@ -20,6 +20,8 @@ class Unit {
 
         double x,y,angle;
         int moveForward, moveSide, turn;
+        void shoot(int weapon, Server& serv);
+        void updatePhysics(Server&);
 		double health;
 
     protected:

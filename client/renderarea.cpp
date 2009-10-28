@@ -91,6 +91,24 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         }
 
     }
+
+    for(int i=0;i<engine.bots.size();i++) {
+        double px = engine.bots[i].x * SQUARE, py = engine.bots[i].y * SQUARE;
+        double x=width/2 - centerx + px;
+        double y=height/2 - centery + py;
+        if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
+            painter.setBrush(QBrush(QColor(190,140,90)));
+            painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
+            painter.setBrush(QBrush(QColor(90,240,90)));
+			double a=engine.bots[i].direction;
+            painter.drawEllipse(
+					x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
+					y+(RADIUS-EYE_DIST-EYE_SIZE)*-sin(a)-EYE_SIZE,
+					2*EYE_SIZE,
+					2*EYE_SIZE);
+        }
+
+    }
     //Bullets
     QMap<int,Bullet>::Iterator it;
     painter.setBrush(QBrush(QColor(220,40,35)));

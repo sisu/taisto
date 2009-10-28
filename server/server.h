@@ -9,6 +9,7 @@
 #include "player.h"
 #include "area.h"
 #include "bullet.h"
+#include "bot.h"
 
 class Server: public QTcpServer {
 	Q_OBJECT
@@ -21,13 +22,13 @@ public:
 	Area area;
 	QList<Bullet> bullets;
 	QList<Player> players;
+	QList<Bot> bots;
 	int bulletID;
 
 public slots:
 	void update();
 
 private:
-	//QList<Bot> bots;
 	int curSpawn;
 	QTimer timer;
 	int nextID;
