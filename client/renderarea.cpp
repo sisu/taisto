@@ -15,7 +15,23 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     QPainter painter(this);
     painter.setRenderHint(painter.Antialiasing,true);
     //painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(QColor(90,240,90)));
+
+    //Borders
+    
+    if(centerx-width/2<0) {
+        painter.setBrush(QBrush(QColor(40,40,40)));
+        double over=width/2-centerx;
+        painter.drawRect(0,0,(int)(over),(int)(height));
+    }
+    if(centerx+width/2>width) {
+        painter.setBrush(QBrush(QColor(40,40,40)));
+        double over=centerx+width/2-width;;
+        painter.drawRect(width-over,height,(int)(over),(int)(height));
+    }
+    
+
+
+    //Player
     for(int i=0;i<engine.players.size();i++) {
 		double px = engine.players[i].x * SQUARE, py = engine.players[i].y * SQUARE;
         double x=width/2 - centerx + px;
@@ -25,9 +41,13 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
             painter.setBrush(QBrush(QColor(190,140,90)));
             painter.drawEllipse(x+(RADIUS-8)*sin(engine.players[i].direction),y+(RADIUS-8)*cos(engine.players[i].direction),3,3);
-        }
+       }
 
     }
+    
+
+    
+
 #if 0
     for(int i=0;i<bots.size();i++) {
         double x=width/2 + centerx - players[i].x;
