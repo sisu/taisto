@@ -45,22 +45,33 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 
     //Boxes
+                painter.setPen(Qt::NoPen);
 
-	Area& a = engine.area;
-	double w2=width/2, h2=height/2;
-	int startx = max(0, (centerx-w2)/SQUARE);
-	int endx = min(a.w-1, (centerx+w2)/SQUARE);
-	int starty = max(0, (centery-h2)/SQUARE);
-	int endy = min(a.h()-1, (centery+h2)/SQUARE);
-	for(int y=starty; y<=endy; ++y) {
-		for(int x=startx; x<=endx; ++x) {
-			if (a.data[y*a.w+x]) {
-				double x0 = w2 + x*SQUARE - centerx;
-				double y0 = h2 + y*SQUARE - centery;
-				painter.drawRect(x0, y0, SQUARE, SQUARE);
-			}
-		}
-	}
+    Area& a = engine.area;
+    double w2=width/2, h2=height/2;
+    int startx = max(0, (centerx-w2)/SQUARE);
+    int endx = min(a.w-1, (centerx+w2)/SQUARE);
+    int starty = max(0, (centery-h2)/SQUARE);
+    int endy = min(a.h()-1, (centery+h2)/SQUARE);
+    for(int y=starty; y<=endy; ++y) {
+        for(int x=startx; x<=endx; ++x) {
+            if (a.data[y*a.w+x]) {
+                painter.setBrush(QBrush(QColor(70,40,40)));
+//                painter.setPen(QPen(QColor(0,0,0)));
+
+                double x0 = w2 + x*SQUARE - centerx;
+                double y0 = h2 + y*SQUARE - centery;
+                painter.drawRect(x0, y0, SQUARE, SQUARE);
+            } else if(y%a.part<a.spawn) {
+                painter.setPen(Qt::NoPen);
+                painter.setBrush(QBrush(QColor(230,250,230)));
+                double x0 = w2 + x*SQUARE - centerx;
+                double y0 = h2 + y*SQUARE - centery;
+                painter.drawRect(x0,y0,SQUARE,SQUARE);
+            }
+        }
+    }
+    painter.setPen(QPen(QColor(0,0,0)));
 
     //Player
     for(int i=0;i<engine.players.size();i++) {
@@ -71,12 +82,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             painter.setBrush(QBrush(QColor(90,240,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
             painter.setBrush(QBrush(QColor(190,140,90)));
-			double a=engine.players[i].direction;
+            double a=engine.players[i].direction;
             painter.drawEllipse(
-					x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
-					y+(RADIUS-EYE_DIST-EYE_SIZE)*-sin(a)-EYE_SIZE,
-					2*EYE_SIZE,
-					2*EYE_SIZE);
+                    x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
+                    y+(RADIUS-EYE_DIST-EYE_SIZE)*-sin(a)-EYE_SIZE,
+                    2*EYE_SIZE,
+                    2*EYE_SIZE);
         }
 
     }
