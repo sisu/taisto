@@ -39,6 +39,15 @@ void Server::update()
 	}
 
 	sendToAll(stateMsg);
+
+
+	for(int i=0; i<bullets.size(); ) {
+		if (bullets[i].update(players, area)) {
+			qDebug()<<"removing bullet"<<bullets[i].x<<bullets[i].y;
+			bullets[i] = bullets.back();
+			bullets.pop_back();
+		} else ++i;
+	}
 }
 
 void Server::sendInitialInfo(QTcpSocket* sock, int id)

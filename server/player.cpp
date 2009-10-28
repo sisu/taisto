@@ -4,14 +4,11 @@
 #include "server.h"
 #include <cmath>
 
-const double FRAME_TIME = 1.0/FPS;
-
 inline void Player::fix(double px, double py, double d)
 {
 	double dx=x-px, dy=y-py;
 	double r2 = dx*dx + dy*dy;
-	if (r2 < d*d) {
-		double a = d / sqrt(r2);
+	if (r2 < d*d) { double a = d / sqrt(r2);
 		x = px + dx*a;
 		y = py + dy*a;
 	}
@@ -79,14 +76,22 @@ void Player::readShoot(QDataStream& s, Server& serv)
 	int weapon;
 	s>>weapon;
 
+	shoot(weapon, serv);
+}
+
+void Player::shoot(int weapon, Server& serv)
+{
 	double a = angle + .1*(rndf()-.5);
-	double dx = sin(a);
-	double dy = -cos(a);
+	double dx = cos(a);
+	double dy = -sin(a);
 	double px = x + dx*PLAYER_RADIUS*1.5;
 	double py = y + dy*PLAYER_RADIUS*1.5;
 	double v = 20;
 	double vx = dx * v;
 	double vy = dy * v;
+
+	Bullet bullet(0,weapon,px,py,vx,vy);
+	serv.bullets.append(bullet);
 
 	QByteArray msg;
 	QDataStream os(&msg, QIODevice::WriteOnly);

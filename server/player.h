@@ -28,6 +28,7 @@ private:
 	void readState(QDataStream& s);
 	void readShoot(QDataStream& s, Server& serv);
 	void fix(double px, double py, double d=PLAYER_RADIUS);
+	void shoot(int weapon, Server& s);
 
 	int packetSize;
 };
