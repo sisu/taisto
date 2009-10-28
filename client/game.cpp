@@ -26,6 +26,26 @@ void Game::start() {
 void Game::go() {
 	conn.update(engine);
     engine.go();
+
+    for(int i = 0; i < window.keysHeld.size(); ++i) {
+        switch(window.keysHeld[i]) {
+            case Qt::Key_Left:
+                player.mx = -1;
+                break;
+            case Qt::Key_Right:
+                player.mx = 1;
+                break;
+            case Qt::Key_Down:
+                player.mx = -1;
+                break;
+            case Qt::Key_Up:
+                player.mx = 1;
+                break;
+            default:
+                break;
+        }
+    }
+
     window.draw(player.x,player.y,engine.players,engine.bots);
 	conn.sendStatus();
 
