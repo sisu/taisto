@@ -6,7 +6,7 @@
 Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 {
 	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
-	timer.start(FPS);
+	timer.start(1000/FPS);
 }
 
 void Server::update()
