@@ -19,7 +19,7 @@ inline double dist(double ax, double ay, double bx, double by, double px, double
 double distToPlayer(double x, double y, double px, double py, double vx, double vy)
 {
 	double ax=px-x, ay=py-y;
-	return (ax*vx + ay*vy) / (vy*vy + vx*vx);
+	return ax*vx + ay*vy;
 }
 
 bool Bullet::update(QList<Player> plrs, const Area& a)
@@ -35,7 +35,7 @@ bool Bullet::update(QList<Player> plrs, const Area& a)
 	for(int i=0; i<plrs.size(); ++i) {
 		double px = plrs[i].x, py = plrs[i].y;
 		double d;
-		if (dist(x,y,px,py)<nDist && (d=distToPlayer(x,y,px,py,vx0,vy0)) < PLAYER_RADIUS) {
+		if ((d=distToPlayer(x,y,px,py,vx0,vy0))<nDist && dist(x,y,ex,ey,px,py) < PLAYER_RADIUS) {
 			nearest = i;
 			nDist = d;
 		}
@@ -46,6 +46,9 @@ bool Bullet::update(QList<Player> plrs, const Area& a)
 	double dx = vx/v * step;
 	double dy = vy/v * step;
 	for(int i=0; i<count; ++i) {
+		if ((i+1)*step > nDist) {
+			return 1;
+		}
 		x += dx;
 		y += dy;
 		int ix=x, iy=y;
