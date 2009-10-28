@@ -1,4 +1,5 @@
 #include "bullet.h"
+#include "server.h"
 #include <QList>
 #include <cmath>
 
@@ -22,8 +23,11 @@ double distToPlayer(double x, double y, double px, double py, double vx, double 
 	return ax*vx + ay*vy;
 }
 
-bool Bullet::update(QList<Player> plrs, const Area& a)
+bool Bullet::update(Server& s)
+	//QList<Player> plrs, const Area& a)
 {
+	QList<Player>& plrs = s.players;
+	Area& a = s.area;
 	double v = sqrt(vx*vx + vy*vy);
 	double len = v * FRAME_TIME;
 
@@ -47,6 +51,7 @@ bool Bullet::update(QList<Player> plrs, const Area& a)
 	double dy = vy/v * step;
 	for(int i=0; i<count; ++i) {
 		if ((i+1)*step > nDist) {
+			s.hitPlayer(plrs[nearest], type);
 			return 1;
 		}
 		x += dx;

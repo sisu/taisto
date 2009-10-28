@@ -1,4 +1,5 @@
 #include <QDataStream>
+#include <cmath>
 #include "server.h"
 #include "messages.h"
 #include "constants.h"
@@ -16,9 +17,8 @@ void Server::update()
 	while(hasPendingConnections()) {
 		qDebug()<<"got connection";
 		QTcpSocket* sock = nextPendingConnection();
-		QPair<int,int> p = area.getSpawnPoint(curSpawn);
-//		qDebug()<<"spawn"<<p.first<<p.second;
-		Player pl(sock, p.first+.5, p.second+.5, nextID++);
+		Player pl(sock,0,0,nextID++);
+		spawnPlayer(pl);
 		players.append(pl);
 		sendInitialInfo(sock, pl.id);
 	}
@@ -31,13 +31,13 @@ void Server::update()
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
-	stream << 1 + 4 + players.size()*(4+8+8+8+4+4+4);
+	stream << 1 + 4 + players.size()*(4+8+8+8+4+4+4+8);
 	stream << MSG_STATE << players.size();
 	for(int i=0; i<players.size(); ++i) {
 		Player& pl = players[i];
 		pl.update(*this);
 //		qDebug()<<"pl1"<<pl.x<<pl.y;
-		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn;
+		stream<<pl.id<<pl.x<<pl.y<<pl.angle<<pl.moveForward<<pl.moveSide<<pl.turn<<pl.health;
 	}
 
 	// Bot stuff
@@ -61,7 +61,7 @@ void Server::update()
 
 
 	for(int i=0; i<bullets.size(); ) {
-		if (bullets[i].update(players, area)) {
+		if (bullets[i].update(*this)) {
 			qDebug()<<"removing bullet"<<bullets[i].x<<bullets[i].y;
 			sendHit(bullets[i]);
 			bullets[i] = bullets.back();
@@ -73,12 +73,13 @@ void Server::update()
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
 {
 	QDataStream s(sock);
-	s << 1 + 4+4 + area.w*area.h*4 + 4;
+	s << 1 + 4+4 + area.w*area.h*4 + 4+4 + 4;
 	s<<MSG_INITIAL;
 	s<<area.w<<area.h;
 	for(int i=0; i<area.parts.size(); ++i)
 		for(int j=0; j<area.parts[i].data.size(); ++j)
 			s<<area.parts[i].data[j];
+	s<<area.parts[0].data.size()/area.w<<area.parts[0].spawnH;
 	s<<id;
 	qDebug()<<"sent player id"<<id;
 	sock->flush();
@@ -101,4 +102,22 @@ void Server::sendHit(const Bullet& b)
 	s << MSG_HIT << b.id;
 
 	sendToAll(msg);
+}
+
+double damages[] = {0,0.1};
+void Server::hitPlayer(Player& p, int weapon)
+{
+	p.health -= damages[weapon];
+	qDebug()<<"hit"<<p.health;
+	if (p.health < 0) {
+		spawnPlayer(p);
+	}
+}
+void Server::spawnPlayer(Player& p)
+{
+	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
+	p.x = spawn.first+.5;
+	p.y = spawn.second+.5;
+	p.health = 1;
+	p.angle = -M_PI/2;
 }
