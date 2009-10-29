@@ -312,10 +312,15 @@ void RenderArea::drawExplosions(QPainter& painter)
 			double xx = x + start*vx/v;
 			double yy = y + start*vy/v;
 			QPointF p = getWallHitPoint(x, y, xx, yy, engine.area);
+#if 0
 			double r = .5*rndf()+.5;
 			double g = r * rndf();
 			double b = r*.5;
-			particles.append(Particle(p.x(),p.y(),vx,vy,QColor::fromRgbF(r,g,b), start));
+			QColor c = QColor::fromRgbF(r,g,b);
+#else
+			QColor c = QColor::fromHsvF(rndf()/6, 1, 1);
+#endif
+			particles.append(Particle(p.x(),p.y(),vx,vy,c, start));
 		}
 	}
 	engine.explosions.clear();
