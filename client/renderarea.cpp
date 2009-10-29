@@ -1,6 +1,7 @@
 #include <QtGui>
 #include "renderarea.h"
 #include "constants.h"
+#include "physics.h"
 #ifndef max
     #define max( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #endif
@@ -88,7 +89,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             ptext.end();
 
             if(x0>0) {
-        qDebug()<<"MOI";
+//        qDebug()<<"MOI";
                 painter.drawPixmap(x0-text.width()-5,y0+y1-text.height(),text);
             }
             if(x0+x1<width) {
@@ -225,8 +226,13 @@ void RenderArea::drawBar(QPainter& painter)
     // Health bar
 
     if(player != NULL) {
+        painter.setBrush(QBrush(QColor(145,0,0)));
+        painter.drawRect(10, statusBarY + 6, 100, statusBarHeight-12);
         painter.setBrush(QBrush(QColor(255,0,0)));
-        painter.drawRect(10, statusBarY + 7, 100*player->health, 6);
+        painter.drawRect(10, statusBarY + 6, 100*player->health, statusBarHeight-12);
+/*        painter.setBrush(QBrush(QColor(180,170,230)));
+        painter.drawRect(10, statusBarY + 10, min(100,engine.bulletCounts[player->weapon]), 6);
+*/
     }
 
     // Weapon boxes
@@ -247,7 +253,7 @@ void RenderArea::drawBar(QPainter& painter)
 
         QFont newFont(painter.font());
         newFont.setPixelSize(10);
-        painter.setFont(newFont);
+        painter.setFont(QFont("Verdana",10,QFont::Bold));
         painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
     }
 
@@ -257,8 +263,12 @@ void RenderArea::drawBar(QPainter& painter)
     weaponNames << "Bead Gun" << "Shotgun" << "Machine Gun" << "Electrogun" << "Rocket Launcher";
 
     painter.setBrush(QBrush(QColor(60,60,60))); 
+    QString weaponstr;
+    if(index!=0) weaponstr=weaponNames[index]+" ("+QString::number(engine.bulletCounts[index+1])+")";
+    else weaponstr=weaponNames[index];
+    
     painter.drawText(QPoint(150 + sizeof(weaponColors)/sizeof(weaponColors[0]) * 25 + 10, statusBarY + 14),
-            weaponNames[index]);
+            weaponstr);
 }
 
 int RenderArea::distance(QPoint a, QPoint b) {
@@ -426,10 +436,16 @@ void RenderArea::drawExplosions(QPainter& painter)
 			double start=rndf() * ROCKET_RADIUS;
 			double xx = x + start*vx/v;
 			double yy = y + start*vy/v;
+			QPointF p = getWallHitPoint(x, y, xx, yy, engine.area);
+#if 0
 			double r = .5*rndf()+.5;
 			double g = r * rndf();
 			double b = r*.5;
-			particles.append(Particle(xx,yy,vx,vy,QColor::fromRgbF(r,g,b), start));
+			QColor c = QColor::fromRgbF(r,g,b);
+#else
+			QColor c = QColor::fromHsvF(rndf()/6, 1, 1);
+#endif
+			particles.append(Particle(p.x(),p.y(),vx,vy,c, start));
 		}
 	}
 	engine.explosions.clear();
@@ -441,7 +457,7 @@ void RenderArea::drawExplosions(QPainter& painter)
 	if (particles.size()) qDebug()<<particles.size();
 	for(int i=0; i<particles.size(); ) {
 		const double tt=0.2;
-		if (particles[i].update() || particles[i].time>tt) {
+		if (particles[i].update(engine.area) || particles[i].time>tt) {
 			particles[i]=particles.back();
 			particles.pop_back();
 		} else {

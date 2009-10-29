@@ -28,6 +28,8 @@ public:
 	QList<Item> items;
 	QList<Bot> bots;
 	int bulletID;
+	int curSpawn;
+
     void hitBot(Bot& b, int weapon);
 	void addBullet(int w, double x, double y, double dx, double dy, double v);
 
@@ -35,7 +37,6 @@ public slots:
 	void update();
 
 private:
-	int curSpawn;
 	QTimer timer;
 	int nextID;
 	QTime curT;
@@ -45,13 +46,14 @@ private:
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);
 	void spawnPlayer(Unit& p, bool bot=0);
-	void createBot(int place);
-	void createItem();
+	void createBot(int place, int w);
+	void createItem(int type);
 	void updatePlayers();
 	void updateBots();
 	void updateBullets();
 	void updateItems();
-	void spawnInitial();
+	void spawnStuff(bool next=0);
+	void rocketDamage(Unit& u, const Bullet& b);
 };
 
 #endif

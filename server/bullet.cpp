@@ -81,14 +81,15 @@ bool Bullet::update(Server& s, QList<Unit*>& plrs)
 		ex = x + vx0*nDist;
 		ey = y + vy0*nDist;
 	}
-	QPair<double,double> p = getWallHitPoint(x,y,ex,ey,s.area);
-	x=p.first;
-	y=p.second;
+	QPointF p = getWallHitPoint(x,y,ex,ey,s.area);
+	x=p.x(), y=p.y();
 	if (nDist<len && fabs(x-ex)<1e-3 && fabs(y-ey)<1e-3) {
 		s.bulletHit(plrs[nearest], *this);
 		return 1;
 	}
 	if (fabs(x-ex)>1e-3 || fabs(x-ex)>1e-3) {
+		x -= 1e-3*vx0;
+		y -= 1e-3*vy0;
 		s.bulletHit(0, *this);
 		return 1;
 	}

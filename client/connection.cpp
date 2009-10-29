@@ -145,6 +145,7 @@ void Connection::readItem(QDataStream& s) {
 		engine.items.append(it);
 	}
 }
+const int boxSizes[20] = {0,15,40,1,1};
 void Connection::readGet(QDataStream& s) {
 	int item;
 	s>>item;

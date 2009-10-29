@@ -9,6 +9,7 @@ void Bot::runAI(Server& s, int t)
 {
 	shooting=0;
 	moveSide=0;
+
 //	turn=moveForward=moveSide=0;
 	double vx=cos(angle), vy=-sin(angle);
 	for(int i=0; i<s.players.size(); ++i) {
@@ -32,13 +33,36 @@ void Bot::runAI(Server& s, int t)
 		}
 	}
 	if (t-lastHitT < 500) {
+		// FIXME: choose direction
 		moveForward=0;
 		turn=1;
 	}
 
 	if (t<nextT) return;
-	nextT = t+300+rand()%800;
+
+	double yhigh = s.area.startPlaces[s.curSpawn+1];
+	double ylow = s.area.startPlaces[s.curSpawn];
+
+	if (y > yhigh) {
+		moveForward = rand()%8 != 0;
+		turn=0;
+		if (vx<0 && rand()%4!=0) turn=-1;
+		else if (vx>0 && rand()%8!=0) turn=1;
+		else turn = rand()%4-1;
+		nextT = t+400;
+		return;
+	}
+	if (y < ylow) {
+		moveForward = rand()%8 != 0;
+		turn=0;
+		if (vx<0 && rand()%8!=0) turn=1;
+		else if (vx>0 && rand()%8!=0) turn=-1;
+		else turn = rand()%3-1;
+		nextT = t+400;
+		return;
+	}
 
 	moveForward=rand()%2;
 	turn = rand()%3-1;
+	nextT = t+300+rand()%800;
 }
