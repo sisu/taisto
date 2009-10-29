@@ -9,8 +9,10 @@
 #include "object.h"
 #include "engine.h"
 #include "player.h"
+#include <QtOpenGL>
 
-class RenderArea : public QWidget
+//class RenderArea : public QWidget
+class RenderArea : public QGLWidget
 {
     Q_OBJECT
 

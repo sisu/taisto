@@ -11,7 +11,8 @@
 #define RADIUS (PLAYER_RADIUS*SQUARE)
 const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
-RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
+RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QGL::SampleBuffers),parent), engine(_engine), player(NULL)
+//RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);

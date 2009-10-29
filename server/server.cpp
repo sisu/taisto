@@ -169,7 +169,12 @@ void Server::updateBullets()
 		} else ++i;
 	}
 	for(int i=0; i<players.size(); ++i)
-		if (players[i].health<=0) spawnPlayer(players[i],0);
+		if (players[i].health<=0) {
+			char tmp[] = {0,0,0,1,MSG_DIE};
+			players[i].socket->write(tmp,5);
+			players[i].socket->flush();
+			spawnPlayer(players[i],0);
+		}
 	for(int i=0; i<bots.size(); ) {
 //		if (bots[i].health<=0) spawnPlayer(bots[i],1);
 		if (bots[i].health<=0) {

@@ -51,6 +51,9 @@ void Connection::update()
 			case MSG_GET:
 				readGet(s);
 				break;
+			case MSG_DIE:
+				for(int i=0; i<engine.bulletCounts.size(); ++i) engine.bulletCounts[i]=0;
+				break;
 			default:
 				qDebug()<<type;
 				abort();

@@ -5,7 +5,7 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += . ../server
-QT += network
+QT += network opengl
 
 # Input
 HEADERS += connection.h \
