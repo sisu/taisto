@@ -302,13 +302,18 @@ void RenderArea::drawExplosions(QPainter& painter)
 {
 	for(int i=0; i<engine.explosions.size(); ++i) {
 		double x=engine.explosions[i].x(), y=engine.explosions[i].y();
-		for(int j=0; j<100; ++j) {
+		for(int j=0; j<800; ++j) {
+			double q=30;
 			double vx=rndf()-.5, vy=rndf()-.5;
-//			double v = sqrt(vx*vx + vy*vy);
+			vx *= q, vy *= q;
+			double v = sqrt(vx*vx + vy*vy);
+			double start=rndf() * ROCKET_RADIUS;
+			double xx = x + start*vx/v;
+			double yy = y + start*vy/v;
 			double r = .5*rndf()+.5;
 			double g = r * rndf();
 			double b = r*.5;
-			particles.append(Particle(x,y,vx,vy,QColor::fromRgbF(r,g,b)));
+			particles.append(Particle(xx,yy,vx,vy,QColor::fromRgbF(r,g,b), start));
 		}
 	}
 	engine.explosions.clear();
@@ -319,15 +324,17 @@ void RenderArea::drawExplosions(QPainter& painter)
 	painter.setPen(Qt::NoPen);
 	if (particles.size()) qDebug()<<particles.size();
 	for(int i=0; i<particles.size(); ) {
-		if (particles[i].update()) {
+		const double tt=0.2;
+		if (particles[i].update() || particles[i].time>tt) {
 			particles[i]=particles.back();
 			particles.pop_back();
 		} else {
 			Particle& p = particles[i++];
-			p.color.setAlphaF(0.2);
+			double life = (tt-p.time)/tt;
+			p.color.setAlphaF(0.8*life);
 			painter.setBrush(QBrush(p.color));
-			double s=SQUARE*5;
-			painter.drawEllipse(midX + SQUARE*p.x - s + midX, midY + SQUARE*p.y - s + midY, 2*s, 2*s);
+			double s=SQUARE*.2;
+			painter.drawEllipse(midX + SQUARE*p.x - s, midY + SQUARE*p.y - s, 2*s, 2*s);
 		}
 	}
 }
