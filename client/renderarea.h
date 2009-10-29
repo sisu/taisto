@@ -13,7 +13,7 @@
 #include <QtOpenGL>
 
 //class RenderArea : public QWidget
-class RenderArea : public QWidget
+class RenderArea : public QGLWidget
 {
     Q_OBJECT
 
