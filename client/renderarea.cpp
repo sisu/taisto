@@ -29,6 +29,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 	painter.translate(0, height);
 	painter.scale(1,-1);
     
+    Area& a = engine.area;
+    double w2=width/2, h2=height/2;
+    int startx = max(0, (centerx-w2)/SQUARE);
+    int endx = min(a.w-1, (centerx+w2)/SQUARE);
+    int starty = max(0, (centery-h2)/SQUARE);
+    int endy = min(a.h()-1, (centery+h2)/SQUARE);
     
     //Borders
 	painter.setBrush(QBrush(QColor(40,40,40)));
@@ -43,31 +49,66 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
 
 
+    //Spawn areas
+    painter.setBrush(QBrush(QColor(230,250,30)));
+    int k = (starty/a.part)*a.part;
+    double x0=w2+startx*SQUARE-centerx;
+    double x1=(endx-startx+1)*SQUARE;
+    painter.setFont(QFont("Verdana", 50, QFont::Bold));
+    while(k<=endy) {
+        if(k+a.spawn>=starty) {
+            int k_index=(k/a.part)+1;
+            double y0=h2+k*SQUARE-centery;
+            double y1=a.spawn*SQUARE;
+            painter.drawRect(x0,y0,x1,y1);
+            
+            //Level number
+            QPixmap text(35,a.spawn*SQUARE);
+            text.fill(QColor(0,0,0,0));
+            QPainter ptext(&text);
+            ptext.translate(0, a.spawn*SQUARE);
+            ptext.scale(1,-1);
+            ptext.setFont(QFont("Verdana",50,QFont::Bold));
+            ptext.setPen(QPen(QColor(230,230,230)));
+            ptext.setBrush(QBrush(QColor(230,230,230)));
+            ptext.drawText(text.rect(),Qt::AlignVCenter,QString::number(k_index));
+            ptext.end();
+
+            if(x0>0) {
+                painter.drawPixmap(x0-text.width()-5,y0+y1-text.height(),text);
+            }
+            if(x0+x1<width) {
+                painter.drawPixmap(x0+x1+5,y0+y1-text.height(),text);
+
+            }
+
+
+
+        }
+        k+=a.part;
+    }
+
+
 
 
     //Boxes
     painter.setPen(Qt::NoPen);
 
-    Area& a = engine.area;
-    double w2=width/2, h2=height/2;
-    int startx = max(0, (centerx-w2)/SQUARE);
-    int endx = min(a.w-1, (centerx+w2)/SQUARE);
-    int starty = max(0, (centery-h2)/SQUARE);
-    int endy = min(a.h()-1, (centery+h2)/SQUARE);
     for(int y=starty; y<=endy; ++y) {
         for(int x=startx; x<=endx; ++x) {
             if (a.data[y*a.w+x]) {
                 painter.setBrush(QBrush(QColor(70,40,40)));
-//                painter.setPen(QPen(QColor(0,0,0)));
+                //                painter.setPen(QPen(QColor(0,0,0)));
 
                 double x0 = w2 + x*SQUARE - centerx;
                 double y0 = h2 + y*SQUARE - centery;
                 painter.drawRect(x0, y0, SQUARE, SQUARE);
-            } else if(y%a.part<a.spawn) {
-                painter.setPen(Qt::NoPen);
-                painter.setBrush(QBrush(QColor(230,250,230)));
-                double x0 = w2 + x*SQUARE - centerx;
-                double y0 = h2 + y*SQUARE - centery; painter.drawRect(x0,y0,SQUARE,SQUARE); }
+            } 
+            /*else if(y%a.part<a.spawn) {
+              painter.setPen(Qt::NoPen);
+              painter.setBrush(QBrush(QColor(230,250,230)));
+              double x0 = w2 + x*SQUARE - centerx;
+              double y0 = h2 + y*SQUARE - centery; painter.drawRect(x0,y0,SQUARE,SQUARE); }*/
         }
     }
     painter.setPen(QPen(QColor(0,0,0)));
@@ -92,26 +133,26 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
 
     for(int i=0;i<engine.bots.size();i++) {
-//		qDebug()<<"drawing bot"<<engine.bots[i].x<<engine.bots[i].y;
+        //		qDebug()<<"drawing bot"<<engine.bots[i].x<<engine.bots[i].y;
         double px = engine.bots[i].x * SQUARE, py = engine.bots[i].y * SQUARE;
         double x=width/2 - centerx + px;
         double y=height/2 - centery + py;
 
         painter.setBrush(QBrush(QColor(255,0,0)));
-//        painter.drawRect(x-5, y+5, 10*engine.bots[i].health, 3);
-		const double w = .7*SQUARE;
+        //        painter.drawRect(x-5, y+5, 10*engine.bots[i].health, 3);
+        const double w = .7*SQUARE;
         painter.drawRect(x-.5*w, y+5, w*engine.bots[i].health, SQUARE*.15);
 
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(190,140,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
             painter.setBrush(QBrush(QColor(90,240,90)));
-			double a=engine.bots[i].direction;
+            double a=engine.bots[i].direction;
             painter.drawEllipse(
-					x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
-					y+(RADIUS-EYE_DIST-EYE_SIZE)*-sin(a)-EYE_SIZE,
-					2*EYE_SIZE,
-					2*EYE_SIZE);
+                    x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
+                    y+(RADIUS-EYE_DIST-EYE_SIZE)*-sin(a)-EYE_SIZE,
+                    2*EYE_SIZE,
+                    2*EYE_SIZE);
         }
 
     }
@@ -145,7 +186,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 		painter.setBrush(QBrush(c));
 
 		double x = width/2 - centerx + it.x*SQUARE;
-		double y = width/2 - centery + it.y*SQUARE;
+		double y = height/2 - centery + it.y*SQUARE;
 		int s=5;
 		painter.drawRect(x-s,y-s,2*s,2*s);
 	}
