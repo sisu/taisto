@@ -2,6 +2,7 @@
 #define ENGINE_H
 #include <QObject>
 #include <QMap>
+#include <QPointF>
 #include "object.h"
 #include "area.h"
 #include "bullet.h"
@@ -20,6 +21,7 @@ class Engine : public QObject {
         QList<Item> items;
         QMap<int,Bullet> bullets;
 		QList<int> bulletCounts;
+		QList<QPointF> explosions;
         
 		Area area;
 };

@@ -117,6 +117,7 @@ void Connection::readHit(QDataStream& s)
 	double x,y;
 	s>>id>>x>>y;
 	if (engine.bullets.find(id)->weapon==5) {
+		engine.explosions.append(QPointF(x,y));
 	}
 	engine.bullets.remove(id);
 }

@@ -11,6 +11,15 @@
 #define RADIUS (PLAYER_RADIUS*SQUARE)
 const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
+
+const QColor weaponColors[] = {
+    QColor(60,220,155),
+    QColor(0,125,225),
+    QColor(225,185,0),
+    QColor(210,30,105),
+    QColor(230,120,100)
+};
+
 RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QGL::SampleBuffers),parent), engine(_engine), player(NULL)
 //RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
@@ -168,16 +177,6 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawEllipse(x-2,y-2,4,4);
     }
 
-    QList<QString> weaponNames;
-    weaponNames << "Bead Gun" << "Shotgun" << "Machine Gun" << "Electrogun" << "Rocket Launcher";
-
-    QList<QColor> weaponColors;
-    weaponColors.append(QColor(60,220,155));
-    weaponColors.append(QColor(0,125,225));
-    weaponColors.append(QColor(225,185,0));
-    weaponColors.append(QColor(210,30,105));
-    weaponColors.append(QColor(230,120,100));
-
 	//Items
 	for(int i=0; i<engine.items.size(); ++i) {
 		Item& it = engine.items[i];
@@ -197,7 +196,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     drawLightning(painter,lPoints);
     */
 
-	//Statusbar
+	drawExplosions(painter);
+	drawBar(painter);
+}
+void RenderArea::drawBar(QPainter& painter)
+{
+    painter.setPen(QPen(QColor(0,0,0)));
 	painter.resetTransform();
 
 	int statusBarHeight = 20;
@@ -218,7 +222,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
     int boxx = 150;
 
-    for(int i = 0; i < weaponColors.size(); ++i) {
+    for(int i = 0; i < int(sizeof(weaponColors)/sizeof(weaponColors[0])); ++i) {
         painter.setBrush(QBrush(weaponColors[i])); 
         
         if(player != NULL && player->weapon == i + 1) {
@@ -239,8 +243,11 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
     int index = player != NULL ? player->weapon - 1 : 0; 
 
+    QList<QString> weaponNames;
+    weaponNames << "Bead Gun" << "Shotgun" << "Machine Gun" << "Electrogun" << "Rocket Launcher";
+
     painter.setBrush(QBrush(QColor(60,60,60))); 
-    painter.drawText(QPoint(150 + weaponColors.size() * 25 + 10, statusBarY + 14),
+    painter.drawText(QPoint(150 + sizeof(weaponColors)/sizeof(weaponColors[0]) * 25 + 10, statusBarY + 14),
             weaponNames[index]);
 }
 
@@ -278,6 +285,43 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPoint> points) {
     for(int i = 0; i < graph.size(); ++i) {
         painter.drawLine(points[graph[i].first],points[graph[i].second]);
     }
+}
+double rndf()
+{
+	return double(rand())/RAND_MAX;
+}
+void RenderArea::drawExplosions(QPainter& painter)
+{
+	for(int i=0; i<engine.explosions.size(); ++i) {
+		double x=engine.explosions[i].x(), y=engine.explosions[i].y();
+		for(int j=0; j<100; ++j) {
+			double vx=rndf()-.5, vy=rndf()-.5;
+//			double v = sqrt(vx*vx + vy*vy);
+			double r = .5*rndf()+.5;
+			double g = r * rndf();
+			double b = r*.5;
+			particles.append(Particle(x,y,vx,vy,QColor::fromRgbF(r,g,b)));
+		}
+	}
+	engine.explosions.clear();
+
+	double midX = width/2 - centerx;
+	double midY = height/2 - centery;
+
+	painter.setPen(Qt::NoPen);
+	if (particles.size()) qDebug()<<particles.size();
+	for(int i=0; i<particles.size(); ) {
+		if (particles[i].update()) {
+			particles[i]=particles.back();
+			particles.pop_back();
+		} else {
+			Particle& p = particles[i++];
+			p.color.setAlphaF(0.2);
+			painter.setBrush(QBrush(p.color));
+			double s=SQUARE*5;
+			painter.drawEllipse(midX + SQUARE*p.x - s + midX, midY + SQUARE*p.y - s + midY, 2*s, 2*s);
+		}
+	}
 }
 
 void RenderArea::draw(Player* player) {

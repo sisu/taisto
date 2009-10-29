@@ -9,6 +9,7 @@
 #include "object.h"
 #include "engine.h"
 #include "player.h"
+#include "particle.h"
 #include <QtOpenGL>
 
 //class RenderArea : public QWidget
@@ -30,6 +31,10 @@ class RenderArea : public QGLWidget
 
     private:
         Player* player;
+		QList<Particle> particles;
+
+		void drawBar(QPainter& p);
+		void drawExplosions(QPainter& p);
 };
 
 #endif
