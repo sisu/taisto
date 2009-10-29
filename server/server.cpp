@@ -14,6 +14,8 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 	curT.start();
 	prevSec=frames=0;
 	lastSpawn=-1e9;
+
+	spawnInitial();
 }
 
 void Server::update()
@@ -233,26 +235,22 @@ void Server::sendHit(const Bullet& b)
 	sendToAll(msg);
 }
 
-#if 0
-void Server::hitPlayer(Unit& p, int weapon)
+static void rocketDamage(Unit& u, const Bullet& b)
 {
-	p.health -= damages[weapon] / p.armor;
-	p.lastHitT = curT.elapsed();
-	qDebug()<<"hit"<<p.health;
+	double dx=u.x-b.x, dy=u.y-b.y;
+	double d2 = dx*dx + dy*dy;
+	if (d2 > ROCKET_RADIUS*ROCKET_RADIUS) return;
+	double d = sqrt(d2);
+	double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
+	u.health -= dmg / u.armor;
 }
-#endif
 void Server::bulletHit(Unit* p, const Bullet& b)
 {
 	if (b.type==5) {
-		for(int i=0; i<players.size(); ++i) {
-			Player& pl = players[i];
-			double dx=pl.x-b.x, dy=pl.y-b.y;
-			double d2 = dx*dx + dy*dy;
-			if (d2 < ROCKET_RADIUS*ROCKET_RADIUS) continue;
-			double d = sqrt(d2);
-			double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
-			p->health -= dmg / p->armor;
-		}
+		for(int i=0; i<players.size(); ++i)
+			rocketDamage(players[i], b);
+		for(int i=0; i<bots.size(); ++i)
+			rocketDamage(bots[i], b);
 		return;
 	}
 	if (p==0) return;
@@ -309,4 +307,11 @@ void Server::spawnInitial()
 
 	for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
 		createItem();
+
+	// rocket launcher
+	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
+	int type = 5;
+	Item i(spawn.first + .5, spawn.second+.5, type);
+	items.append(i);
+	qDebug()<<"jee";
 }
