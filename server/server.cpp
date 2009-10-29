@@ -39,12 +39,16 @@ void Server::update()
 	updateBullets();
 	updateItems();
 
-	// Handle spawn changes
-	for(int i=0; i<players.size(); ++i) {
-		if (players[i].y >= area.startPlaces[curSpawn+1]) {
-			++curSpawn;
-			spawnInitial();
-		}
+	bool playerNext=0;
+	for(int i=0; i<players.size(); ++i)
+		if (players[i].y >= area.startPlaces[curSpawn+1]) playerNext=1;
+	bool botNext=0;
+	for(int i=0; i<bots.size(); ++i)
+		if (bots[i].y <= area.startPlaces[curSpawn+1]+area.parts[curSpawn+1].spawnH) botNext=1;
+
+	if (playerNext && !botNext) {
+		++curSpawn;
+		spawnInitial();
 	}
 
 	++frames;
@@ -57,11 +61,11 @@ void Server::update()
 
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
 	if (t > lastSpawn + area.spawnIntervals[curSpawn] && bots.size()<area.maxBots[curSpawn]) {
-		qDebug()<<"spawning"<<area.spawnCounts[curSpawn]<<"bots";
 		int s = players.size();
+		qDebug()<<"spawning"<<area.spawnCounts[curSpawn]*s<<"bots";
 		if (!s) s=1;
 		for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
-			createBot();
+			createBot(curSpawn+1+playerNext);
 		for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
 			createItem();
 		lastSpawn = t;
@@ -244,9 +248,9 @@ void Server::addBullet(int weap, double x, double y, double vx, double vy, doubl
 	os << x<<y<<vx<<vy;
 	sendToAll(msg);
 }
-void Server::createBot()
+void Server::createBot(int place)
 {
-	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+1);
+	QPair<int,int> spawn = area.getSpawnPoint(place);
 	Bot b(spawn.first + .5, spawn.second+.5);
 	bots.append(b);
 }
@@ -263,7 +267,7 @@ void Server::spawnInitial()
 	int s=players.size();
 	if (!s) s=1;
 	for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
-		createBot();
+		createBot(curSpawn+1);
 
 	for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
 		createItem();

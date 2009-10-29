@@ -21,7 +21,7 @@ void Connection::update()
 		if (packetSize<0) {
 			if (bytesAvailable()<4) break;
 			s>>packetSize;
-			if (packetSize>100) qDebug()<<"big packet"<<packetSize;
+			if (packetSize>1<<20) qDebug()<<"big packet"<<packetSize;
 		}
 		if (bytesAvailable()<packetSize) break;
 //		qDebug()<<"packet size"<<packetSize;
