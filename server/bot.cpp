@@ -40,7 +40,7 @@ void Bot::runAI(Server& s, int t)
 
 	if (t<nextT) return;
 
-	double yhigh = s.area.startPlaces[s.curSpawn+1];
+	double yhigh = s.area.startPlaces[s.curSpawn+1] + s.area.parts[s.curSpawn+1].spawnH;
 	double ylow = s.area.startPlaces[s.curSpawn];
 
 	if (y > yhigh) {
