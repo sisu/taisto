@@ -16,7 +16,7 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 	prevSec=frames=0;
 	lastSpawn=-1e9;
 
-	spawnInitial();
+	spawnStuff();
 }
 
 void Server::update()
@@ -58,7 +58,7 @@ void Server::update()
 
 	if (playerNext && !botNext) {
 		++curSpawn;
-		spawnInitial();
+		spawnStuff();
 	}
 
 	++frames;
@@ -70,16 +70,8 @@ void Server::update()
 	}
 
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
-	if (t > lastSpawn + area.spawnIntervals[curSpawn] && bots.size()<area.maxBots[curSpawn]) {
-		int s = players.size();
-		qDebug()<<"spawning"<<area.spawnCounts[curSpawn]*s<<"bots";
-		if (!s) s=1;
-		for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
-			createBot(curSpawn+1+playerNext);
-		for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
-			createItem();
-		lastSpawn = t;
-	}
+	if (t > lastSpawn + area.spawnIntervals[curSpawn] && bots.size()<area.maxBots[curSpawn])
+		spawnStuff(playerNext);
 }
 
 void Server::updatePlayers()
@@ -284,36 +276,30 @@ void Server::addBullet(int weap, double x, double y, double vx, double vy, doubl
 	os << x<<y<<vx<<vy;
 	sendToAll(msg);
 }
-void Server::createBot(int place)
+void Server::createBot(int place, int w)
 {
 	QPair<int,int> spawn = area.getSpawnPoint(place);
-	Bot b(spawn.first + .5, spawn.second+.5, 1);
+	Bot b(spawn.first + .5, spawn.second+.5, w);
 	bots.append(b);
 }
-void Server::createItem()
+void Server::createItem(int type)
 {
 	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
-	int type = rand()%2;
-	if (type) type=2;
 	Item i(spawn.first + .5, spawn.second+.5, type);
 	items.append(i);
+	qDebug()<<"item created"<<type;
 }
-void Server::spawnInitial()
+void Server::spawnStuff(bool next)
 {
 	lastSpawn = curT.elapsed();
-
-	int s=players.size();
+	int s = players.size();
 	if (!s) s=1;
-	for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
-		createBot(curSpawn+1);
-
-	for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
-		createItem();
-
-	// rocket launcher
-	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
-	int type = 5;
-	Item i(spawn.first + .5, spawn.second+.5, type);
-	items.append(i);
-	qDebug()<<"jee";
+	for(int j=0; j<6; ++j) {
+		qDebug()<<"spawning"<<area.spawnCounts[j][curSpawn]*s<<"bots ;"<<next;
+		for(int i=0; i<area.spawnCounts[j][curSpawn] * s; ++i)
+			createBot(curSpawn+1+next, j);
+		if (area.itemCounts[j][curSpawn]) qDebug()<<"creating"<<j<<area.itemCounts[j][curSpawn];
+		for(int i=0; i<area.itemCounts[j][curSpawn] * s; ++i)
+			createItem(j);
+	}
 }

@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QPair>
+#include "constants.h"
 
 struct AreaPart {
 	AreaPart(int w, int h);
@@ -21,9 +22,11 @@ struct Area {
 	int w,h;
 
 	QList<int> spawnIntervals;
-	QList<int> spawnCounts;
+//	QList<int> spawnCounts;
+	QList<int> spawnCounts[1+WEAPONS];
 	QList<int> maxBots;
-	QList<int> itemCounts;
+//	QList<int> itemCounts;
+	QList<int> itemCounts[1+WEAPONS];
 
 	QPair<int,int> getSpawnPoint(int spawn);
 

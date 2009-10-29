@@ -1,5 +1,14 @@
 #include "area.h"
+#include "constants.h"
 #include <cstdlib>
+
+inline QList<int> linearList(int s, int e, int xs, int xe)
+{
+	QList<int> r;
+	for(int i=0; i<s; ++i) r.append(0);
+	for(int i=s; i<=e; ++i) r.append(xs + (xe-xs)*(i-s)/(e-s));
+	return r;
+}
 
 AreaPart::AreaPart(int w, int h)
 {
@@ -19,6 +28,7 @@ Area::Area(int count): w(16)
 		}
 		startPlaces.append(startPlaces.back() + parts.back().data.size()/w);
 	}
+#if 0
 	int si0 = 10*1000;
 	int sc0 = 2;
 	int mb0 = 5;
@@ -27,11 +37,38 @@ Area::Area(int count): w(16)
 	int mbn = 40;
 	int ic0 = 2;
 	int icn = 8;
-	for(int i=0; i<count; ++i) {
-		spawnIntervals.append(si0 + i*(sin-si0)/count);
-		spawnCounts.append(sc0 + i*(scn-sc0)/count);
-		maxBots.append(mb0 + i*(mbn-mb0)/count);
-		itemCounts.append(ic0 + i*(icn-ic0)/count);
+#endif
+	spawnIntervals = linearList(0, count, 10*1000, 5*1000);
+//	spawnCounts = linearList(0, count, 2, 8);
+	maxBots = linearList(0, count, 5, 40);
+//	itemCounts = linearList(0, count, 2, 8);
+
+	struct S {
+		int s,x0,xn;
+	};
+	S barr[] = {
+		{0,0,0},
+		{0,2,10},
+		{1,1,8},
+		{6,1,6},
+		{12,0,0},
+		{12,1,3}
+	};
+	for(unsigned i=0; i<sizeof(barr)/sizeof(barr[0]); ++i) {
+		S& s = barr[i];
+		spawnCounts[i] = linearList(s.s, count, s.x0, s.xn);
+	}
+	S iarr[] = {
+		{0,1,4},
+		{0,0,0},
+		{0,2,6},
+		{2,1,6},
+		{12,1,3},
+		{8,1,4}
+	};
+	for(unsigned i=0; i<sizeof(iarr)/sizeof(iarr[0]); ++i) {
+		S& s = iarr[i];
+		itemCounts[i] = linearList(s.s, count, s.x0, s.xn);
 	}
 }
 
