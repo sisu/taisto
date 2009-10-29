@@ -224,8 +224,13 @@ void RenderArea::drawBar(QPainter& painter)
     // Health bar
 
     if(player != NULL) {
+        painter.setBrush(QBrush(QColor(145,0,0)));
+        painter.drawRect(10, statusBarY + 6, 100, statusBarHeight-12);
         painter.setBrush(QBrush(QColor(255,0,0)));
-        painter.drawRect(10, statusBarY + 7, 100*player->health, 6);
+        painter.drawRect(10, statusBarY + 6, 100*player->health, statusBarHeight-12);
+/*        painter.setBrush(QBrush(QColor(180,170,230)));
+        painter.drawRect(10, statusBarY + 10, min(100,engine.bulletCounts[player->weapon]), 6);
+*/
     }
 
     // Weapon boxes
@@ -246,7 +251,7 @@ void RenderArea::drawBar(QPainter& painter)
 
         QFont newFont(painter.font());
         newFont.setPixelSize(10);
-        painter.setFont(newFont);
+        painter.setFont(QFont("Verdana",10,QFont::Bold));
         painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
     }
 
@@ -256,8 +261,12 @@ void RenderArea::drawBar(QPainter& painter)
     weaponNames << "Bead Gun" << "Shotgun" << "Machine Gun" << "Electrogun" << "Rocket Launcher";
 
     painter.setBrush(QBrush(QColor(60,60,60))); 
+    QString weaponstr;
+    if(index!=0) weaponstr=weaponNames[index]+" ("+QString::number(engine.bulletCounts[index+1])+")";
+    else weaponstr=weaponNames[index];
+    
     painter.drawText(QPoint(150 + sizeof(weaponColors)/sizeof(weaponColors[0]) * 25 + 10, statusBarY + 14),
-            weaponNames[index]);
+            weaponstr);
 }
 
 int RenderArea::distance(QPoint a, QPoint b) {
