@@ -8,6 +8,8 @@
 
 class Server;
 
+const double botArmors[1+WEAPONS] = {0,0.15,0.2,0.3,0.8,0.9};
+
 class Bot : public Unit {
 public:
 	Bot(double xx, double yy, int w): Unit(xx,yy) {
@@ -15,7 +17,7 @@ public:
 		shooting=0;
 		nextT=0;
 		angle=M_PI/2;
-		armor=0.15;
+		armor=botArmors[w];
 		weapon = w;
 	}
 

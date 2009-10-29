@@ -2,6 +2,8 @@
 #define PARTICLE_H
 
 #include "constants.h"
+#include "area.h"
+#include "physics.h"
 #include <cmath>
 
 struct Particle {
@@ -17,9 +19,11 @@ struct Particle {
 		dist=dst;
 		time=0;
 	}
-	bool update() {
-		x += vx*FRAME_TIME;
-		y += vy*FRAME_TIME;
+	bool update(const Area& a) {
+		double xx = x+vx*FRAME_TIME;
+		double yy = y+vy*FRAME_TIME;
+		QPointF p = getWallHitPoint(x,y,xx,yy,a);
+		x=p.x(), y=p.y();
 		dist += v*FRAME_TIME;
 		time += FRAME_TIME;
 		return dist>=ROCKET_RADIUS;

@@ -1,11 +1,11 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "area.h"
 #include <cmath>
-#include <QPair>
+#include <QPointF>
 
-inline QPair<double,double> getWallHitPoint(double x0, double y0, double x1, double y1, const Area& a)
+template<class Area>
+inline QPointF getWallHitPoint(double x0, double y0, double x1, double y1, const Area& a)
 {
 	double vx=x1-x0, vy=y1-y0;
 	double len2 = vx*vx + vy*vy;
@@ -18,7 +18,7 @@ inline QPair<double,double> getWallHitPoint(double x0, double y0, double x1, dou
 	double d2;
 	while((d2=(x-x0)*(x-x0) + (y-y0)*(y-y0)) <= len2) {
 		if (a.blocked(ix,iy)) {
-			return QPair<double,double>(x,y);
+			return QPointF(x,y);
 		}
 		int ix2=ix+idx, iy2=iy+idy;
 		double dx = idx<0 ? x-ix : ix2-x;
@@ -35,12 +35,13 @@ inline QPair<double,double> getWallHitPoint(double x0, double y0, double x1, dou
 			y += vy0*yy;
 		}
 	}
-	return QPair<double,double>(x1,y1);
+	return QPointF(x1,y1);
 }
+template<class Area>
 inline bool rayHitsWall(double x0, double y0, double x1, double y1, const Area& a)
 {
-	QPair<double,double> p = getWallHitPoint(x0,y0,x1,y1,a);
-	return fabs(p.first-x1)>1e-3 || fabs(p.second-y1)>1e-3;
+	QPointF p = getWallHitPoint(x0,y0,x1,y1,a);
+	return fabs(p.x()-x1)>1e-3 || fabs(p.y()-y1)>1e-3;
 }
 
 #endif

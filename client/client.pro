@@ -14,7 +14,8 @@ HEADERS += connection.h \
     object.h \
     renderarea.h \
     window.h \
-	player.h
+	player.h \
+	particle.h
 SOURCES += connection.cpp \
     engine.cpp \
     game.cpp \
