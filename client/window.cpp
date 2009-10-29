@@ -2,9 +2,8 @@
 #include "renderarea.h"
 #include "window.h"
 Window::Window(Engine& engine, Player& pl) : player(pl)
-{      
-//	setFixedSize(800,800);
-	resize(800,600);
+{   
+    resize(800,600);
 	renderArea = new RenderArea(engine);
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->addWidget(renderArea);
