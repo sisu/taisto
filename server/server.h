@@ -45,10 +45,12 @@ private:
 	void sendHit(const Bullet& b);
 	void spawnPlayer(Unit& p, bool bot=0);
 	void createBot();
+	void createItem();
 	void updatePlayers();
 	void updateBots();
 	void updateBullets();
 	void updateItems();
+	void spawnInitial();
 };
 
 #endif

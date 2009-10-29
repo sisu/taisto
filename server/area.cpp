@@ -25,10 +25,13 @@ Area::Area(int count): w(16)
 	int sin = 5*1000;
 	int scn = 8;
 	int mbn = 40;
+	int ic0 = 2;
+	int icn = 8;
 	for(int i=0; i<count; ++i) {
 		spawnIntervals.append(si0 + i*(sin-si0)/count);
 		spawnCounts.append(sc0 + i*(scn-sc0)/count);
 		maxBots.append(mb0 + i*(mbn-mb0)/count);
+		itemCounts.append(ic0 + i*(icn-ic0)/count);
 	}
 }
 

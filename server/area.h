@@ -23,6 +23,7 @@ struct Area {
 	QList<int> spawnIntervals;
 	QList<int> spawnCounts;
 	QList<int> maxBots;
+	QList<int> itemCounts;
 
 	QPair<int,int> getSpawnPoint(int spawn);
 

@@ -41,8 +41,10 @@ void Server::update()
 
 	// Handle spawn changes
 	for(int i=0; i<players.size(); ++i) {
-		if (players[i].y >= area.startPlaces[curSpawn+1])
+		if (players[i].y >= area.startPlaces[curSpawn+1]) {
 			++curSpawn;
+			spawnInitial();
+		}
 	}
 
 	++frames;
@@ -60,6 +62,8 @@ void Server::update()
 		if (!s) s=1;
 		for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
 			createBot();
+		for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
+			createItem();
 		lastSpawn = t;
 	}
 }
@@ -113,6 +117,19 @@ void Server::updateBots()
 
 void Server::updateItems()
 {
+	for(int j=0; j<players.size(); ++j) {
+		for(int i=0; i<items.size(); ++i) {
+			double dx=items[i].x-players[j].x;
+			double dy=items[i].y-players[j].y;
+			double d2 = dx*dx + dy*dy;
+			double s=ITEM_RADIUS+PLAYER_RADIUS;
+			if (d2 < s*s) {
+				items[i]=items.back();
+				items.pop_back();
+			} else ++i;
+		}
+	}
+
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
     stream << 1 + 4 + items.size()*(8+8+4);
@@ -220,4 +237,22 @@ void Server::createBot()
 	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+1);
 	Bot b(spawn.first + .5, spawn.second+.5);
 	bots.append(b);
+}
+void Server::createItem()
+{
+	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+1);
+	Item i(spawn.first + .5, spawn.second+.5, rand()%2);
+	items.append(i);
+}
+void Server::spawnInitial()
+{
+	lastSpawn = curT.elapsed();
+
+	int s=players.size();
+	if (!s) s=1;
+	for(int i=0; i<area.spawnCounts[curSpawn] * s; ++i)
+		createBot();
+
+	for(int i=0; i<area.itemCounts[curSpawn] * s; ++i)
+		createItem();
 }
