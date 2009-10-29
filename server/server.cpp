@@ -233,11 +233,33 @@ void Server::sendHit(const Bullet& b)
 	sendToAll(msg);
 }
 
+#if 0
 void Server::hitPlayer(Unit& p, int weapon)
 {
 	p.health -= damages[weapon] / p.armor;
 	p.lastHitT = curT.elapsed();
 	qDebug()<<"hit"<<p.health;
+}
+#endif
+void Server::bulletHit(Unit* p, const Bullet& b)
+{
+	if (b.type==5) {
+		for(int i=0; i<players.size(); ++i) {
+			Player& pl = players[i];
+			double dx=pl.x-b.x, dy=pl.y-b.y;
+			double d2 = dx*dx + dy*dy;
+			if (d2 < ROCKET_RADIUS*ROCKET_RADIUS) continue;
+			double d = sqrt(d2);
+			double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
+			p->health -= dmg / p->armor;
+		}
+		return;
+	}
+	if (p==0) return;
+
+	p->health -= damages[b.type] / p->armor;
+	p->lastHitT = curT.elapsed();
+	qDebug()<<"hit"<<p->health;
 }
 
 void Server::spawnPlayer(Unit& p, bool bot)
