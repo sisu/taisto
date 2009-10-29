@@ -28,6 +28,8 @@ public:
 	QList<Item> items;
 	QList<Bot> bots;
 	int bulletID;
+	int curSpawn;
+
     void hitBot(Bot& b, int weapon);
 	void addBullet(int w, double x, double y, double dx, double dy, double v);
 
@@ -35,7 +37,6 @@ public slots:
 	void update();
 
 private:
-	int curSpawn;
 	QTimer timer;
 	int nextID;
 	QTime curT;
