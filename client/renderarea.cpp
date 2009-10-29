@@ -20,7 +20,7 @@ const QColor weaponColors[] = {
     QColor(230,120,100)
 };
 
-RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QGL::SampleBuffers),parent), engine(_engine), player(NULL)
+RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 //RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
 
@@ -201,7 +201,9 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
     /*
     QList<QPoint> lPoints;
-    lPoints<<QPoint(100,100)<<QPoint(100,150)<<QPoint(200,120)<<QPoint(125,175)<<QPoint(75,200);
+    //lPoints<<QPoint(100,100)<<QPoint(100,150)<<QPoint(200,120)<<QPoint(125,175)<<QPoint(75,200);
+    lPoints<<QPoint(100,100)<<QPoint(100,500)<<QPoint(200,120)<<QPoint(125,175)<<QPoint(75,200);
+    lPoints<<QPoint(400,100)<<QPoint(100,450)<<QPoint(500,120)<<QPoint(125,675)<<QPoint(75,800);
     drawLightning(painter,lPoints);
     */
 
@@ -265,6 +267,44 @@ int RenderArea::distance(QPoint a, QPoint b) {
     return (int)sqrt(dx*dx+dy*dy);
 }
 
+QList<QPoint> RenderArea::pathBetween(QPoint a, QPoint b) {
+    qDebug()<<a<<b;
+    const int minDist = 20;
+    QList<QPoint> ret;
+    if(distance(a,b) < minDist) {
+        qDebug()<<"Moro";
+        ret.append(a);
+        ret.append(b);
+        return ret;
+    }
+
+    const int odds [5] = {30,55,75,90,100};
+    int xd = rand() % 2;
+    int yd = rand() % 2;
+    int rx = rand() % 100;
+    int ry = rand() % 100;
+
+    double nx = 0, ny = 0;
+
+    for(int i = 0; i < 5; ++i) {
+        if(rx < odds[i]) {
+            nx = (a.x() + b.x()) / 2;
+            nx += xd ? i + 1 : -(i + 1);
+        }
+    }
+
+    for(int i = 0; i < 5; ++i) {
+        if(ry < odds[i]) {
+            ny = (a.y() + b.y()) / 2;
+            ny += yd ? i + 1 : -(i + 1);
+        }
+    }
+
+    QPoint midPoint(nx,ny);
+    ret = pathBetween(a,midPoint) + pathBetween(midPoint,b);
+    return ret;
+}
+
 void RenderArea::drawLightning(QPainter& painter, QList<QPoint> points) {
     // 0 is the beginning
     QList<int> picked;
@@ -289,10 +329,86 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPoint> points) {
         picked.append(pr.second);
     }
 
-    painter.setBrush(QBrush(QColor(130,175,200))); 
+
+    QList<QPair<int,int> > newGraph;
+    QPair<int,int> last;
+
+    newGraph.append(graph[0]);
+
+
+    for(int a = 0; a < graph.size(); ++a) {
+        QList<QPoint> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
+        painter.setPen(QPen(QColor(130,175,200),2)); 
+        for(int i = 0; i < pts.size() - 1; ++i) {
+            painter.drawLine(pts[i],pts[i+1]);
+        }
+        painter.setPen(QPen(QColor(160,210,240,100),5));
+        for(int i = 0; i < pts.size() - 1; ++i) {
+            painter.drawLine(pts[i],pts[i+1]);
+        }
+        painter.setPen(QPen(QColor(160,210,240,50),9));
+        for(int i = 0; i < pts.size() - 1; ++i) {
+            painter.drawLine(pts[i],pts[i+1]);
+        }
+        painter.setPen(QPen(QColor(170,210,240,25),13));
+        for(int i = 0; i < pts.size() - 1; ++i) {
+            painter.drawLine(pts[i],pts[i+1]);
+        }
+    }
+
+    /*
+    painter.setPen(QPen(QColor(160,210,240,100),5));
     for(int i = 0; i < graph.size(); ++i) {
         painter.drawLine(points[graph[i].first],points[graph[i].second]);
     }
+
+    painter.setPen(QPen(QColor(160,210,240,50),9));
+    for(int i = 0; i < graph.size(); ++i) {
+        painter.drawLine(points[graph[i].first],points[graph[i].second]);
+    }
+
+    painter.setPen(QPen(QColor(170,210,240,25),13));
+    for(int i = 0; i < graph.size(); ++i) {
+        painter.drawLine(points[graph[i].first],points[graph[i].second]);
+    }
+    */
+
+    /*
+    painter.setPen(QPen(QColor(170,210,240,0),0));
+    painter.setBrush(QBrush(QColor(170,210,240,20)));
+    painter.drawEllipse(-150,-150,600,600);
+
+    */
+    /*
+
+    double maxLen = 0;
+
+    QVector<int> lengthTo(points.size(),0);
+    for(int i = 0; i < graph.size(); ++i) {
+        lengthTo[graph[i].second] = lengthTo[graph[i].first] + 1;
+        if(lengthTo[graph[i].second] > maxLen) {
+            maxLen = lengthTo[graph[i].second];
+        }
+    }
+
+    double maxW = 3;
+    double minW = 1;
+
+    for(int i = 0; i < graph.size(); ++i) {
+        double w = maxW - (maxW - minW) * lengthTo[graph[i].second] / maxLen;
+        painter.setPen(QPen(QColor(130,175,200),w)); 
+        painter.drawLine(points[graph[i].first],points[graph[i].second]);
+    }
+    
+    maxW = 12;
+    minW = 3;
+
+    for(int i = 0; i < graph.size(); ++i) {
+        double w = maxW - (maxW - minW) * lengthTo[graph[i].second] / maxLen;
+        painter.setPen(QPen(QColor(160,210,240,100),w));
+        painter.drawLine(points[graph[i].first],points[graph[i].second]);
+    }
+    */
 }
 double rndf()
 {

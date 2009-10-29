@@ -13,7 +13,7 @@
 #include <QtOpenGL>
 
 //class RenderArea : public QWidget
-class RenderArea : public QGLWidget
+class RenderArea : public QWidget
 {
     Q_OBJECT
 
@@ -27,6 +27,7 @@ class RenderArea : public QGLWidget
         void drawItemPix();
         void drawLightning(QPainter& painter, QList<QPoint> points);
         int distance(QPoint a, QPoint b);
+        QList<QPoint> pathBetween(QPoint a, QPoint b);
 
     protected:
         void paintEvent(QPaintEvent *event);
