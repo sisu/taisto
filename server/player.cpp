@@ -42,7 +42,7 @@ void Player::readState(QDataStream& s)
 }
 void Player::readShoot(QDataStream& s, Server& serv)
 {
-	qDebug()<<"got shoot";
+//	qDebug()<<"got shoot";
 	int weapon;
 	s>>weapon;
 

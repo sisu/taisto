@@ -41,9 +41,10 @@ void Game::go() {
     player.weapon = window.selectedWeapon;
 	int t = startTime.elapsed();
 //	qDebug()<<player.shooting<<startTime.elapsed()<<player.shootTime+loadTimes[player.weapon];
-	if (player.shooting && t>player.shootTime+loadTimes[player.weapon]) {
+	if (player.shooting && t>player.shootTime && (player.weapon==1 || engine.bulletCounts[player.weapon]>0)) {
 		conn.sendShoot();
-		player.shootTime = t;
+		player.shootTime = t + loadTimes[player.weapon];
+		engine.bulletCounts[player.weapon] -= 1;
 	}
 	if (t/1000>prevSec) {
 		prevSec = t/1000;

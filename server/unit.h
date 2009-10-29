@@ -17,6 +17,7 @@ class Unit {
             angle=-M_PI/2;
             packetSize=-1;
 			health=1;
+			armor=1;
         }
 
         double x,y,angle;
@@ -24,6 +25,7 @@ class Unit {
         void shoot(int weapon, Server& serv);
         void updatePhysics(Server&);
 		double health;
+		double armor;
 
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);

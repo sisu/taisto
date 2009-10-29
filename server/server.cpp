@@ -162,7 +162,7 @@ void Server::updateBullets()
 
 	for(int i=0; i<bullets.size(); ) {
 		if (bullets[i].update(*this, common)) {
-			qDebug()<<"removing bullet"<<bullets[i].x<<bullets[i].y;
+//			qDebug()<<"removing bullet"<<bullets[i].x<<bullets[i].y;
 			sendHit(bullets[i]);
 			bullets[i] = bullets.back();
 			bullets.pop_back();
@@ -222,7 +222,7 @@ void Server::sendHit(const Bullet& b)
 
 void Server::hitPlayer(Unit& p, int weapon)
 {
-	p.health -= damages[weapon];
+	p.health -= damages[weapon] / p.armor;
 	qDebug()<<"hit"<<p.health;
 }
 
@@ -257,7 +257,9 @@ void Server::createBot(int place)
 void Server::createItem()
 {
 	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
-	Item i(spawn.first + .5, spawn.second+.5, rand()%2);
+	int type = rand()%2;
+	if (type) type=2;
+	Item i(spawn.first + .5, spawn.second+.5, type);
 	items.append(i);
 }
 void Server::spawnInitial()
