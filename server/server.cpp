@@ -227,8 +227,8 @@ void Server::sendHit(const Bullet& b)
 	QByteArray msg;
 	QDataStream s(&msg, QIODevice::WriteOnly);
 
-	s << 1+sizeof(b.id);
-	s << MSG_HIT << b.id;
+	s << 1+sizeof(b.id)+8+8;
+	s << MSG_HIT << b.id << b.x<<b.y;
 
 	sendToAll(msg);
 }

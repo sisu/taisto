@@ -114,7 +114,8 @@ void Connection::readShoot(QDataStream& s)
 void Connection::readHit(QDataStream& s)
 {
 	int id;
-	s>>id;
+	double x,y;
+	s>>id>>x>>y;
 	engine.bullets.remove(id);
 }
 void Connection::readEnemy(QDataStream& s) {
