@@ -44,7 +44,8 @@ void Game::go() {
 		conn.sendShoot();
 		player.shootTime = t + loadTimes[player.weapon];
 		engine.bulletCounts[player.weapon] -= 1;
-	}
+        if(engine.bulletCounts[player.weapon]==0) player.weapon=1;
+	}           
 	if (t/1000>prevSec) {
 		prevSec = t/1000;
 		qDebug()<<"packet count:"<<conn.packetCount;
