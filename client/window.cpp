@@ -18,7 +18,7 @@ void Window::draw(Player* player) {
 
 void Window::keyPressEvent(QKeyEvent* event) {
     this->keysHeld.append(event->key());
-    if(event->key() >= Qt::Key_1 && event->key() <= Qt::Key_9) {
+    if(event->key() >= Qt::Key_1 && event->key() <= Qt::Key_5) {
         player.weapon = event->key() - Qt::Key_1 + 1;
     }
 	switch(event->key()) {
