@@ -153,7 +153,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
     for(int i = 0; i < weaponColors.size(); ++i) {
         painter.setBrush(QBrush(weaponColors[i])); 
-        painter.drawRect(boxx + i*25, statusBarY + 4, 20, 12);
+        
+        if(player != NULL && player->weapon == i + 1) {
+            painter.drawRect(boxx + i*25, statusBarY + 2, 20, 16);
+        } else {
+            painter.drawRect(boxx + i*25, statusBarY + 4, 20, 12);
+        }
         painter.setBrush(QBrush(QColor(60,60,60))); 
         QString str = "";
         str += '1'+i;
