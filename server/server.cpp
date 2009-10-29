@@ -39,6 +39,13 @@ void Server::update()
 	updateBullets();
 	updateItems();
 
+	if (curSpawn>0) {
+		int botCount=0;
+		for(int i=0; i<bots.size(); ++i)
+			if (bots[i].y <= area.startPlaces[curSpawn]+area.parts[curSpawn].spawnH) ++botCount;
+		if (botCount>players.size()) --curSpawn;
+	}
+
 	bool playerNext=0;
 	for(int i=0; i<players.size(); ++i)
 		if (players[i].y >= area.startPlaces[curSpawn+1]) playerNext=1;
@@ -111,7 +118,7 @@ void Server::updateBots()
             bot.moveSide << bot.turn << bot.health << bot.weapon;
 
 		int t = curT.elapsed();
-		if (bot.shooting && t>bot.lastShoot+200) {
+		if (bot.shooting && t>bot.lastShoot+loadTimes[bot.weapon]) {
 			bot.shoot(bot.weapon, *this);
 			bot.lastShoot=t;
 		}
