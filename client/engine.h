@@ -8,7 +8,7 @@
 #include "player.h"
 #include "item.h"
 
-const double FRAMETIME=0.040;
+const double FRAMETIME=0.02;
 class Engine : public QObject {
     Q_OBJECT
     public:

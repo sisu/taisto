@@ -3,7 +3,7 @@
 #include "window.h"
 Window::Window(Engine& engine)
 {      
-	setFixedSize(600,600);
+	setFixedSize(800,800);
 	renderArea = new RenderArea(engine);
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->addWidget(renderArea);

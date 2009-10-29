@@ -7,7 +7,7 @@
 #ifndef min
     #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #endif
-#define SQUARE 20
+#define SQUARE 30
 #define RADIUS (PLAYER_RADIUS*SQUARE)
 const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
@@ -98,7 +98,9 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         double y=height/2 - centery + py;
 
         painter.setBrush(QBrush(QColor(255,0,0)));
-        painter.drawRect(x-5, y+5, 10*engine.bots[i].health, 3);
+//        painter.drawRect(x-5, y+5, 10*engine.bots[i].health, 3);
+		const double w = .7*SQUARE;
+        painter.drawRect(x-.5*w, y+5, w*engine.bots[i].health, SQUARE*.15);
 
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(190,140,90)));
