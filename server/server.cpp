@@ -118,7 +118,7 @@ void Server::updateBots()
 void Server::updateItems()
 {
 	for(int j=0; j<players.size(); ++j) {
-		for(int i=0; i<items.size(); ++i) {
+		for(int i=0; i<items.size(); ) {
 			double dx=items[i].x-players[j].x;
 			double dy=items[i].y-players[j].y;
 			double d2 = dx*dx + dy*dy;

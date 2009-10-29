@@ -124,6 +124,28 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawEllipse(x-2,y-2,4,4);
     }
 
+    QList<QColor> weaponColors;
+    weaponColors.append(QColor(60,220,155));
+    weaponColors.append(QColor(0,125,225));
+    weaponColors.append(QColor(225,185,0));
+    weaponColors.append(QColor(210,30,105));
+    weaponColors.append(QColor(230,120,100));
+
+	//Items
+	for(int i=0; i<engine.items.size(); ++i) {
+		Item& it = engine.items[i];
+		QColor c(255,255,255);
+		if (it.itemNo>0) c=weaponColors[it.itemNo-1];
+		painter.setBrush(QBrush(c));
+
+		double x = width/2 - centerx + it.x*SQUARE;
+		double y = width/2 - centery + it.y*SQUARE;
+		int s=5;
+		painter.drawRect(x-s,y-s,2*s,2*s);
+	}
+
+
+	//Statusbar
 	painter.resetTransform();
 
 	int statusBarHeight = 20;
@@ -139,13 +161,6 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.setBrush(QBrush(QColor(255,0,0)));
         painter.drawRect(10, statusBarY + 7, 100*player->health, 6);
     }
-
-    QList<QColor> weaponColors;
-    weaponColors.append(QColor(60,220,155));
-    weaponColors.append(QColor(0,125,225));
-    weaponColors.append(QColor(225,185,0));
-    weaponColors.append(QColor(210,30,105));
-    weaponColors.append(QColor(230,120,100));
 
     // Weapon boxes
 
