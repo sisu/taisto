@@ -140,9 +140,7 @@ void Connection::readItem(QDataStream& s) {
 void Connection::readGet(QDataStream& s) {
 	int item;
 	s>>item;
-	if (item==0)
-		player->health = 1;
-	else engine.bulletCounts[item] += 20;
+	if (item>0) engine.bulletCounts[item-1] += 20;
 }
 
 void Connection::sendStatus()

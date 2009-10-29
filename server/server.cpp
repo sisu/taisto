@@ -130,6 +130,7 @@ void Server::updateItems()
 				s << MSG_GET << items[i].itemNo;
 				players[j].socket->flush();
 
+				if (items[i].itemNo==0) players[j].health=1;
 				items[i]=items.back();
 				items.pop_back();
 			} else ++i;
@@ -165,8 +166,13 @@ void Server::updateBullets()
 	}
 	for(int i=0; i<players.size(); ++i)
 		if (players[i].health<=0) spawnPlayer(players[i],0);
-	for(int i=0; i<bots.size(); ++i)
-		if (bots[i].health<=0) spawnPlayer(bots[i],1);
+	for(int i=0; i<bots.size(); ) {
+//		if (bots[i].health<=0) spawnPlayer(bots[i],1);
+		if (bots[i].health<=0) {
+			bots[i]=bots.back();
+			bots.pop_back();
+		} else ++i;
+	}
 }
 
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
