@@ -53,6 +53,7 @@ void Connection::update()
 				break;
 			case MSG_DIE:
 				for(int i=0; i<engine.bulletCounts.size(); ++i) engine.bulletCounts[i]=0;
+				player->weapon = 1;
 				break;
 			default:
 				qDebug()<<type;
@@ -123,7 +124,7 @@ void Connection::readEnemy(QDataStream& s) {
 	s>>p;
 	for(int i=0; i<p; ++i) {
 		Player pl;
-		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health;
+		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health>>pl.weapon;
 //		qDebug()<<"aaa"<<pl.x<<pl.y;
 		engine.bots.append(pl);
 	}

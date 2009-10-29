@@ -2,7 +2,7 @@
 #include "game.h"
 #include "constants.h"
 
-Game::Game(): conn(&player, engine), window(engine), player() {
+Game::Game(): conn(&player, engine), window(engine,player), player() {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(FRAMETIME*1000);
@@ -38,7 +38,6 @@ void Game::go() {
 
 //	qDebug()<<player.x<<player.y;
 
-    player.weapon = window.selectedWeapon;
 	int t = startTime.elapsed();
 //	qDebug()<<player.shooting<<startTime.elapsed()<<player.shootTime+loadTimes[player.weapon];
 	if (player.shooting && t>player.shootTime && (player.weapon==1 || engine.bulletCounts[player.weapon]>0)) {

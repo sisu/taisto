@@ -1,7 +1,7 @@
 #include <QtGui>
 #include "renderarea.h"
 #include "window.h"
-Window::Window(Engine& engine)
+Window::Window(Engine& engine, Player& pl) : player(pl)
 {      
 	setFixedSize(800,800);
 	renderArea = new RenderArea(engine);
@@ -9,7 +9,6 @@ Window::Window(Engine& engine)
 	layout->addWidget(renderArea);
 	setLayout(layout);
 	setWindowTitle("simo");
-    selectedWeapon = 1;
 }
 
 void Window::draw(Player* player) {
@@ -20,7 +19,7 @@ void Window::draw(Player* player) {
 void Window::keyPressEvent(QKeyEvent* event) {
     this->keysHeld.append(event->key());
     if(event->key() >= Qt::Key_1 && event->key() <= Qt::Key_9) {
-        selectedWeapon = event->key() - Qt::Key_1 + 1;
+        player.weapon = event->key() - Qt::Key_1 + 1;
     }
 	switch(event->key()) {
 		case Qt::Key_Right:

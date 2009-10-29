@@ -100,7 +100,7 @@ void Server::updateBots()
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
 
-    stream << 1 + 4 + bots.size()*(8+8+8+4+4+4+8);
+    stream << 1 + 4 + bots.size()*(8+8+8+4+4+4+8+4);
     stream << MSG_ENEMY << bots.size();
 
     for(int i = 0; i < bots.size(); ++i) {
@@ -108,11 +108,11 @@ void Server::updateBots()
 		bot.runAI(*this);
         bot.updatePhysics(*this);
         stream << bot.x << bot.y << bot.angle << bot.moveForward <<
-            bot.moveSide << bot.turn << bot.health;
+            bot.moveSide << bot.turn << bot.health << bot.weapon;
 
 		int t = curT.elapsed();
 		if (bot.shooting && t>bot.lastShoot+200) {
-			bot.shoot(1, *this);
+			bot.shoot(bot.weapon, *this);
 			bot.lastShoot=t;
 		}
     }
@@ -256,7 +256,7 @@ void Server::addBullet(int weap, double x, double y, double vx, double vy, doubl
 void Server::createBot(int place)
 {
 	QPair<int,int> spawn = area.getSpawnPoint(place);
-	Bot b(spawn.first + .5, spawn.second+.5);
+	Bot b(spawn.first + .5, spawn.second+.5, 1);
 	bots.append(b);
 }
 void Server::createItem()
