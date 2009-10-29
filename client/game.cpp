@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "game.h"
 #include "constants.h"
 
@@ -9,6 +10,8 @@ Game::Game(): conn(&player, engine), window(engine), player() {
 	 engine.players.append(player);
 	 startTime.start();
 	 prevSec=0;
+
+	 connect(this, SIGNAL(disconnected()), this, SLOT(end()));
 }
 
 void Game::start(QString ip, int port) {
@@ -19,6 +22,7 @@ void Game::start(QString ip, int port) {
     // Luo verkko
     
     conn.connect(ip,port);
+	 conn.waitForConnected(3000);
 
     //Luo ikkuna + piirtopinta
     window.show();
@@ -46,4 +50,13 @@ void Game::go() {
 		qDebug()<<"packet count:"<<conn.packetCount;
 		conn.packetCount = 0;
 	}
+
+	if (conn.state() != QAbstractSocket::ConnectedState) {
+		qDebug()<<conn.state();
+		end();
+	}
+}
+void Game::end() {
+	qDebug()<<"disconnected";
+	exit(0);
 }

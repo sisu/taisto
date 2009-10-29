@@ -19,6 +19,7 @@ class Engine : public QObject {
         QList<Player> bots;
         QList<Item> items;
         QMap<int,Bullet> bullets;
+		QList<int> bulletCounts;
         
 		Area area;
 };

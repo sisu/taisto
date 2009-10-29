@@ -124,6 +124,12 @@ void Server::updateItems()
 			double d2 = dx*dx + dy*dy;
 			double s=ITEM_RADIUS+PLAYER_RADIUS;
 			if (d2 < s*s) {
+				qDebug()<<"sending item";
+				QDataStream s(players[j].socket);
+				s << 1+4;
+				s << MSG_GET << items[i].itemNo;
+				players[j].socket->flush();
+
 				items[i]=items.back();
 				items.pop_back();
 			} else ++i;
@@ -240,7 +246,7 @@ void Server::createBot()
 }
 void Server::createItem()
 {
-	QPair<int,int> spawn = area.getSpawnPoint(curSpawn+1);
+	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
 	Item i(spawn.first + .5, spawn.second+.5, rand()%2);
 	items.append(i);
 }

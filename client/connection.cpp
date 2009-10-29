@@ -48,6 +48,9 @@ void Connection::update()
 			case MSG_ITEM:
 			    readItem(s);
 			    break;
+			case MSG_GET:
+				readGet(s);
+				break;
 			default:
 				qDebug()<<type;
 				abort();
@@ -133,6 +136,13 @@ void Connection::readItem(QDataStream& s) {
 		s>>it.x>>it.y>>it.itemNo;
 		engine.items.append(it);
 	}
+}
+void Connection::readGet(QDataStream& s) {
+	int item;
+	s>>item;
+	if (item==0)
+		player->health = 1;
+	else engine.bulletCounts[item] += 20;
 }
 
 void Connection::sendStatus()

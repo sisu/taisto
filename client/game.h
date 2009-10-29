@@ -24,6 +24,7 @@ public:
     void start(QString, int);
     public slots:
         void go();
+		void end();
 
 };
 #endif
