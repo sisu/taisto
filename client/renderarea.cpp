@@ -77,7 +77,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             painter.drawRect(x0,y0,x1,y1);
             
             //Level number
-            QPixmap text(35,a.spawn*SQUARE);
+            QPixmap text(85,a.spawn*SQUARE);
             text.fill(QColor(0,0,0,0));
             QPainter ptext(&text);
             ptext.translate(0, a.spawn*SQUARE);
@@ -241,7 +241,7 @@ void RenderArea::drawBar(QPainter& painter)
 
     for(int i = 0; i < int(sizeof(weaponColors)/sizeof(weaponColors[0])); ++i) {
         painter.setBrush(QBrush(weaponColors[i])); 
-        if(engine.bulletCounts[i]==0&&i>0) {
+        if(engine.bulletCounts[i+1]==0&&i>1) {
             QColor q=weaponColors[i];
             painter.setBrush(QColor(q.red()/4,q.green()/4,q.blue()/4));
         }
