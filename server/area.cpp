@@ -28,16 +28,8 @@ Area::Area(int count): w(16)
 		}
 		startPlaces.append(startPlaces.back() + parts.back().data.size()/w);
 	}
-#if 0
-	int si0 = 10*1000;
-	int sc0 = 2;
-	int mb0 = 5;
-	int sin = 5*1000;
-	int scn = 8;
-	int mbn = 40;
-	int ic0 = 2;
-	int icn = 8;
-#endif
+	makeConnected();
+
 	spawnIntervals = linearList(0, count, 10*1000, 5*1000);
 //	spawnCounts = linearList(0, count, 2, 8);
 	maxBots = linearList(0, count, 5, 40);
@@ -80,4 +72,31 @@ QPair<int,int> Area::getSpawnPoint(int spawn)
 		y = startPlaces[spawn] + rand() % parts[spawn].spawnH;
 	} while(data[y*w+x]!=0);
 	return QPair<int,int>(x,y);
+}
+
+static const int dx[]={0,1,0,-1};
+static const int dy[]={1,0,-1,0};
+void Area::connDFS(int x, int y, QVector<bool>& used)
+{
+	used[y*w+x]=1;
+	for(int i=0; i<4; ++i) {
+		int x2=x+dx[i], y2=y+dy[i];
+		if (blocked(x2,y2)) continue;
+		if (!used[y2*w+x2]) connDFS(x2,y2,used);
+	}
+}
+void Area::makeConnected()
+{
+	QVector<bool> used(w*h,0);
+	int sx=-1,sy=-1;
+	for(int y=0; y<h && sx<0; ++y)
+		for(int x=0; x<w && sx<0; ++x)
+			if (!blocked(x,y)) sx=x,sy=y;
+	connDFS(sx,sy,used);
+
+	for(int y=0; y<h; ++y) {
+		for(int x=0; x<w; ++x) {
+			if (blocked(x,y) || used[y*w+x]) continue;
+		}
+	}
 }

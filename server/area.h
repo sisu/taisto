@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QPair>
+#include <QVector>
 #include "constants.h"
 
 struct AreaPart {
@@ -34,6 +35,10 @@ struct Area {
 		if (x<0 || x>=w || y<0 || y>=h) return 1;
 		return data[y*w+x];
 	}
+
+private:
+	void makeConnected();
+	void connDFS(int x, int y, QVector<bool>& used);
 };
 
 #endif
