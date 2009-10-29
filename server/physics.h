@@ -1,8 +1,11 @@
+#ifndef PHYSICS_H
+#define PHYSICS_H
+
 #include "area.h"
 #include <cmath>
 #include <QPair>
 
-QPair<double,double> getWallHitPoint(double x0, double y0, double x1, double y1, const Area& a)
+inline QPair<double,double> getWallHitPoint(double x0, double y0, double x1, double y1, const Area& a)
 {
 	double vx=x1-x0, vy=y1-y0;
 	double len2 = vx*vx + vy*vy;
@@ -34,3 +37,4 @@ QPair<double,double> getWallHitPoint(double x0, double y0, double x1, double y1,
 	}
 	return QPair<double,double>(x1,y1);
 }
+#endif
