@@ -19,9 +19,11 @@ class RenderArea : public QGLWidget
     public:
         Engine& engine;
         RenderArea(Engine&, QWidget* parent=0);
+        QList<QPixmap> itemPix;
         void draw(Player*);
         double centerx,centery;
         double width, height;
+        void drawItemPix();
         void drawLightning(QPainter& painter, QList<QPoint> points);
         int distance(QPoint a, QPoint b);
 
