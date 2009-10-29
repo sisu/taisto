@@ -23,9 +23,13 @@ const QColor weaponColors[] = {
 RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QGL::SampleBuffers),parent), engine(_engine), player(NULL)
 //RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
+
+    drawItemPix();
+
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
 }
+
 void RenderArea::paintEvent(QPaintEvent * /* event */)
 {
     width=this->size().width();
@@ -59,11 +63,11 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 
     //Spawn areas
-    painter.setBrush(QBrush(QColor(230,250,30)));
+    painter.setBrush(QBrush(QColor(230,250,230)));
+    painter.setPen(Qt::NoPen);
     int k = (starty/a.part)*a.part;
     double x0=w2+startx*SQUARE-centerx;
     double x1=(endx-startx+1)*SQUARE;
-    painter.setFont(QFont("Verdana", 50, QFont::Bold));
     while(k<=endy) {
         if(k+a.spawn>=starty) {
             int k_index=(k/a.part)+1;
@@ -84,6 +88,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             ptext.end();
 
             if(x0>0) {
+        qDebug()<<"MOI";
                 painter.drawPixmap(x0-text.width()-5,y0+y1-text.height(),text);
             }
             if(x0+x1<width) {
@@ -180,14 +185,18 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 	//Items
 	for(int i=0; i<engine.items.size(); ++i) {
 		Item& it = engine.items[i];
-		QColor c(255,255,255);
+		/*QColor c(255,255,255);
 		if (it.itemNo>0) c=weaponColors[it.itemNo-1];
 		painter.setBrush(QBrush(c));
 
 		double x = width/2 - centerx + it.x*SQUARE;
 		double y = height/2 - centery + it.y*SQUARE;
 		int s=5;
-		painter.drawRect(x-s,y-s,2*s,2*s);
+		painter.drawRect(x-s,y-s,2*s,2*s);*/
+        QPixmap& curr=itemPix[it.itemNo];
+		double x = width/2 - centerx + it.x*SQUARE;
+		double y = height/2 - centery + it.y*SQUARE;
+        painter.drawPixmap(x-curr.width()/2,y-curr.height()/2,curr);
 	}
 
     /*
@@ -237,7 +246,6 @@ void RenderArea::drawBar(QPainter& painter)
         QFont newFont(painter.font());
         newFont.setPixelSize(10);
         painter.setFont(newFont);
-
         painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
     }
 
@@ -322,6 +330,78 @@ void RenderArea::drawExplosions(QPainter& painter)
 			painter.drawEllipse(midX + SQUARE*p.x - s + midX, midY + SQUARE*p.y - s + midY, 2*s, 2*s);
 		}
 	}
+}
+
+void RenderArea::drawItemPix() {
+    int itemwidth=12;
+    int itemheight=12;
+    
+    // Healthitem
+    QPixmap h(itemwidth,itemheight);
+    h.fill(QColor(0,0,0));
+    QPainter p(&h);
+    p.setBrush(QBrush(QColor(255,255,255)));
+    p.setPen(QPen(QColor(0,0,0)));
+    p.setPen(Qt::NoPen);
+    p.drawRect(0,0,itemwidth,itemheight);
+    p.setBrush(QBrush(QColor(255,0,0)));
+    p.setPen(Qt::NoPen);
+    p.drawRect(itemwidth/2-2,1,4,itemheight-2);
+    p.drawRect(1,itemheight/2-2,itemwidth-2,4);
+    p.end();
+    itemPix.append(h);
+    
+    //Bead gun
+    QPixmap p1(itemwidth,itemheight);
+    p1.fill(QColor(0,0,0));
+    QPainter p1p(&p1);
+                p1p.setPen(QPen(QColor(55,55,55)));
+    p1p.setBrush(QBrush(QColor(60,220,155)));
+    p1p.setPen(Qt::NoPen);
+    p1p.drawRect(0,0,itemwidth,itemheight);
+    p1p.end();
+    itemPix.append(p1);
+    //Shotgun
+    QPixmap p2(itemwidth,itemheight);
+    p2.fill(QColor(0,0,0));
+    QPainter p2p(&p2);
+    p2p.setBrush(QBrush(QColor(0,125,225)));
+    p2p.setPen(Qt::NoPen);
+    p2p.drawRect(0,0,itemwidth,itemheight);
+    p2p.end();
+    itemPix.append(p2);
+
+    //Machine gun
+    QPixmap p3(itemwidth,itemheight);
+    p3.fill(QColor(0,0,0));
+    QPainter p3p(&p3);
+    p3p.setBrush(QBrush(QColor(225,185,0)));
+    p3p.setPen(QPen(QColor(0,0,0)));
+    p3p.drawRect(0,0,itemwidth,itemheight);
+    p3p.end();
+    itemPix.append(p3);
+
+    //Electrogun
+    QPixmap p4(itemwidth,itemheight);
+    p4.fill(QColor(0,0,0));
+    QPainter p4p(&p4);
+    p4p.setBrush(QBrush(QColor(210,30,105)));
+    p4p.setPen(Qt::NoPen);
+    p4p.drawRect(0,0,itemwidth,itemheight);
+    p4p.end();
+    itemPix.append(p4);
+    
+    //Rocket launcher
+    QPixmap p5(itemwidth,itemheight);
+    p5.fill(QColor(0,0,0));
+    QPainter p5p(&p5);
+    p5p.setBrush(QBrush(QColor(230,120,100)));
+    p5p.setPen(Qt::NoPen);
+    p5p.drawRect(0,0,itemwidth,itemheight);
+    p5p.end();
+    itemPix.append(p5);
+    
+       
 }
 
 void RenderArea::draw(Player* player) {
