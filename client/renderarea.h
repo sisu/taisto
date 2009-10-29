@@ -20,6 +20,8 @@ class RenderArea : public QWidget
         void draw(Player*);
         double centerx,centery;
         double width, height;
+        void drawLightning(QPainter& painter, QList<QPoint> points);
+        int distance(QPoint a, QPoint b);
 
     protected:
         void paintEvent(QPaintEvent *event);

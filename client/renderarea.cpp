@@ -124,6 +124,9 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawEllipse(x-2,y-2,4,4);
     }
 
+    QList<QString> weaponNames;
+    weaponNames << "Bead Gun" << "Shotgun" << "Machine Gun" << "Electrogun" << "Rocket Launcher";
+
     QList<QColor> weaponColors;
     weaponColors.append(QColor(60,220,155));
     weaponColors.append(QColor(0,125,225));
@@ -144,6 +147,11 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 		painter.drawRect(x-s,y-s,2*s,2*s);
 	}
 
+    /*
+    QList<QPoint> lPoints;
+    lPoints<<QPoint(100,100)<<QPoint(100,150)<<QPoint(200,120)<<QPoint(125,175)<<QPoint(75,200);
+    drawLightning(painter,lPoints);
+    */
 
 	//Statusbar
 	painter.resetTransform();
@@ -185,11 +193,48 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
     }
 
+    int index = player != NULL ? player->weapon - 1 : 0; 
 
     painter.setBrush(QBrush(QColor(60,60,60))); 
-    painter.drawText(QPoint(150 + weaponColors.size() * 25 + 10, statusBarY + 14), "Hernepyssy");
+    painter.drawText(QPoint(150 + weaponColors.size() * 25 + 10, statusBarY + 14),
+            weaponNames[index]);
 }
 
+int RenderArea::distance(QPoint a, QPoint b) {
+    int dx = a.x() - b.x();
+    int dy = a.y() - b.y();
+    return (int)sqrt(dx*dx+dy*dy);
+}
+
+void RenderArea::drawLightning(QPainter& painter, QList<QPoint> points) {
+    // 0 is the beginning
+    QList<int> picked;
+    picked.append(0);
+
+    QList<QPair<int,int> > graph;
+    
+    while(picked.size() < points.size()) {
+        int cheapest = (int)1e9;
+        QPair<int,int> pr;
+        for(int i = 0; i < picked.size(); ++i) {
+            for(int j = 0; j < points.size(); ++j) {
+                if(picked.contains(j)) continue;
+                int dist = distance(points[picked[i]],points[j]);
+                if(dist < cheapest) {
+                    cheapest = dist;
+                    pr = QPair<int,int>(picked[i],j);
+                }
+            }
+        }
+        graph.append(pr); 
+        picked.append(pr.second);
+    }
+
+    painter.setBrush(QBrush(QColor(130,175,200))); 
+    for(int i = 0; i < graph.size(); ++i) {
+        painter.drawLine(points[graph[i].first],points[graph[i].second]);
+    }
+}
 
 void RenderArea::draw(Player* player) {
     //qDebug()<<"Health: "<<player->health;
