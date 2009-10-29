@@ -2,12 +2,13 @@
 #include "server.h"
 #include <cmath>
 
-const double A=0.5;
+const double A=0.9;
 
 void Bot::runAI(Server& s)
 {
 	shooting=0;
-	turn=moveForward=moveSide=0;
+	moveSide=0;
+//	turn=moveForward=moveSide=0;
 	double vx=cos(angle), vy=-sin(angle);
 	for(int i=0; i<s.players.size(); ++i) {
 		Player& pl = s.players[i];
@@ -28,6 +29,11 @@ void Bot::runAI(Server& s)
 			}
 		}
 	}
-	moveForward=1;
-	turn = rand()%2-1;
+
+	int t=timer.elapsed();
+	if (t<nextT) return;
+	nextT = t+300+rand()%800;
+
+	moveForward=rand()%2;
+	turn = rand()%3-1;
 }

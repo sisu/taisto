@@ -14,8 +14,8 @@ const int FPS = 50;
 const double FRAME_TIME = 1./FPS;
 
 const int WEAPONS = 16;
-const int loadTimes[1+WEAPONS] = {0,200,350};
-const double bulletSpeeds[1+WEAPONS] = {0,20,40};
-const double damages[1+WEAPONS] = {0,0.11,0.11};
+const int loadTimes[1+WEAPONS] = {0,200,350,50};
+const double bulletSpeeds[1+WEAPONS] = {0,20,40,50};
+const double damages[1+WEAPONS] = {0,0.11,0.11,0.06};
 
 #endif

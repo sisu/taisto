@@ -55,6 +55,9 @@ void Unit::shoot(int weap, Server& serv)
 				makeBullet(serv, weap, angle+((i-1.5)*.05), 0.03);
 			}
 			break;
+		case 3:
+			makeBullet(serv, weap, angle, 0.02);
+			break;
 		default:
 			qDebug()<<"unknown weapon"<<weap;
 			break;
