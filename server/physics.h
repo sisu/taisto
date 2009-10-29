@@ -37,4 +37,10 @@ inline QPair<double,double> getWallHitPoint(double x0, double y0, double x1, dou
 	}
 	return QPair<double,double>(x1,y1);
 }
+inline bool rayHitsWall(double x0, double y0, double x1, double y1, const Area& a)
+{
+	QPair<double,double> p = getWallHitPoint(x0,y0,x1,y1,a);
+	return fabs(p.first-x1)>1e-3 || fabs(p.second-y1)>1e-3;
+}
+
 #endif

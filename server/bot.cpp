@@ -20,8 +20,7 @@ void Bot::runAI(Server& s, int t)
 		if (l < 8) {
 			double a = acos((vx*dx+vy*dy)/(l*v));
 			if (a>-A && a<A) {
-				QPair<double,double> p = getWallHitPoint(x,y,pl.x,pl.y,s.area);
-				if (fabs(p.first-pl.x)>1e-3 || fabs(p.second-pl.y)>1e-3) continue;
+				if (rayHitsWall(x,y,pl.x,pl.y,s.area)) continue;
 //				qDebug()<<"YYYAAAAARRRRRRRR";
 				double dir = vx*dy - vy*dx;
 				if (dir>0) turn=-1;

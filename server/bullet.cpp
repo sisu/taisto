@@ -85,9 +85,13 @@ bool Bullet::update(Server& s, QList<Unit*>& plrs)
 	x=p.first;
 	y=p.second;
 	if (nDist<len && fabs(x-ex)<1e-3 && fabs(y-ey)<1e-3) {
-		s.hitPlayer(*plrs[nearest], type);
+		s.bulletHit(plrs[nearest], *this);
 		return 1;
 	}
-	return fabs(x-ex)>1e-3 || fabs(x-ex)>1e-3;
+	if (fabs(x-ex)>1e-3 || fabs(x-ex)>1e-3) {
+		s.bulletHit(0, *this);
+		return 1;
+	}
+	return 0;
 #endif
 }

@@ -19,7 +19,8 @@ public:
 	Server(int spawns);
 
 	void sendToAll(QByteArray msg);
-	void hitPlayer(Unit& pl, int weapon);
+//	void hitPlayer(Unit& pl, int weapon);
+	void bulletHit(Unit* pl, const Bullet& b);
 
 	Area area;
 	QList<Bullet> bullets;
