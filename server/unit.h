@@ -18,6 +18,7 @@ class Unit {
             packetSize=-1;
 			health=1;
 			armor=1;
+			lastHitT=-1e9;
         }
 
         double x,y,angle;
@@ -26,6 +27,8 @@ class Unit {
         void updatePhysics(Server&);
 		double health;
 		double armor;
+
+		int lastHitT;
 
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);

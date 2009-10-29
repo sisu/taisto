@@ -110,9 +110,10 @@ void Server::updateBots()
     stream << 1 + 4 + bots.size()*(8+8+8+4+4+4+8+4);
     stream << MSG_ENEMY << bots.size();
 
+	int t = curT.elapsed();
     for(int i = 0; i < bots.size(); ++i) {
         Bot& bot = bots[i];
-		bot.runAI(*this);
+		bot.runAI(*this, t);
         bot.updatePhysics(*this);
         stream << bot.x << bot.y << bot.angle << bot.moveForward <<
             bot.moveSide << bot.turn << bot.health << bot.weapon;
@@ -235,6 +236,7 @@ void Server::sendHit(const Bullet& b)
 void Server::hitPlayer(Unit& p, int weapon)
 {
 	p.health -= damages[weapon] / p.armor;
+	p.lastHitT = curT.elapsed();
 	qDebug()<<"hit"<<p.health;
 }
 

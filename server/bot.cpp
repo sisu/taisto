@@ -4,7 +4,7 @@
 
 const double A=0.9;
 
-void Bot::runAI(Server& s)
+void Bot::runAI(Server& s, int t)
 {
 	shooting=0;
 	moveSide=0;
@@ -29,8 +29,11 @@ void Bot::runAI(Server& s)
 			}
 		}
 	}
+	if (t-lastHitT < 500) {
+		moveForward=0;
+		turn=1;
+	}
 
-	int t=timer.elapsed();
 	if (t<nextT) return;
 	nextT = t+300+rand()%800;
 

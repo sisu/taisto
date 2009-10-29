@@ -19,13 +19,12 @@ public:
 		weapon = w;
 	}
 
-	void runAI(Server& s);
+	void runAI(Server& s, int t);
 
 	int weapon;
 
 	bool shooting;
 	int lastShoot;
-	QTime timer;
 	int nextT;
 };
 
