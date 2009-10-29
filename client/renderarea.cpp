@@ -124,12 +124,50 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawEllipse(x-2,y-2,4,4);
     }
 
+	painter.resetTransform();
+
+	int statusBarHeight = 20;
+	int statusBarFromBottom = 5;
+	int statusBarY = height - statusBarHeight - statusBarFromBottom;
+
+    painter.setBrush(QBrush(QColor(255,255,255)));
+    painter.drawRect(5, statusBarY, width - 10, statusBarHeight);
+
     // Health bar
 
     if(player != NULL) {
         painter.setBrush(QBrush(QColor(255,0,0)));
-        painter.drawRect(10, 5, 100*player->health, 5);
+        painter.drawRect(10, statusBarY + 7, 100*player->health, 6);
     }
+
+    QList<QColor> weaponColors;
+    weaponColors.append(QColor(60,220,155));
+    weaponColors.append(QColor(0,125,225));
+    weaponColors.append(QColor(225,185,0));
+    weaponColors.append(QColor(210,30,105));
+    weaponColors.append(QColor(230,120,100));
+
+    // Weapon boxes
+
+    int boxx = 150;
+
+    for(int i = 0; i < weaponColors.size(); ++i) {
+        painter.setBrush(QBrush(weaponColors[i])); 
+        painter.drawRect(boxx + i*25, statusBarY + 4, 20, 12);
+        painter.setBrush(QBrush(QColor(60,60,60))); 
+        QString str = "";
+        str += '1'+i;
+
+        QFont newFont(painter.font());
+        newFont.setPixelSize(10);
+        painter.setFont(newFont);
+
+        painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
+    }
+
+
+    painter.setBrush(QBrush(QColor(60,60,60))); 
+    painter.drawText(QPoint(150 + weaponColors.size() * 25 + 10, statusBarY + 14), "Hernepyssy");
 }
 
 
