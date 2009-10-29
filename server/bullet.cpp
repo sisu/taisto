@@ -1,5 +1,6 @@
 #include "bullet.h"
 #include "server.h"
+#include "physics.h"
 #include <QList>
 #include <cmath>
 
@@ -25,7 +26,6 @@ double distToPlayer(double x, double y, double px, double py, double vx, double 
 
 bool Bullet::update(Server& s, QList<Unit*>& plrs)
 {
-	Area& a = s.area;
 	double v = sqrt(vx*vx + vy*vy);
 	double len = v * FRAME_TIME;
 
@@ -43,6 +43,8 @@ bool Bullet::update(Server& s, QList<Unit*>& plrs)
 		}
 	}
 
+#if 0
+	Area& a = s.area;
 	int ix=x, iy=y;
 	int idx=vx<0?-1:1, idy=vy<0?-1:1;
 	double x0=x,y0=y;
@@ -74,4 +76,18 @@ bool Bullet::update(Server& s, QList<Unit*>& plrs)
 	}
 	x=ex,y=ey;
 	return 0;
+#else
+	if (nDist < len) {
+		ex = x + vx0*nDist;
+		ey = y + vy0*nDist;
+	}
+	QPair<double,double> p = getWallHitPoint(x,y,ex,ey,s.area);
+	x=p.first;
+	y=p.second;
+	if (nDist<len && fabs(x-ex)<1e-3 && fabs(y-ey)<1e-3) {
+		s.hitPlayer(*plrs[nearest], type);
+		return 1;
+	}
+	return fabs(x-ex)>1e-3 || fabs(x-ex)>1e-3;
+#endif
 }

@@ -2,7 +2,7 @@
 #include "server.h"
 #include <cmath>
 
-const double A=0.9;
+const double A=1.0;
 
 void Bot::runAI(Server& s, int t)
 {
