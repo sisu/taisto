@@ -1,6 +1,7 @@
 #include <QtGui>
 #include "renderarea.h"
 #include "constants.h"
+#include "physics.h"
 #ifndef max
     #define max( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #endif
@@ -88,7 +89,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             ptext.end();
 
             if(x0>0) {
-        qDebug()<<"MOI";
+//        qDebug()<<"MOI";
                 painter.drawPixmap(x0-text.width()-5,y0+y1-text.height(),text);
             }
             if(x0+x1<width) {
@@ -310,10 +311,11 @@ void RenderArea::drawExplosions(QPainter& painter)
 			double start=rndf() * ROCKET_RADIUS;
 			double xx = x + start*vx/v;
 			double yy = y + start*vy/v;
+			QPointF p = getWallHitPoint(x, y, xx, yy, engine.area);
 			double r = .5*rndf()+.5;
 			double g = r * rndf();
 			double b = r*.5;
-			particles.append(Particle(xx,yy,vx,vy,QColor::fromRgbF(r,g,b), start));
+			particles.append(Particle(p.x(),p.y(),vx,vy,QColor::fromRgbF(r,g,b), start));
 		}
 	}
 	engine.explosions.clear();
@@ -325,7 +327,7 @@ void RenderArea::drawExplosions(QPainter& painter)
 	if (particles.size()) qDebug()<<particles.size();
 	for(int i=0; i<particles.size(); ) {
 		const double tt=0.2;
-		if (particles[i].update() || particles[i].time>tt) {
+		if (particles[i].update(engine.area) || particles[i].time>tt) {
 			particles[i]=particles.back();
 			particles.pop_back();
 		} else {

@@ -5,6 +5,7 @@
 #include "messages.h"
 #include "constants.h"
 #include "bot.h"
+#include "physics.h"
 
 Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
 {
@@ -235,11 +236,12 @@ void Server::sendHit(const Bullet& b)
 	sendToAll(msg);
 }
 
-static void rocketDamage(Unit& u, const Bullet& b)
+void Server::rocketDamage(Unit& u, const Bullet& b)
 {
 	double dx=u.x-b.x, dy=u.y-b.y;
 	double d2 = dx*dx + dy*dy;
 	if (d2 > ROCKET_RADIUS*ROCKET_RADIUS) return;
+	if (rayHitsWall(b.x,b.y,u.x,u.y,area)) return;
 	double d = sqrt(d2);
 	double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
 	u.health -= dmg / u.armor;

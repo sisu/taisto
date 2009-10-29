@@ -52,6 +52,7 @@ private:
 	void updateBullets();
 	void updateItems();
 	void spawnInitial();
+	void rocketDamage(Unit& u, const Bullet& b);
 };
 
 #endif
