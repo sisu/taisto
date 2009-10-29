@@ -250,7 +250,6 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     painter.setBrush(QBrush(QColor(60,60,60))); 
     painter.drawText(QPoint(150 + weaponColors.size() * 25 + 10, statusBarY + 14),
             weaponNames[index]);
-    painter.drawPixmap(50,50,itemPix[1]);
 }
 
 int RenderArea::distance(QPoint a, QPoint b) {
