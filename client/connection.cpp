@@ -145,11 +145,11 @@ void Connection::readItem(QDataStream& s) {
 		engine.items.append(it);
 	}
 }
-const int boxSizes[20] = {0,15,40,1,1};
+const int boxSizes[20] = {0,15,50,1,2};
 void Connection::readGet(QDataStream& s) {
 	int item;
 	s>>item;
-	if (item>0) engine.bulletCounts[item] += 20;
+	if (item>0) engine.bulletCounts[item] += boxSizes[item];
 }
 
 void Connection::sendStatus()
