@@ -26,6 +26,9 @@ void Player::update(Server& s)
 			case MSG_SHOOT:
 				readShoot(is, s);
 				break;
+			case MSG_INFO:
+				readInfo(is);
+				break;
 			default:
 				qDebug()<<type;
 				abort();
@@ -47,4 +50,17 @@ void Player::readShoot(QDataStream& s, Server& serv)
 	s>>weapon;
 
 	shoot(weapon, serv);
+}
+void Player::readInfo(QDataStream& s)
+{
+	int len;
+	s>>len;
+	char* buf = new char[2*len+1];
+	s.readRawData(buf, 2*len);
+	buf[2*len]=0;
+	name = QString::fromRawData((QChar*)buf, len);
+	for(int i=0; i<len; ++i) qDebug()<<int(buf[i]);
+	qDebug()<<"got name"<<name<<len<<name.size();
+
+	qDebug()<<name;
 }
