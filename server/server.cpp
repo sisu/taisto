@@ -345,7 +345,7 @@ void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Playe
 
 	pts.append(QPointF(pl.x,pl.y));
 	pl.health -= damages[4] / pl.armor;
-	if (player) player->damageDone += damages[4] / player->armor;
+	if (player) player->damageDone += damages[4] / pl.armor;
 	pl.lastShooter = player;
 //	qDebug()<<"lightning damage"<<pl.health;
 }
