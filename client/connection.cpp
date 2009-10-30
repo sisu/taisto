@@ -154,7 +154,7 @@ void Connection::readItem(QDataStream& s) {
 	}
 }
 void Connection::readGet(QDataStream& s) {
-	static const int boxSizes[20] = {0,0,15,100,200,3};
+	static const int boxSizes[20] = {0,0,15,100,50,3};
 	int item;
 	s>>item;
 	if (item>0) engine.bulletCounts[item] += boxSizes[item];
