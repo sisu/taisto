@@ -57,6 +57,7 @@ void Server::update()
 		if (bots[i].y <= area.startPlaces[curSpawn+1]+area.parts[curSpawn+1].spawnH) botNext=1;
 
 	if (playerNext && !botNext) {
+		items.clear();
 		++curSpawn;
 		spawnStuff();
 	}
