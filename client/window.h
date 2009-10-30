@@ -5,6 +5,7 @@
 #include <QString>
 #include "player.h"
 #include "engine.h"
+#include "stats.h"
 class RenderArea;
 class Window : public QWidget
 {
@@ -22,7 +23,7 @@ class Window : public QWidget
         void checkCheats();
         void addToLetterBuffer(int event);
     public slots:
-        void draw(Player*);
+        void draw(Player*, Stats*);
     private:
         RenderArea *renderArea;
 		Player& player;

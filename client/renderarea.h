@@ -10,6 +10,7 @@
 #include "engine.h"
 #include "player.h"
 #include "particle.h"
+#include "stats.h"
 #include <QtOpenGL>
 
 //class RenderArea : public QWidget
@@ -22,11 +23,12 @@ class RenderArea : public QGLWidget
         RenderArea(Engine&, QWidget* parent=0);
         QList<QPixmap> itemPix;
         QList<QPixmap> bulletPix;
-        void draw(Player*);
+        void draw(Player*,Stats*);
         double centerx,centery;
         double width, height;
         void drawItemPix();
         void drawBulletPix();
+        QPixmap drawStats();
         QList<QPoint> pathBetween(QPoint a, QPoint b);
         void drawLightning(QPainter& painter, QList<QPointF> points);
         QList<QPointF> pathBetween(QPointF a, QPointF b);
@@ -36,6 +38,7 @@ class RenderArea : public QGLWidget
 
     private:
         Player* player;
+        Stats* stats;
 		QList<Particle> particles;
 
 		void drawBar(QPainter& p);

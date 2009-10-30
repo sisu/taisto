@@ -2,7 +2,7 @@
 #include <cmath>
 #include "connection.h"
 #include "messages.h"
-
+#include "stats.h"
 Connection::Connection(Player* obj, Engine& e): player(obj), engine(e) {
 	packetSize=-1;
 	packetCount=0;

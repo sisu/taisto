@@ -16,8 +16,9 @@ Window::Window(Engine& engine, Player& pl) : player(pl)
 	listOfCheats.append("ibeatyou");
 }
 
-void Window::draw(Player* player) {
-	renderArea->draw(player);
+void Window::draw(Player* player,Stats* stats) {
+    if(keysHeld.contains(Qt::Key_Tab)) {qDebug("gay");renderArea->draw(player,stats);}
+    else renderArea->draw(player,0);
 	//"Piirrä"
 }
 
