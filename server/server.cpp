@@ -67,6 +67,8 @@ void Server::update()
 		qDebug()<<"fps:"<<frames;
 		frames=0;
 		prevSec=t/1000;
+
+		sendStats();
 	}
 
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
@@ -182,14 +184,15 @@ void Server::updateBullets()
 			spawnPlayer(players[i],0);
 			++players[i].deaths;
 
-			Player* shooter = getPlayer(players[i].lastShooter);
+			Player* shooter = players[i].lastShooter;
 			if (shooter) ++shooter->kills;
 		}
 	for(int i=0; i<bots.size(); ) {
 //		if (bots[i].health<=0) spawnPlayer(bots[i],1);
 		if (bots[i].health<=0) {
-			Player* shooter = getPlayer(bots[i].lastShooter);
+			Player* shooter = bots[i].lastShooter;
 			if (shooter) ++shooter->kills;
+//			qDebug()<<"killed by"<<bots[i].lastShooter;
 
 			bots[i]=bots.back();
 			bots.pop_back();
@@ -235,6 +238,25 @@ void Server::sendHit(const Bullet& b)
 
 	sendToAll(msg);
 }
+void Server::sendStats()
+{
+	QByteArray msg;
+	QDataStream s(&msg, QIODevice::WriteOnly);
+
+	int lens=0;
+	for(int i=0; i<players.size(); ++i) lens+=players[i].name.size();
+	qDebug()<<"stats"<<lens;
+	s << 1+4+lens+players.size()*(4+4+4+8+4);
+	s << MSG_STATS << players.size();
+	for(int i=0; i<players.size(); ++i) {
+		Player& p = players[i];
+		qDebug()<<"str"<<p.name;
+		s << p.id << p.kills << p.deaths << p.damageDone << p.name.size();// << p.name;
+		s.writeRawData((char*)p.name.data(), p.name.size());
+	}
+
+	sendToAll(msg);
+}
 
 void Server::rocketDamage(Unit& u, const Bullet& b)
 {
@@ -246,7 +268,7 @@ void Server::rocketDamage(Unit& u, const Bullet& b)
 	double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
 	u.health -= dmg / u.armor;
 	if (b.shooter) b.shooter->damageDone += dmg/u.armor;
-	u.lastShooter = b.id;
+	u.lastShooter = b.shooter;
 }
 void Server::bulletHit(Unit* p, const Bullet& b)
 {
@@ -261,8 +283,8 @@ void Server::bulletHit(Unit* p, const Bullet& b)
 
 	p->health -= damages[b.type] / p->armor;
 	p->lastHitT = curT.elapsed();
-	if (b.shooter) b.shooter->damageDone += damages[b.type] / p->armor;
-	p->lastShooter = b.id;
+	if (b.shooter) b.shooter->damageDone += damages[b.type] / p->armor, qDebug()<<"adding for"<<b.shooter->id<<damages[b.type]/p->armor;
+	p->lastShooter = b.shooter;
 	qDebug()<<"hit"<<p->health;
 }
 
@@ -324,7 +346,7 @@ void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Playe
 	pts.append(QPointF(pl.x,pl.y));
 	pl.health -= damages[4] / pl.armor;
 	if (player) player->damageDone += damages[4] / player->armor;
-	pl.lastShooter = player ? player->id : -1;
+	pl.lastShooter = player;
 //	qDebug()<<"lightning damage"<<pl.health;
 }
 void Server::hitLightning(Unit& u)

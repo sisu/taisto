@@ -31,6 +31,7 @@ private:
 	void readItem(QDataStream& s);
 	void readGet(QDataStream& s);
 	void readLightning(QDataStream& s);
+	void readStats(QDataStream& s);
 	int packetSize;
 };
 #endif

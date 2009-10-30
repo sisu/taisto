@@ -9,6 +9,7 @@
 #include "constants.h"
 
 class Server;
+class Player;
 
 class Unit {
     public:
@@ -31,7 +32,7 @@ class Unit {
 		int id; // -1 for bots
 
 		int lastHitT;
-		int lastShooter;
+		Player* lastShooter;
 
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);

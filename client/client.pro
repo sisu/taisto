@@ -5,6 +5,7 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += . ../server
+CONFIG += debug
 QT += network opengl
 
 # Input
@@ -16,11 +17,17 @@ HEADERS += connection.h \
     window.h \
 	player.h \
 	particle.h \
+<<<<<<< HEAD:client/client.pro
     stats.h
+=======
+	setupdialog.h
+>>>>>>> 1930c314b962e375b5b8fd122da5a890890feabe:client/client.pro
 SOURCES += connection.cpp \
     engine.cpp \
     game.cpp \
     main.cpp \
     object.cpp \
     renderarea.cpp \
-    window.cpp
+    window.cpp \
+	setupdialog.cpp
+
