@@ -27,7 +27,7 @@ RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QG
 
     drawBulletPix();
     drawItemPix();
-
+    stats=0;
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
 }
@@ -505,6 +505,7 @@ void RenderArea::drawExplosions(QPainter& painter)
 			painter.drawEllipse(midX + SQUARE*p.x - s, midY + SQUARE*p.y - s, 2*s, 2*s);
 		}
 	}
+    if(stats!=0) painter.drawPixmap(40,40,drawStats());
 }
 
 void RenderArea::drawItemPix() {
@@ -644,10 +645,29 @@ void RenderArea::drawBulletPix() {
        
 }
 
+QPixmap RenderArea::drawStats() {
+    QPixmap statswindow(500,100);
+    statswindow.fill(QColor(20,20,20,80));
 
-void RenderArea::draw(Player* player) {
+    QPainter p(&statswindow);
+    p.setBrush(QColor(20,20,20,20));
+    p.setPen(QPen(QColor(245,245,245)));
+    qDebug()<<stats->players.size();
+    p.setFont(QFont("Verdana",12,QFont::Bold));
+    p.drawText(20,20,"ID\tName\tKills\tDeaths\tRatio\tDamage");
+    p.setFont(QFont("Verdana",12));
+    for(int i=0;i<stats->tostring.size();i++) p.drawText(20,40+i*14,stats->tostring[i]);
+//    p.drawText(20,40,stats->tostring);
+
+    //p.drawRect(0,0,width,height);
+    p.end();
+    return statswindow;
+}
+
+void RenderArea::draw(Player* player,Stats* stats) {
     //qDebug()<<"Health: "<<player->health;
     this->player = player;
+    this->stats=stats;
     centerx=player->x*SQUARE;
     centery=player->y*SQUARE;
     update();

@@ -8,7 +8,7 @@
 #include "connection.h"
 #include "engine.h"
 #include "player.h"
-
+#include "stats.h"
 class Game : public QObject {
 Q_OBJECT
 public:
@@ -19,6 +19,7 @@ public:
     Window window;
 	Player player;
 	QTime startTime;
+    Stats stats;
 	int prevSec;
 
 

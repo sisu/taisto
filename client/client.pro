@@ -17,6 +17,7 @@ HEADERS += connection.h \
     window.h \
 	player.h \
 	particle.h \
+    stats.h \
 	setupdialog.h
 SOURCES += connection.cpp \
     engine.cpp \
