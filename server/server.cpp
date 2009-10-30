@@ -326,8 +326,9 @@ void Server::createItem(int type)
 void Server::spawnStuff(bool next)
 {
 	lastSpawn = curT.elapsed();
-	int s = players.size();
+	double s = players.size();
 	if (!s) s=1;
+	s = sqrt(s);
 	for(int j=0; j<6; ++j) {
 		qDebug()<<"spawning"<<area.spawnCounts[j][curSpawn]*s<<"bots ;"<<next;
 		for(int i=0; i<area.spawnCounts[j][curSpawn] * s; ++i)
