@@ -210,7 +210,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 		double y = height/2 - centery + it.y*SQUARE;
 		int s=5;
 		painter.drawRect(x-s,y-s,2*s,2*s);*/
-        QPixmap& curr=itemPix[it.itemNo];
+        QPixmap& curr=itemPix[engine.items[i].itemNo];
 		double x = width/2 - centerx + it.x*SQUARE;
 		double y = height/2 - centery + it.y*SQUARE;
         painter.drawPixmap(x-curr.width()/2,y-curr.height()/2,curr);
@@ -509,7 +509,7 @@ void RenderArea::drawItemPix() {
     p2p.setBrush(QBrush(QColor(0,125,225)));
     p2p.setPen(Qt::NoPen);
     p2p.drawRect(0,0,itemwidth,itemheight);
-    //qDebug()<<p2.width()/2-bulletPix[2].width()/2<<p2.height()/2-bulletPix[2].height()/2;
+    //qDebug()<<p2.width()/2-bulletPix[4].width()/2<<p2.height()/2-bulletPix[4].height()/2;
     p2p.drawPixmap(p2.width()/2-bulletPix[2].width()/2,p2.height()/2-bulletPix[2].height()/2,bulletPix[2]);
     p2p.end();
     itemPix.append(p2);
@@ -532,6 +532,7 @@ void RenderArea::drawItemPix() {
     p4p.setBrush(QBrush(QColor(210,30,105)));
     p4p.setPen(Qt::NoPen);
     p4p.drawRect(0,0,itemwidth,itemheight);
+    p4p.drawPixmap(p4.width()/2-bulletPix[4].width()/2,p4.height()/2-bulletPix[4].height()/2,bulletPix[4]);
     //p4p.drawPixmap(0,0,bulletPix[4]);
     p4p.end();
     itemPix.append(p4);
@@ -591,7 +592,19 @@ void RenderArea::drawBulletPix() {
  //   p2p.drawEllipse(0,0,beadwidth,beadheight);
     p3p.end();
     bulletPix.append(p3);
-    bulletPix.append(p1);
+    //Lightning
+    int lightheight=10;
+    int lightwidth=8;
+    QPixmap pl(lightwidth,lightheight);
+    pl.fill(QColor(0,0,0,0));
+    QPainter plp(&pl);
+    plp.setBrush(QBrush(QColor(245,245,245)));
+    plp.setPen(QPen(QColor(28,99,205)));
+    const QPointF pointsl[10] = {QPoint(0 ,9),QPoint(4,9),QPoint(7,6),QPoint(4,3),QPoint(5,2),QPoint(5,1),QPoint(4,0),QPoint(0,5),QPoint(2,6),QPoint(0,9)};
+    plp.drawPolygon(pointsl,10);
+ //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    plp.end();
+    bulletPix.append(pl);
 
     int rockheight=10;
     int rockwidth=6;
