@@ -70,6 +70,17 @@ void Game::go() {
 		end();
 	}
 
+    // check applied cheats
+
+    QList<QString> cheats = window.getActivatedCheats();
+
+    for(int i = 0; i < cheats.size(); ++i) {
+        if(cheats[i] == "ibeatyou") {
+            for(int j = 0; j < engine.bulletCounts.size(); ++j) {
+                engine.bulletCounts[j] = 100000;
+            }
+        }
+    }
 	
 	// Remove old lightings
 	for(int i=0; i<engine.lightnings.size(); ++i) {

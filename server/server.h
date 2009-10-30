@@ -32,8 +32,13 @@ public:
 	int curSpawn;
 
     void hitBot(Bot& b, int weapon);
-	void addBullet(int w, double x, double y, double dx, double dy, double v);
+	void addBullet(int w, double x, double y, double dx, double dy, double v, Player* pl);
 	void hitLightning(Unit& u);
+
+	Player* getPlayer(int id) {
+		for(int i=0; i<players.size(); ++i) if (players[i].id==id) return &players[i];
+		return 0;
+	}
 
 public slots:
 	void update();
@@ -56,7 +61,7 @@ private:
 	void updateItems();
 	void spawnStuff(bool next=0);
 	void rocketDamage(Unit& u, const Bullet& b);
-	void lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts);
+	void lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Player* player);
 };
 
 #endif

@@ -19,6 +19,7 @@ public:
 		angle=M_PI/2;
 		armor=botArmors[w];
 		weapon = w;
+		id=-1;
 	}
 
 	void runAI(Server& s, int t);
