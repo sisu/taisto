@@ -10,7 +10,7 @@
 #endif
 const double SQUARE=30;
 const double RADIUS = (PLAYER_RADIUS*SQUARE);
-const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
+const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.4;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
 
 const QColor weaponColors[] = {
@@ -25,6 +25,7 @@ RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QG
 //RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
 
+    drawBulletPix();
     drawItemPix();
 
     setBackgroundRole(QPalette::Base);
@@ -38,7 +39,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     QPainter painter(this);
     painter.setRenderHint(painter.Antialiasing,true);
     
-	painter.setBrush(QBrush(QColor(220,210,180)));
+	//painter.setBrush(QBrush(QColor(220,210,180)));
+	painter.setBrush(QBrush(QColor(50,50,50)));
     painter.drawRect(0,0,width,height);    
 	painter.translate(0, height);
 	painter.scale(1,-1);
@@ -51,7 +53,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     int endy = min(a.h()-1, (centery+h2)/SQUARE);
     
     //Borders
-	painter.setBrush(QBrush(QColor(40,40,40)));
+	//painter.setBrush(QBrush(QColor(40,40,40)));
+    painter.setBrush(QBrush(QColor(120,110,100)));
 
     if(centerx-width/2<0) {
         double over=width/2-centerx;
@@ -64,7 +67,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 
     //Spawn areas
-    painter.setBrush(QBrush(QColor(230,250,230)));
+    //painter.setBrush(QBrush(QColor(230,250,230)));
+    painter.setBrush(QBrush(QColor(50,60,70)));
     painter.setPen(Qt::NoPen);
     int k = (starty/a.part)*a.part;
     double x0=w2+startx*SQUARE-centerx;
@@ -112,7 +116,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     for(int y=starty; y<=endy; ++y) {
         for(int x=startx; x<=endx; ++x) {
             if (a.data[y*a.w+x]) {
-                painter.setBrush(QBrush(QColor(70,40,40)));
+                painter.setBrush(QBrush(QColor(130,120,110)));
+                //painter.setBrush(QBrush(QColor(70,40,40)));
                 //                painter.setPen(QPen(QColor(0,0,0)));
 
                 double x0 = w2 + x*SQUARE - centerx;
@@ -161,7 +166,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(190,140,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
-            painter.setBrush(QBrush(QColor(90,240,90)));
+//            painter.setBrush(QBrush(QColor(90,240,90)));
+            painter.setBrush(QBrush(weaponColors[engine.bots[i].weapon-1]));
             double a=engine.bots[i].direction;
             painter.drawEllipse(
                     x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
@@ -179,8 +185,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
         double x = width/2 - centerx + px;
         double y = height/2 - centery + py;
-
-        painter.drawEllipse(x-2,y-2,4,4);
+        QPixmap cur=bulletPix[it.value().weapon];
+//        cur.rotate(it.value().dirdeg);
+        QMatrix matrix;
+        cur=cur.transformed(matrix.rotate(it.value().dirdeg));
+        painter.drawPixmap(x-cur.width()/2,y-cur.height()/2,cur);
+ //       painter.rotate(-it.value().dir);
     }
 
 	//Items
@@ -326,7 +336,12 @@ QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
 }
 
 void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
-	if (points.size()==1) return;
+	if (points.size()==1) {
+		double s=.1;
+		points.append(QPointF(points[0].x()+s,points[0].y()+s));
+		points[0].setX(points[0].x()-s);
+		points[0].setY(points[0].y()-s);
+	}
 	qDebug()<<"drawing lightning"<<points.size();
 	qDebug()<<points;
     // 0 is the beginning
@@ -334,23 +349,21 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
     picked.append(0);
 
     QList<QPair<int,int> > graph;
-    
-    while(picked.size() < points.size()) {
-        double cheapest = (int)1e9;
-        QPair<int,int> pr;
-        for(int i = 0; i < picked.size(); ++i) {
-            for(int j = 0; j < points.size(); ++j) {
-                if(picked.contains(j)) continue;
-                double dist = distance(points[picked[i]],points[j]);
-                if(dist < cheapest) {
-                    cheapest = dist;
-                    pr = QPair<int,int>(picked[i],j);
-                }
-            }
-        }
-        graph.append(pr); 
-        picked.append(pr.second);
-    }
+	QVector<bool> used(points.size(), 0);
+	QVector<QPair<double,int> > dists(points.size(), QPair<double,int>(1e9,-1));
+	for(int i=0; i<points.size(); ++i) {
+		QPair<double,int> choise(1e10, 0);
+		int ci=-1;
+		for(int j=0; j<points.size(); ++j)
+			if (!used[j] && dists[j]<choise) choise=dists[j], ci=j;
+		used[ci]=1;
+		for(int j=0; j<points.size(); ++j) {
+			if (used[j]) continue;
+			double d = distance(points[ci],points[j]);
+			if (d<dists[j].first) dists[j].first=d, dists[j].second=ci;
+		}
+		if (choise.second>=0) graph.append(QPair<int,int>(choise.second,ci));
+	}
 
 	qDebug()<<graph;
 
@@ -497,7 +510,7 @@ void RenderArea::drawExplosions(QPainter& painter)
 void RenderArea::drawItemPix() {
     int itemwidth=12;
     int itemheight=12;
-    
+
     // Healthitem
     QPixmap h(itemwidth,itemheight);
     h.fill(QColor(0,0,0));
@@ -512,15 +525,16 @@ void RenderArea::drawItemPix() {
     p.drawRect(1,itemheight/2-2,itemwidth-2,4);
     p.end();
     itemPix.append(h);
-    
+
     //Bead gun
     QPixmap p1(itemwidth,itemheight);
     p1.fill(QColor(0,0,0));
     QPainter p1p(&p1);
-                p1p.setPen(QPen(QColor(55,55,55)));
+    p1p.setPen(QPen(QColor(55,55,55)));
     p1p.setBrush(QBrush(QColor(60,220,155)));
     p1p.setPen(Qt::NoPen);
     p1p.drawRect(0,0,itemwidth,itemheight);
+    p1p.drawPixmap(0,0,bulletPix[1]);
     p1p.end();
     itemPix.append(p1);
     //Shotgun
@@ -530,6 +544,8 @@ void RenderArea::drawItemPix() {
     p2p.setBrush(QBrush(QColor(0,125,225)));
     p2p.setPen(Qt::NoPen);
     p2p.drawRect(0,0,itemwidth,itemheight);
+    qDebug()<<p2.width()/2-bulletPix[2].width()/2<<p2.height()/2-bulletPix[2].height()/2;
+    p2p.drawPixmap(p2.width()/2-bulletPix[2].width()/2,p2.height()/2-bulletPix[2].height()/2,bulletPix[2]);
     p2p.end();
     itemPix.append(p2);
 
@@ -540,6 +556,7 @@ void RenderArea::drawItemPix() {
     p3p.setBrush(QBrush(QColor(225,185,0)));
     p3p.setPen(QPen(QColor(0,0,0)));
     p3p.drawRect(0,0,itemwidth,itemheight);
+    p3p.drawPixmap(p3.width()/2-bulletPix[3].width()/2,p3.height()/2-bulletPix[3].height()/2,bulletPix[3]);
     p3p.end();
     itemPix.append(p3);
 
@@ -550,9 +567,10 @@ void RenderArea::drawItemPix() {
     p4p.setBrush(QBrush(QColor(210,30,105)));
     p4p.setPen(Qt::NoPen);
     p4p.drawRect(0,0,itemwidth,itemheight);
+    //p4p.drawPixmap(0,0,bulletPix[4]);
     p4p.end();
     itemPix.append(p4);
-    
+
     //Rocket launcher
     QPixmap p5(itemwidth,itemheight);
     p5.fill(QColor(0,0,0));
@@ -560,11 +578,72 @@ void RenderArea::drawItemPix() {
     p5p.setBrush(QBrush(QColor(230,120,100)));
     p5p.setPen(Qt::NoPen);
     p5p.drawRect(0,0,itemwidth,itemheight);
+    p5p.drawPixmap(p5.width()/2-bulletPix[5].width()/2,p5.height()/2-bulletPix[5].height()/2,bulletPix[5]);
     p5p.end();
     itemPix.append(p5);
+
+
+}
+
+void RenderArea::drawBulletPix() {
+
+    //Bead gun
+    int beadheight=5;
+    int beadwidth=5;
+    QPixmap p1(beadwidth,beadheight);
+    bulletPix.append(p1);
+    p1.fill(QColor(0,0,0,0));
+    QPainter p1p(&p1);
+    p1p.setPen(QPen(QColor(55,55,55)));
+    p1p.setBrush(QBrush(QColor(0,220,0)));
+    p1p.drawEllipse(0,0,beadwidth,beadheight);
+    p1p.end();
+    bulletPix.append(p1);
+
+    int shotheight=5;
+    int shotwidth=3;
+    QPixmap p2(shotwidth,shotheight);
+
+    p2.fill(QColor(0,0,0,0));
+    QPainter p2p(&p2);
+    p2p.setPen(QPen(QColor(15,15,15)));
+    p2p.setBrush(QBrush(QColor(80,80,80)));
+    const QPointF points2[5] = {QPoint(1,0),QPoint(2,1),QPoint(2,4),QPoint(0,4),QPoint(0,1)};
+    p2p.drawPolygon(points2,5);
+    //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    p2p.end();
+    bulletPix.append(p2);
     
+    int machheight=7;
+    int machwidth=3;
+    QPixmap p3(machwidth,machheight);
+    p3.fill(QColor(0,0,0,0));
+    QPainter p3p(&p3);
+    p3p.setPen(QPen(QColor(15,15,15)));
+    p3p.setBrush(QBrush(QColor(191,215,11)));
+    const QPointF points3[5] = {QPoint(1 ,0),QPoint(2,1),QPoint(2,6),QPoint(0,6),QPoint(0,1)};
+    p3p.drawPolygon(points3,5);
+ //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    p3p.end();
+    bulletPix.append(p3);
+    bulletPix.append(p1);
+
+    int rockheight=10;
+    int rockwidth=6;
+    QPixmap p4(rockwidth,rockheight);
+    p4.fill(QColor(0,0,0,0));
+    QPainter p4p(&p4);
+    p4p.setPen(QPen(QColor(15,15,15)));
+    p4p.setBrush(QBrush(QColor(56,0,0)));
+    const QPointF points4[14] = {QPoint(0,2),QPoint(2,0),QPoint(3,0),QPoint(5,2),QPoint(5,3),QPoint(4,4),QPoint(4,7),QPoint(5,8),QPoint(5,9),QPoint(0,9),QPoint(0,8),QPoint(1,7),QPoint(1,4),QPoint(0,3)};
+    p4p.drawPolygon(points4,14);
+ //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    p4p.end();
+    bulletPix.append(p4);
+    //for(int i=0;i<6;i++) bulletPix.append(p1);
        
 }
+
 
 void RenderArea::draw(Player* player) {
     //qDebug()<<"Health: "<<player->health;
