@@ -70,7 +70,10 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     //painter.setBrush(QBrush(QColor(230,250,230)));
     painter.setBrush(QBrush(QColor(50,60,70)));
     painter.setPen(Qt::NoPen);
-    int k = (starty/a.part)*a.part;
+    
+    int k;
+    if(a.part>0) k= (starty/a.part)*a.part;
+    else k=99999;
     double x0=w2+startx*SQUARE-centerx;
     double x1=(endx-startx+1)*SQUARE;
     while(k<=endy) {
