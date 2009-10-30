@@ -16,10 +16,11 @@ public:
     QTimer* timer;
     Engine engine;
     Connection conn;
-    Window* window;
+    Window window;
 	Player player;
 	QTime startTime;
 	int prevSec;
+
 
     void start(QString, int);
     void start();
