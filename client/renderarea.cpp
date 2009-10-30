@@ -229,6 +229,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 	drawExplosions(painter);
 	drawBar(painter);
+    if(stats!=0) painter.drawPixmap(40,40,drawStats());
 }
 void RenderArea::drawBar(QPainter& painter)
 {
@@ -508,7 +509,6 @@ void RenderArea::drawExplosions(QPainter& painter)
 			painter.drawEllipse(midX + SQUARE*p.x - s, midY + SQUARE*p.y - s, 2*s, 2*s);
 		}
 	}
-    if(stats!=0) painter.drawPixmap(40,40,drawStats());
 }
 
 void RenderArea::drawItemPix() {
@@ -649,10 +649,11 @@ void RenderArea::drawBulletPix() {
 }
 
 QPixmap RenderArea::drawStats() {
-    QPixmap statswindow(500,100);
+    QPixmap statswindow(500,60+14*stats->tostring.size());
     statswindow.fill(QColor(20,20,20,80));
-
     QPainter p(&statswindow);
+ //   p.scale(1,-1);
+ //   p.translate(0,100);
     p.setBrush(QColor(20,20,20,20));
     p.setPen(QPen(QColor(245,245,245)));
     qDebug()<<stats->players.size();
