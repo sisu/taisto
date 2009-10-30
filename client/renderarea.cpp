@@ -81,7 +81,10 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             int k_index=(k/a.part)+1;
             double y0=h2+k*SQUARE-centery;
             double y1=a.spawn*SQUARE;
-            painter.drawRect(x0,y0,x1,y1);
+            if(k_index>16) { break; }
+            if(k_index==16) painter.setBrush(QBrush(QColor(120,10,10)));
+            if(k_index==16) painter.setPen(QPen(QColor(120,10,10)));
+            if(k_index<=16) painter.drawRect(x0,y0,x1,y1);
             
             //Level number
             QPixmap text(85,a.spawn*SQUARE);
