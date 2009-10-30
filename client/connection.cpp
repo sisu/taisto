@@ -195,6 +195,8 @@ void Connection::readStats(QDataStream& s)
 		s.readRawData(buf, namelen);
 		QString name(buf);
 		delete[] buf;
+
+		qDebug()<<"jee"<<kills<<deaths<<damageDone;
 	}
 }
 
