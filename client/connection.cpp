@@ -195,10 +195,11 @@ void Connection::readStats(QDataStream& s)
 		s>>id>>kills>>deaths>>damageDone>>namelen;
 		char* buf = new char[namelen+1];
 		s.readRawData(buf, namelen);
+		buf[namelen]=0;
 		QString name(buf);
 		delete[] buf;
 
-		qDebug()<<"jee"<<kills<<deaths<<damageDone;
+		qDebug()<<"jee"<<kills<<deaths<<damageDone<<name;
 
 		StatsPlayer pl(id,name,kills,deaths,damageDone);
 		engine.stats.players.append(pl);
