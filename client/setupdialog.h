@@ -13,6 +13,8 @@ class SetupDialog:public QDialog
 	QLineEdit* nameEdit;
 	QLineEdit* hostEdit;
 	QCheckBox* soundCheck;
+	private slots:
+	    void save();
 	public:
 		SetupDialog(QWidget* parent=0);
 		QString name()const;
