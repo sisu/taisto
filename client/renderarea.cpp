@@ -99,7 +99,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
             ptext.end();
 
             if(x0>0) {
-//        qDebug()<<"MOI";
+//        //qDebug()<<"MOI";
                 painter.drawPixmap(x0-text.width()-5,y0+y1-text.height(),text);
             }
             if(x0+x1<width) {
@@ -159,7 +159,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
 
     for(int i=0;i<engine.bots.size();i++) {
-        //		qDebug()<<"drawing bot"<<engine.bots[i].x<<engine.bots[i].y;
+        //		//qDebug()<<"drawing bot"<<engine.bots[i].x<<engine.bots[i].y;
         double px = engine.bots[i].x * SQUARE, py = engine.bots[i].y * SQUARE;
         double x=width/2 - centerx + px;
         double y=height/2 - centery + py;
@@ -314,12 +314,12 @@ inline double distance(QPointF a, QPointF b) {
 }
 
 QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
-//    qDebug()<<a<<b;
+//    //qDebug()<<a<<b;
 //    const int minDist = 20;
 	const double minDist = 20.0/SQUARE;
     QList<QPointF> ret;
     if(distance(a,b) < minDist) {
-        qDebug()<<"Moro";
+        //qDebug()<<"Moro";
         ret.append(a);
         ret.append(b);
         return ret;
@@ -359,8 +359,8 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 		points[0].setX(points[0].x()-s);
 		points[0].setY(points[0].y()-s);
 	}
-	qDebug()<<"drawing lightning"<<points.size();
-	qDebug()<<points;
+	//qDebug()<<"drawing lightning"<<points.size();
+	//qDebug()<<points;
     // 0 is the beginning
     QList<int> picked;
     picked.append(0);
@@ -382,7 +382,7 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 		if (choise.second>=0) graph.append(QPair<int,int>(choise.second,ci));
 	}
 
-	qDebug()<<graph;
+	//qDebug()<<graph;
 
 /*    QList<QPair<int,int> > newGraph;
     QPair<int,int> last;
@@ -394,13 +394,13 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 
     for(int a = 0; a < graph.size(); ++a) {
 		QPointF& pa = points[graph[a].first], pb=points[graph[a].second];
-		qDebug()<<"getting path"<<pa<<pb;
+		//qDebug()<<"getting path"<<pa<<pb;
         QList<QPointF> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
 		for(int i=0; i<pts.size(); ++i) {
 			pts[i].setX(midX + SQUARE*pts[i].x());
 			pts[i].setY(midY + SQUARE*pts[i].y());
 		}
-//		qDebug()<<pts.size()<<pts;
+//		//qDebug()<<pts.size()<<pts;
         painter.setPen(QPen(QColor(130,175,200),2)); 
         for(int i = 0; i < pts.size() - 1; ++i) {
             painter.drawLine(pts[i],pts[i+1]);
@@ -455,7 +455,7 @@ void RenderArea::drawExplosions(QPainter& painter)
 	double midY = height/2 - centery;
 
 	painter.setPen(Qt::NoPen);
-	if (particles.size()) qDebug()<<particles.size();
+	if (particles.size()) //qDebug()<<particles.size();
 	for(int i=0; i<particles.size(); ) {
 		const double tt=0.2;
 		if (particles[i].update(engine.area) || particles[i].time>tt) {
@@ -509,7 +509,7 @@ void RenderArea::drawItemPix() {
     p2p.setBrush(QBrush(QColor(0,125,225)));
     p2p.setPen(Qt::NoPen);
     p2p.drawRect(0,0,itemwidth,itemheight);
-    qDebug()<<p2.width()/2-bulletPix[2].width()/2<<p2.height()/2-bulletPix[2].height()/2;
+    //qDebug()<<p2.width()/2-bulletPix[2].width()/2<<p2.height()/2-bulletPix[2].height()/2;
     p2p.drawPixmap(p2.width()/2-bulletPix[2].width()/2,p2.height()/2-bulletPix[2].height()/2,bulletPix[2]);
     p2p.end();
     itemPix.append(p2);
@@ -617,9 +617,9 @@ QPixmap RenderArea::drawStats() {
  //   p.translate(0,100);
     p.setBrush(QColor(20,20,20,20));
     p.setPen(QPen(QColor(245,245,245)));
-    qDebug()<<stats->players.size();
+    //qDebug()<<stats->players.size();
     p.setFont(QFont("Verdana",12,QFont::Bold));
-    p.drawText(20,20,"ID\tName\tKills\tDeaths\tRatio\tDamage");
+    p.drawText(20,20,"ID\tName\tKills\tDeaths\tRatio");
     p.setFont(QFont("Verdana",12));
     for(int i=0;i<stats->tostring.size();i++) { p.setPen(QPen(player_colors[stats->players[i].id%13]));p.drawText(20,40+i*14,stats->tostring[i]);}
 //    p.drawText(20,40,stats->tostring);
@@ -630,7 +630,7 @@ QPixmap RenderArea::drawStats() {
 }
 
 void RenderArea::draw(Player* player,Stats* stats) {
-    //qDebug()<<"Health: "<<player->health;
+    ////qDebug()<<"Health: "<<player->health;
     this->player = player;
     this->stats=stats;
     centerx=player->x*SQUARE;

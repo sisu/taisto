@@ -17,7 +17,7 @@ Window::Window(Engine& engine, Player& pl) : player(pl)
 }
 
 void Window::draw(Player* player,Stats* stats) {
-    if(keysHeld.contains(Qt::Key_Tab)) {qDebug("gay");renderArea->draw(player,stats);}
+    if(keysHeld.contains(Qt::Key_Tab)) {renderArea->draw(player,stats);}
     else renderArea->draw(player,0);
 	//"Piirrä"
 }
@@ -34,7 +34,7 @@ void Window::addToLetterBuffer(int event) {
 
 void Window::checkCheats() {
     if(listOfCheats.contains(letterBuffer)) {
-        qDebug("Bileet");
+//        qDebug("Bileet");
         activatedCheats.append(letterBuffer); 
     }
 }
@@ -69,7 +69,7 @@ void Window::keyPressEvent(QKeyEvent* event) {
 
 void Window::keyReleaseEvent(QKeyEvent* event) {
 	this->keysHeld.removeAll(event->key());
-    qDebug("Key released");
+    //qDebug("Key released");
 }
 
 void Window::updatePlayerMovement(Player& player) {

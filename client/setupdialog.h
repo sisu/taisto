@@ -12,7 +12,7 @@ class SetupDialog:public QDialog
 	Q_OBJECT
 	QLineEdit* nameEdit;
 	QLineEdit* hostEdit;
-	QCheckBox* soundCheck;
+	//QCheckBox* soundCheck;
 	private slots:
 	    void save();
 	public:
