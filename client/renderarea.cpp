@@ -144,7 +144,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(90,240,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
-            painter.setBrush(QBrush(QColor(190,140,90)));
+            painter.setBrush(player_colors[engine.players[i].id%13]);
             double a=engine.players[i].direction;
             painter.drawEllipse(
                     x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
@@ -286,7 +286,7 @@ void RenderArea::drawBar(QPainter& painter)
 
         QFont newFont(painter.font());
         newFont.setPixelSize(10);
-        painter.setFont(QFont("Verdana",10,QFont::Bold));
+        painter.setFont(QFont("Verdana",8,QFont::Bold));
         painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
     }
 
@@ -618,7 +618,7 @@ QPixmap RenderArea::drawStats() {
     p.setFont(QFont("Verdana",12,QFont::Bold));
     p.drawText(20,20,"ID\tName\tKills\tDeaths\tRatio\tDamage");
     p.setFont(QFont("Verdana",12));
-    for(int i=0;i<stats->tostring.size();i++) p.drawText(20,40+i*14,stats->tostring[i]);
+    for(int i=0;i<stats->tostring.size();i++) { p.setPen(QPen(player_colors[stats->players[i].id%13]));p.drawText(20,40+i*14,stats->tostring[i]);}
 //    p.drawText(20,40,stats->tostring);
 
     //p.drawRect(0,0,width,height);
