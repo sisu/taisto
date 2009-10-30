@@ -21,10 +21,12 @@ class RenderArea : public QGLWidget
         Engine& engine;
         RenderArea(Engine&, QWidget* parent=0);
         QList<QPixmap> itemPix;
+        QList<QPixmap> bulletPix;
         void draw(Player*);
         double centerx,centery;
         double width, height;
         void drawItemPix();
+        void drawBulletPix();
         void drawLightning(QPainter& painter, QList<QPoint> points);
         int distance(QPoint a, QPoint b);
         QList<QPoint> pathBetween(QPoint a, QPoint b);

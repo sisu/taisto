@@ -26,6 +26,7 @@ RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QG
 {
 
     drawItemPix();
+    drawBulletPix();
 
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
@@ -179,8 +180,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
         double x = width/2 - centerx + px;
         double y = height/2 - centery + py;
-
-        painter.drawEllipse(x-2,y-2,4,4);
+        QPixmap cur=bulletPix[it.value().weapon];
+//        cur.rotate(it.value().dirdeg);
+        QMatrix matrix;
+        cur=cur.transformed(matrix.rotate(it.value().dirdeg));
+        painter.drawPixmap(x-cur.width()/2,y-cur.height()/2,cur);
+ //       painter.rotate(-it.value().dir);
     }
 
 	//Items
@@ -545,6 +550,67 @@ void RenderArea::drawItemPix() {
     
        
 }
+void RenderArea::drawBulletPix() {
+    
+    //Bead gun
+    int beadheight=5;
+    int beadwidth=5;
+    QPixmap p1(beadwidth,beadheight);
+    bulletPix.append(p1);
+    p1.fill(QColor(0,0,0,0));
+    QPainter p1p(&p1);
+    p1p.setPen(QPen(QColor(55,55,55)));
+    p1p.setBrush(QBrush(QColor(0,220,0)));
+    p1p.drawEllipse(0,0,beadwidth,beadheight);
+    p1p.end();
+    bulletPix.append(p1);
+
+    int shotheight=10;
+    int shotwidth=10;
+    QPixmap p2(shotwidth,shotheight);
+    itemPix.append(p2);
+    p2.fill(QColor(0,0,0,0));
+    QPainter p2p(&p2);
+    p2p.setPen(QPen(QColor(15,15,15)));
+    p2p.setBrush(QBrush(QColor(80,80,80)));
+    const QPointF points2[5] = {QPoint(1,0),QPoint(2,1),QPoint(2,4),QPoint(0,4),QPoint(0,1)};
+    p2p.drawPolygon(points2,5);
+ //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    p2p.end();
+    bulletPix.append(p2);
+    
+    int machheight=7;
+    int machwidth=3;
+    QPixmap p3(machwidth,machheight);
+    itemPix.append(p3);
+    p3.fill(QColor(0,0,0,0));
+    QPainter p3p(&p3);
+    p3p.setPen(QPen(QColor(15,15,15)));
+    p3p.setBrush(QBrush(QColor(191,215,11)));
+    const QPointF points3[5] = {QPoint(1 ,0),QPoint(2,1),QPoint(2,6),QPoint(0,6),QPoint(0,1)};
+    p3p.drawPolygon(points3,5);
+ //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    p3p.end();
+    bulletPix.append(p3);
+    bulletPix.append(p1);
+
+    int rockheight=8;
+    int rockwidth=6;
+    QPixmap p4(rockwidth,rockheight);
+    itemPix.append(p4);
+    p4.fill(QColor(0,0,0,0));
+    QPainter p4p(&p4);
+    p4p.setPen(QPen(QColor(15,15,15)));
+    p4p.setBrush(QBrush(QColor(56,0,0)));
+    const QPointF points4[6] = {QPoint(0,2  ),QPoint(2,0),QPoint(3,0),QPoint(5,2),QPoint(5,7),QPoint(0,7)};
+    p4p.drawPolygon(points4,6);
+ //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    p4p.end();
+    bulletPix.append(p4);
+    //for(int i=0;i<6;i++) bulletPix.append(p1);
+       
+}
+
 
 void RenderArea::draw(Player* player) {
     //qDebug()<<"Health: "<<player->health;
