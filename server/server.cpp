@@ -303,3 +303,27 @@ void Server::spawnStuff(bool next)
 			createItem(j);
 	}
 }
+void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts)
+{
+	double dx=shooter.x-pl.x;
+	double dy=shooter.y-pl.y;
+	if (dx*dx + dy*dy > LIGHTNING_RADIUS*LIGHTNING_RADIUS) return;
+
+	pts.append(QPointF(pl.x,pl.y));
+	pl.health -= damages[5] / pl.armor;
+}
+void Server::hitLightning(Unit& u)
+{
+	QList<QPointF> pts;
+	for(int i=0; i<players.size(); ++i)
+		if (&u!=&players[i]) lightningDamage(u, players[i], pts);
+	for(int i=0; i<bots.size(); ++i)
+		if (&u!=&bots[i]) lightningDamage(u, bots[i], pts);
+
+	QByteArray msg;
+	QDataStream s(&msg, QIODevice::WriteOnly);
+	s << 1 + 8+8+4 + pts.size()*(8+8);
+	s << MSG_LIGHTNING << u.x << u.y << pts.size();
+	for(int i=0; i<pts.size(); ++i)
+		s << pts[i].x() << pts[i].y();
+}

@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QByteArray>
 #include <QTime>
+#include <QPointF>
 #include "unit.h"
 #include "player.h"
 #include "area.h"
@@ -32,6 +33,7 @@ public:
 
     void hitBot(Bot& b, int weapon);
 	void addBullet(int w, double x, double y, double dx, double dy, double v);
+	void hitLightning(Unit& u);
 
 public slots:
 	void update();
@@ -54,6 +56,7 @@ private:
 	void updateItems();
 	void spawnStuff(bool next=0);
 	void rocketDamage(Unit& u, const Bullet& b);
+	void lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts);
 };
 
 #endif

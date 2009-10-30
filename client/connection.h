@@ -30,6 +30,7 @@ private:
 	void readEnemy(QDataStream& s);
 	void readItem(QDataStream& s);
 	void readGet(QDataStream& s);
+	void readLightning(QDataStream& s);
 	int packetSize;
 };
 #endif

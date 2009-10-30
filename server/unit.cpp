@@ -59,6 +59,7 @@ void Unit::shoot(int weap, Server& serv)
 			makeBullet(serv, weap, angle, 0.02);
 			break;
 		case 4:
+			serv.hitLightning(*this);
 			break;
 		case 5:
 			makeBullet(serv, weap, angle, 0.05);
