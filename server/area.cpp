@@ -88,6 +88,8 @@ void Area::connDFS(int x, int y, QVector<bool>& used)
 }
 void Area::makeConnected()
 {
+	for(int i=0; i<w; ++i)
+		data[i] = parts[0].data[i] = 0;
 	QVector<bool> used(w*h,0);
 	int sx=-1,sy=-1;
 	for(int y=0; y<h && sx<0; ++y)
