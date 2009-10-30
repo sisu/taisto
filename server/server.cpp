@@ -180,10 +180,17 @@ void Server::updateBullets()
 			players[i].socket->write(tmp,5);
 			players[i].socket->flush();
 			spawnPlayer(players[i],0);
+			++players[i].deaths;
+
+			Player* shooter = getPlayer(players[i].lastShooter);
+			if (shooter) ++shooter->kills;
 		}
 	for(int i=0; i<bots.size(); ) {
 //		if (bots[i].health<=0) spawnPlayer(bots[i],1);
 		if (bots[i].health<=0) {
+			Player* shooter = getPlayer(bots[i].lastShooter);
+			if (shooter) ++shooter->kills;
+
 			bots[i]=bots.back();
 			bots.pop_back();
 		} else ++i;
@@ -238,6 +245,8 @@ void Server::rocketDamage(Unit& u, const Bullet& b)
 	double d = sqrt(d2);
 	double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
 	u.health -= dmg / u.armor;
+	if (b.shooter) b.shooter->damageDone += dmg/u.armor;
+	u.lastShooter = b.id;
 }
 void Server::bulletHit(Unit* p, const Bullet& b)
 {
@@ -252,6 +261,8 @@ void Server::bulletHit(Unit* p, const Bullet& b)
 
 	p->health -= damages[b.type] / p->armor;
 	p->lastHitT = curT.elapsed();
+	if (b.shooter) b.shooter->damageDone += damages[b.type] / p->armor;
+	p->lastShooter = b.id;
 	qDebug()<<"hit"<<p->health;
 }
 
@@ -264,10 +275,10 @@ void Server::spawnPlayer(Unit& p, bool bot)
 	p.angle = bot ? M_PI/2 : -M_PI/2;
 }
 
-void Server::addBullet(int weap, double x, double y, double vx, double vy, double v)
+void Server::addBullet(int weap, double x, double y, double vx, double vy, double v, Player* pl)
 {
 	vx *= v, vy*=v;
-	Bullet bullet(bulletID++,weap,x,y,vx,vy);
+	Bullet bullet(bulletID++,weap,x,y,vx,vy,pl);
 	bullets.append(bullet);
 
 	QByteArray msg;
@@ -304,7 +315,7 @@ void Server::spawnStuff(bool next)
 			createItem(j);
 	}
 }
-void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts)
+void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Player* player)
 {
 	double dx=shooter.x-pl.x;
 	double dy=shooter.y-pl.y;
@@ -312,16 +323,19 @@ void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts)
 
 	pts.append(QPointF(pl.x,pl.y));
 	pl.health -= damages[4] / pl.armor;
+	if (player) player->damageDone += damages[4] / player->armor;
+	pl.lastShooter = player ? player->id : -1;
 //	qDebug()<<"lightning damage"<<pl.health;
 }
 void Server::hitLightning(Unit& u)
 {
 	QList<QPointF> pts;
 	pts.append(QPointF(u.x,u.y));
+	Player* player = getPlayer(u.id);
 	for(int i=0; i<players.size(); ++i)
-		if (&u!=&players[i]) lightningDamage(u, players[i], pts);
+		if (&u!=&players[i]) lightningDamage(u, players[i], pts, player);
 	for(int i=0; i<bots.size(); ++i)
-		if (&u!=&bots[i]) lightningDamage(u, bots[i], pts);
+		if (&u!=&bots[i]) lightningDamage(u, bots[i], pts, player);
 //	qDebug()<<"Mui."<<pts.size();
 
 	QByteArray msg;

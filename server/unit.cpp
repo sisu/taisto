@@ -74,5 +74,5 @@ void Unit::makeBullet(Server& serv, int weap, double a, double distr)
 	a += distr*(rndf()-.5);
 	double dx=cos(a), dy=-sin(a);
 	double px=x+dx*PLAYER_RADIUS*1.5, py=y+dy*PLAYER_RADIUS*1.5;
-	serv.addBullet(weap,px,py,dx,dy,bulletSpeeds[weap]);
+	serv.addBullet(weap,px,py,dx,dy,bulletSpeeds[weap],serv.getPlayer(id));
 }

@@ -19,6 +19,7 @@ class Unit {
 			health=1;
 			armor=1;
 			lastHitT=-1e9;
+			lastShooter=0;
         }
 
         double x,y,angle;
@@ -27,8 +28,10 @@ class Unit {
         void updatePhysics(Server&);
 		double health;
 		double armor;
+		int id; // -1 for bots
 
 		int lastHitT;
+		int lastShooter;
 
     protected:
         void fix(double px, double py, double d=PLAYER_RADIUS);
