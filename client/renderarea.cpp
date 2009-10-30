@@ -332,7 +332,12 @@ QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
 }
 
 void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
-	if (points.size()==1) return;
+	if (points.size()==1) {
+		double s=.1;
+		points.append(QPointF(points[0].x()+s,points[0].y()+s));
+		points[0].setX(points[0].x()-s);
+		points[0].setY(points[0].y()-s);
+	}
 	qDebug()<<"drawing lightning"<<points.size();
 	qDebug()<<points;
     // 0 is the beginning
