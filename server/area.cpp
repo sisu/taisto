@@ -1,6 +1,7 @@
 #include "area.h"
 #include "constants.h"
 #include <cstdlib>
+#include <QDebug>
 
 inline QList<int> linearList(int s, int e, int xs, int xe)
 {
@@ -94,9 +95,12 @@ void Area::makeConnected()
 			if (!blocked(x,y)) sx=x,sy=y;
 	connDFS(sx,sy,used);
 
+	int curS=0;
 	for(int y=0; y<h; ++y) {
+		if (curS < parts.size()-1 && y>=startPlaces[curS+1]) ++curS;
 		for(int x=0; x<w; ++x) {
 			if (blocked(x,y) || used[y*w+x]) continue;
+			data[y*w+x] = parts[curS].data[w*(y-startPlaces[curS])+x] = 1;
 		}
 	}
 }
