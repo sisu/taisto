@@ -184,6 +184,7 @@ void Connection::readLightning(QDataStream& s) {
 }
 void Connection::readStats(QDataStream& s)
 {
+	engine.stats.players.clear();
 	int n;
 	s>>n;
 	for(int i=0; i<n; ++i) {
@@ -198,7 +199,11 @@ void Connection::readStats(QDataStream& s)
 		delete[] buf;
 
 		qDebug()<<"jee"<<kills<<deaths<<damageDone;
+
+		StatsPlayer pl(id,name,kills,deaths,damageDone);
+		engine.stats.players.append(pl);
 	}
+	engine.stats.makestring();
 }
 
 void Connection::sendStatus()

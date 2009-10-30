@@ -38,6 +38,7 @@ struct Stats {
     void makestring() {
         sort();
         //Make string
+		tostring.clear();
         for(int i=0;i<players.size();i++) {
             QString str="";
             StatsPlayer& p=players[i];

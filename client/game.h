@@ -19,7 +19,6 @@ public:
     Window window;
 	Player player;
 	QTime startTime;
-    Stats stats;
 	int prevSec;
 
 
