@@ -4,7 +4,7 @@
 #include<QSettings>
 SetupDialog::SetupDialog(QWidget* parent):QDialog(parent)
 {
-    QSettings settings("sisu","taisto");
+    QSettings settings;
 	QFormLayout* lay = new QFormLayout();
 
 	setLayout(lay);
@@ -26,7 +26,7 @@ SetupDialog::SetupDialog(QWidget* parent):QDialog(parent)
 }
 void SetupDialog::save()
 {
-    QSettings settings("sisu","taisto");
+    QSettings settings;
     settings.setValue("name",name());
     settings.setValue("host",hostAddress());
     settings.setValue("sound",sound());
