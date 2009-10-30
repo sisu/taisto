@@ -276,7 +276,7 @@ void RenderArea::drawBar(QPainter& painter)
 
         QFont newFont(painter.font());
         newFont.setPixelSize(10);
-        painter.setFont(QFont("Verdana",10,QFont::Bold));
+        painter.setFont(QFont("Verdana",8,QFont::Bold));
         painter.drawText(QPoint(150 + i * 25 + 6, statusBarY + 13), str);
     }
 
