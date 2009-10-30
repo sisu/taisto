@@ -228,6 +228,16 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
 
 	drawExplosions(painter);
+
+	if (player) {
+		// sight
+		double dx = cos(player->direction);
+		double dy = -sin(player->direction);
+		double len = SQUARE*10;
+		painter.setPen(QColor(255,255,255,64));
+		painter.drawLine(width/2, height/2, int(width/2 + dx*len), int(height/2 + dy*len));
+	}
+
 	drawBar(painter);
     if(stats!=0) painter.drawPixmap(40,40,drawStats());
 }
@@ -406,59 +416,7 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
         }
     }
 
-    /*
-    painter.setPen(QPen(QColor(160,210,240,100),5));
-    for(int i = 0; i < graph.size(); ++i) {
-        painter.drawLine(points[graph[i].first],points[graph[i].second]);
-    }
-
-    painter.setPen(QPen(QColor(160,210,240,50),9));
-    for(int i = 0; i < graph.size(); ++i) {
-        painter.drawLine(points[graph[i].first],points[graph[i].second]);
-    }
-
-    painter.setPen(QPen(QColor(170,210,240,25),13));
-    for(int i = 0; i < graph.size(); ++i) {
-        painter.drawLine(points[graph[i].first],points[graph[i].second]);
-    }
-    */
-
-    /*
-    painter.setPen(QPen(QColor(170,210,240,0),0));
-    painter.setBrush(QBrush(QColor(170,210,240,20)));
-    painter.drawEllipse(-150,-150,600,600);
-
-    */
-    /*
-
-    double maxLen = 0;
-
-    QVector<int> lengthTo(points.size(),0);
-    for(int i = 0; i < graph.size(); ++i) {
-        lengthTo[graph[i].second] = lengthTo[graph[i].first] + 1;
-        if(lengthTo[graph[i].second] > maxLen) {
-            maxLen = lengthTo[graph[i].second];
-        }
-    }
-
-    double maxW = 3;
-    double minW = 1;
-
-    for(int i = 0; i < graph.size(); ++i) {
-        double w = maxW - (maxW - minW) * lengthTo[graph[i].second] / maxLen;
-        painter.setPen(QPen(QColor(130,175,200),w)); 
-        painter.drawLine(points[graph[i].first],points[graph[i].second]);
-    }
-    
-    maxW = 12;
-    minW = 3;
-
-    for(int i = 0; i < graph.size(); ++i) {
-        double w = maxW - (maxW - minW) * lengthTo[graph[i].second] / maxLen;
-        painter.setPen(QPen(QColor(160,210,240,100),w));
-        painter.drawLine(points[graph[i].first],points[graph[i].second]);
-    }
-    */
+	
 }
 double rndf()
 {
