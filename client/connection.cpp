@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cmath>
 #include "connection.h"
 #include "messages.h"
 
@@ -54,6 +55,9 @@ void Connection::update()
 			case MSG_DIE:
 				for(int i=0; i<engine.bulletCounts.size(); ++i) engine.bulletCounts[i]=0;
 				player->weapon = 1;
+				break;
+			case MSG_LIGHTNING:
+				readLightning(s);
 				break;
 			default:
 				qDebug()<<type;
@@ -146,11 +150,34 @@ void Connection::readItem(QDataStream& s) {
 		engine.items.append(it);
 	}
 }
-const int boxSizes[20] = {0,15,50,1,2};
 void Connection::readGet(QDataStream& s) {
+	static const int boxSizes[20] = {0,0,15,50,200,2};
 	int item;
 	s>>item;
 	if (item>0) engine.bulletCounts[item] += boxSizes[item];
+}
+void Connection::readLightning(QDataStream& s) {
+	int count;
+	s>>count;
+	QList<QPointF> pts;
+	for(int i=0; i<count; ++i) {
+		double x,y;
+		s>>x>>y;
+		pts.append(QPointF(x,y));
+	}
+	qDebug()<<"ligthing pts"<<pts.size();
+	QPointF p = pts[0];
+	for(int i=0; i<engine.lightnings.size(); ++i) {
+		QPointF fst = engine.lightnings[0].second[0];
+		if (fabs(p.x()-fst.x())<.3 && fabs(p.y()-fst.y())<.3) {
+			engine.lightnings[0].first.restart();
+			engine.lightnings[0].second = pts;
+			return;
+		}
+	}
+	QTime t;
+	t.start();
+	engine.lightnings.append(QPair<QTime,QList<QPointF> >(t,pts));
 }
 
 void Connection::sendStatus()

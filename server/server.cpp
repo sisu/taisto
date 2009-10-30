@@ -72,6 +72,9 @@ void Server::update()
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
 	if (t > lastSpawn + area.spawnIntervals[curSpawn] && bots.size()<area.maxBots[curSpawn])
 		spawnStuff(playerNext);
+
+	for(int i=0; i<players.size(); ++i)
+		players[i].socket->flush();
 }
 
 void Server::updatePlayers()
@@ -213,8 +216,6 @@ void Server::sendToAll(QByteArray msg)
 #endif
 	for(int i=0; i<players.size(); ++i)
 		players[i].socket->write(msg);
-	for(int i=0; i<players.size(); ++i)
-		players[i].socket->flush();
 }
 
 void Server::sendHit(const Bullet& b)
@@ -302,4 +303,32 @@ void Server::spawnStuff(bool next)
 		for(int i=0; i<area.itemCounts[j][curSpawn] * s; ++i)
 			createItem(j);
 	}
+}
+void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts)
+{
+	double dx=shooter.x-pl.x;
+	double dy=shooter.y-pl.y;
+	if (dx*dx + dy*dy > LIGHTNING_RADIUS*LIGHTNING_RADIUS) return;
+
+	pts.append(QPointF(pl.x,pl.y));
+	pl.health -= damages[4] / pl.armor;
+//	qDebug()<<"lightning damage"<<pl.health;
+}
+void Server::hitLightning(Unit& u)
+{
+	QList<QPointF> pts;
+	pts.append(QPointF(u.x,u.y));
+	for(int i=0; i<players.size(); ++i)
+		if (&u!=&players[i]) lightningDamage(u, players[i], pts);
+	for(int i=0; i<bots.size(); ++i)
+		if (&u!=&bots[i]) lightningDamage(u, bots[i], pts);
+//	qDebug()<<"Mui."<<pts.size();
+
+	QByteArray msg;
+	QDataStream s(&msg, QIODevice::WriteOnly);
+	s << 1 + 4 + pts.size()*(8+8);
+	s << MSG_LIGHTNING << pts.size();
+	for(int i=0; i<pts.size(); ++i)
+		s << pts[i].x() << pts[i].y();
+	sendToAll(msg);
 }

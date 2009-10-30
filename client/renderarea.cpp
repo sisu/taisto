@@ -8,8 +8,8 @@
 #ifndef min
     #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #endif
-#define SQUARE 30
-#define RADIUS (PLAYER_RADIUS*SQUARE)
+const double SQUARE=30;
+const double RADIUS = (PLAYER_RADIUS*SQUARE);
 const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
 
@@ -25,8 +25,8 @@ RenderArea::RenderArea(Engine& _engine, QWidget* parent): QGLWidget(QGLFormat(QG
 //RenderArea::RenderArea(Engine& _engine, QWidget* parent): QWidget(parent), engine(_engine), player(NULL)
 {
 
-    drawItemPix();
     drawBulletPix();
+    drawItemPix();
 
     setBackgroundRole(QPalette::Base);
     setAutoFillBackground(true);
@@ -213,6 +213,12 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     drawLightning(painter,lPoints);
     */
 
+    // Lightnings
+
+    for(int i = 0; i < engine.lightnings.size(); ++i) {
+        drawLightning(painter,engine.lightnings[i].second);
+    }
+
 	drawExplosions(painter);
 	drawBar(painter);
 }
@@ -279,16 +285,17 @@ void RenderArea::drawBar(QPainter& painter)
             weaponstr);
 }
 
-int RenderArea::distance(QPoint a, QPoint b) {
-    int dx = a.x() - b.x();
-    int dy = a.y() - b.y();
-    return (int)sqrt(dx*dx+dy*dy);
+inline double distance(QPointF a, QPointF b) {
+    double dx = a.x() - b.x();
+    double dy = a.y() - b.y();
+    return sqrt(dx*dx+dy*dy);
 }
 
-QList<QPoint> RenderArea::pathBetween(QPoint a, QPoint b) {
+QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
     qDebug()<<a<<b;
-    const int minDist = 20;
-    QList<QPoint> ret;
+//    const int minDist = 20;
+	const double minDist = 20.0/SQUARE;
+    QList<QPointF> ret;
     if(distance(a,b) < minDist) {
         qDebug()<<"Moro";
         ret.append(a);
@@ -299,31 +306,34 @@ QList<QPoint> RenderArea::pathBetween(QPoint a, QPoint b) {
     const int odds [5] = {30,55,75,90,100};
     int xd = rand() % 2;
     int yd = rand() % 2;
-    int rx = rand() % 100;
-    int ry = rand() % 100;
+    double rx = (rand() % 100)/SQUARE;
+    double ry = (rand() % 100)/SQUARE;
 
     double nx = 0, ny = 0;
 
     for(int i = 0; i < 5; ++i) {
         if(rx < odds[i]) {
             nx = (a.x() + b.x()) / 2;
-            nx += xd ? i + 1 : -(i + 1);
+            nx += (xd ? i + 1 : -(i + 1)) / SQUARE;
         }
     }
 
     for(int i = 0; i < 5; ++i) {
         if(ry < odds[i]) {
             ny = (a.y() + b.y()) / 2;
-            ny += yd ? i + 1 : -(i + 1);
+            ny += (yd ? i + 1 : -(i + 1))/SQUARE;
         }
     }
 
-    QPoint midPoint(nx,ny);
+    QPointF midPoint(nx,ny);
     ret = pathBetween(a,midPoint) + pathBetween(midPoint,b);
     return ret;
 }
 
-void RenderArea::drawLightning(QPainter& painter, QList<QPoint> points) {
+void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
+	if (points.size()==1) return;
+	qDebug()<<"drawing lightning"<<points.size();
+//	qDebug()<<points;
     // 0 is the beginning
     QList<int> picked;
     picked.append(0);
@@ -347,15 +357,23 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPoint> points) {
         picked.append(pr.second);
     }
 
+	qDebug()<<graph;
 
-    QList<QPair<int,int> > newGraph;
+/*    QList<QPair<int,int> > newGraph;
     QPair<int,int> last;
 
     newGraph.append(graph[0]);
-
+*/
+	double midX = width/2 - centerx;
+	double midY = height/2 - centery;
 
     for(int a = 0; a < graph.size(); ++a) {
-        QList<QPoint> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
+        QList<QPointF> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
+		for(int i=0; i<pts.size(); ++i) {
+			pts[i].setX(midX + SQUARE*pts[i].x());
+			pts[i].setY(midY + SQUARE*pts[i].y());
+		}
+//		qDebug()<<pts.size()<<pts;
         painter.setPen(QPen(QColor(130,175,200),2)); 
         for(int i = 0; i < pts.size() - 1; ++i) {
             painter.drawLine(pts[i],pts[i+1]);
@@ -482,7 +500,7 @@ void RenderArea::drawExplosions(QPainter& painter)
 void RenderArea::drawItemPix() {
     int itemwidth=12;
     int itemheight=12;
-    
+
     // Healthitem
     QPixmap h(itemwidth,itemheight);
     h.fill(QColor(0,0,0));
@@ -497,15 +515,16 @@ void RenderArea::drawItemPix() {
     p.drawRect(1,itemheight/2-2,itemwidth-2,4);
     p.end();
     itemPix.append(h);
-    
+
     //Bead gun
     QPixmap p1(itemwidth,itemheight);
     p1.fill(QColor(0,0,0));
     QPainter p1p(&p1);
-                p1p.setPen(QPen(QColor(55,55,55)));
+    p1p.setPen(QPen(QColor(55,55,55)));
     p1p.setBrush(QBrush(QColor(60,220,155)));
     p1p.setPen(Qt::NoPen);
     p1p.drawRect(0,0,itemwidth,itemheight);
+    p1p.drawPixmap(0,0,bulletPix[1]);
     p1p.end();
     itemPix.append(p1);
     //Shotgun
@@ -515,6 +534,8 @@ void RenderArea::drawItemPix() {
     p2p.setBrush(QBrush(QColor(0,125,225)));
     p2p.setPen(Qt::NoPen);
     p2p.drawRect(0,0,itemwidth,itemheight);
+    qDebug()<<p2.width()/2-bulletPix[2].width()/2<<p2.height()/2-bulletPix[2].height()/2;
+    p2p.drawPixmap(p2.width()/2-bulletPix[2].width()/2,p2.height()/2-bulletPix[2].height()/2,bulletPix[2]);
     p2p.end();
     itemPix.append(p2);
 
@@ -525,6 +546,7 @@ void RenderArea::drawItemPix() {
     p3p.setBrush(QBrush(QColor(225,185,0)));
     p3p.setPen(QPen(QColor(0,0,0)));
     p3p.drawRect(0,0,itemwidth,itemheight);
+    p3p.drawPixmap(p3.width()/2-bulletPix[3].width()/2,p3.height()/2-bulletPix[3].height()/2,bulletPix[3]);
     p3p.end();
     itemPix.append(p3);
 
@@ -535,9 +557,10 @@ void RenderArea::drawItemPix() {
     p4p.setBrush(QBrush(QColor(210,30,105)));
     p4p.setPen(Qt::NoPen);
     p4p.drawRect(0,0,itemwidth,itemheight);
+    //p4p.drawPixmap(0,0,bulletPix[4]);
     p4p.end();
     itemPix.append(p4);
-    
+
     //Rocket launcher
     QPixmap p5(itemwidth,itemheight);
     p5.fill(QColor(0,0,0));
@@ -545,13 +568,15 @@ void RenderArea::drawItemPix() {
     p5p.setBrush(QBrush(QColor(230,120,100)));
     p5p.setPen(Qt::NoPen);
     p5p.drawRect(0,0,itemwidth,itemheight);
+    p5p.drawPixmap(p5.width()/2-bulletPix[5].width()/2,p5.height()/2-bulletPix[5].height()/2,bulletPix[5]);
     p5p.end();
     itemPix.append(p5);
-    
-       
+
+
 }
+
 void RenderArea::drawBulletPix() {
-    
+
     //Bead gun
     int beadheight=5;
     int beadwidth=5;
@@ -565,24 +590,23 @@ void RenderArea::drawBulletPix() {
     p1p.end();
     bulletPix.append(p1);
 
-    int shotheight=10;
-    int shotwidth=10;
+    int shotheight=5;
+    int shotwidth=3;
     QPixmap p2(shotwidth,shotheight);
-    itemPix.append(p2);
+
     p2.fill(QColor(0,0,0,0));
     QPainter p2p(&p2);
     p2p.setPen(QPen(QColor(15,15,15)));
     p2p.setBrush(QBrush(QColor(80,80,80)));
     const QPointF points2[5] = {QPoint(1,0),QPoint(2,1),QPoint(2,4),QPoint(0,4),QPoint(0,1)};
     p2p.drawPolygon(points2,5);
- //   p2p.drawEllipse(0,0,beadwidth,beadheight);
+    //   p2p.drawEllipse(0,0,beadwidth,beadheight);
     p2p.end();
     bulletPix.append(p2);
     
     int machheight=7;
     int machwidth=3;
     QPixmap p3(machwidth,machheight);
-    itemPix.append(p3);
     p3.fill(QColor(0,0,0,0));
     QPainter p3p(&p3);
     p3p.setPen(QPen(QColor(15,15,15)));
@@ -594,16 +618,15 @@ void RenderArea::drawBulletPix() {
     bulletPix.append(p3);
     bulletPix.append(p1);
 
-    int rockheight=8;
+    int rockheight=10;
     int rockwidth=6;
     QPixmap p4(rockwidth,rockheight);
-    itemPix.append(p4);
     p4.fill(QColor(0,0,0,0));
     QPainter p4p(&p4);
     p4p.setPen(QPen(QColor(15,15,15)));
     p4p.setBrush(QBrush(QColor(56,0,0)));
-    const QPointF points4[6] = {QPoint(0,2  ),QPoint(2,0),QPoint(3,0),QPoint(5,2),QPoint(5,7),QPoint(0,7)};
-    p4p.drawPolygon(points4,6);
+    const QPointF points4[14] = {QPoint(0,2),QPoint(2,0),QPoint(3,0),QPoint(5,2),QPoint(5,3),QPoint(4,4),QPoint(4,7),QPoint(5,8),QPoint(5,9),QPoint(0,9),QPoint(0,8),QPoint(1,7),QPoint(1,4),QPoint(0,3)};
+    p4p.drawPolygon(points4,14);
  //   p2p.drawEllipse(0,0,beadwidth,beadheight);
     p4p.end();
     bulletPix.append(p4);

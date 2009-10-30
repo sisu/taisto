@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QMap>
 #include <QPointF>
+#include <QTime>
+#include <QPair>
 #include "object.h"
 #include "area.h"
 #include "bullet.h"
@@ -21,7 +23,9 @@ class Engine : public QObject {
         QList<Item> items;
         QMap<int,Bullet> bullets;
 		QList<int> bulletCounts;
+
 		QList<QPointF> explosions;
+		QList<QPair<QTime,QList<QPointF> > > lightnings;
         
 		Area area;
 };
