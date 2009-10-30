@@ -42,7 +42,7 @@ void Game::go() {
 	conn.update();
     engine.go();
     window.updatePlayerMovement(player);
-    window.draw(&player,&stats); //(player.x,player.y);
+    window.draw(&player,&engine.stats); //(player.x,player.y);
 	conn.sendStatus();
 
 	//	qDebug()<<player.x<<player.y;

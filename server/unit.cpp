@@ -41,6 +41,9 @@ void Unit::updatePhysics(Server& s) {
 		if (this!=&s.players[i]) fix(s.players[i].x,s.players[i].y,2*PLAYER_RADIUS);
 	for(int i=0; i<s.bots.size(); ++i)
 		if (this!=&s.bots[i]) fix(s.bots[i].x,s.bots[i].y,2*PLAYER_RADIUS);
+
+	if (x<0 || x>s.area.w) x = double(rand())/RAND_MAX * s.area.w;
+
 	angle += turn * TURN_SPEED * FRAME_TIME;
 }
 
