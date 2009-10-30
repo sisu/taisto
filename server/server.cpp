@@ -246,13 +246,13 @@ void Server::sendStats()
 	int lens=0;
 	for(int i=0; i<players.size(); ++i) lens+=players[i].name.size();
 	qDebug()<<"stats"<<lens;
-	s << 1+4+lens+players.size()*(4+4+4+8+4);
+	s << 1+4+2*lens+players.size()*(4+4+4+8+4);
 	s << MSG_STATS << players.size();
 	for(int i=0; i<players.size(); ++i) {
 		Player& p = players[i];
-		qDebug()<<"str"<<p.name;
+		qDebug()<<"name"<<p.name.size()<<p.name;
 		s << p.id << p.kills << p.deaths << p.damageDone << p.name.size();// << p.name;
-		s.writeRawData((char*)p.name.data(), p.name.size());
+		s.writeRawData((char*)p.name.data(), 2*p.name.size());
 	}
 
 	sendToAll(msg);

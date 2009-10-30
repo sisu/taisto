@@ -154,7 +154,7 @@ void Connection::readItem(QDataStream& s) {
 	}
 }
 void Connection::readGet(QDataStream& s) {
-	static const int boxSizes[20] = {0,0,15,50,200,2};
+	static const int boxSizes[20] = {0,0,15,100,200,3};
 	int item;
 	s>>item;
 	if (item>0) engine.bulletCounts[item] += boxSizes[item];
@@ -193,11 +193,10 @@ void Connection::readStats(QDataStream& s)
 		double damageDone;
 		int namelen;
 		s>>id>>kills>>deaths>>damageDone>>namelen;
-		char* buf = new char[namelen+1];
-		s.readRawData(buf, namelen);
-		buf[namelen]=0;
-		QString name(buf);
-		delete[] buf;
+		char* buf = new char[2*namelen+1];
+		s.readRawData(buf, 2*namelen);
+		buf[2*namelen]=0;
+		QString name = QString::fromRawData((QChar*)buf, namelen);
 
 		qDebug()<<"jee"<<kills<<deaths<<damageDone<<name;
 
