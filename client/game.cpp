@@ -1,7 +1,9 @@
 #include <cstdlib>
+#include <QSettings>
 #include "game.h"
 #include "constants.h"
 #include "setupdialog.h"
+#include "messages.h"
 
 Game::Game(): conn(&player, engine), window(engine,player), player() {
      timer = new QTimer(this);
@@ -24,6 +26,16 @@ void Game::start(QString ip, int port) {
 
 	conn.connect(ip,port);
 	conn.waitForConnected(3000);
+
+	QSettings settings;
+	QString name = settings.value("name").toString();
+	qDebug()<<"sending name"<<name<<name.size();
+
+	QDataStream s(&conn);
+	s << 1 + 4 + name.size()*2;
+	s << MSG_INFO << name.size();
+	s.writeRawData((char*)name.data(), 2*name.size());
+	conn.flush();
 
 	//Luo ikkuna + piirtopinta
 	window.show();
