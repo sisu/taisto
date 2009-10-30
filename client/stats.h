@@ -18,9 +18,10 @@ struct StatsPlayer {
     double damage;
     bool operator<(const StatsPlayer& b) const {
         if(deaths==0&&b.deaths==0) return kills>b.kills;
-        else if(deaths==0) return false;
-        else if(b.deaths==0) return true;
-        else return kills*1.0/deaths>b.kills*1.0/deaths;
+        else if(deaths==0) return true;
+        else if(b.deaths==0) return false;
+//        else return kills*1.0/deaths>b.kills*1.0/deaths;
+		return double(kills)*b.deaths > double(b.kills)*deaths;
     }
 
 
@@ -56,7 +57,6 @@ struct Stats {
 //            str+=QString::number(p.damage);
             tostring.append(str);
         }
-
 
     }
     void sort() {
