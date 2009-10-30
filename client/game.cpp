@@ -40,15 +40,9 @@ void Game::start(){
 
 void Game::go() {
 	conn.update();
-<<<<<<< HEAD:client/game.cpp
     engine.go();
     window.updatePlayerMovement(player);
     window.draw(&player,&stats); //(player.x,player.y);
-=======
-	engine.go();
-	window.updatePlayerMovement(player);
-	window.draw(&player); //(player.x,player.y);
->>>>>>> 1930c314b962e375b5b8fd122da5a890890feabe:client/game.cpp
 	conn.sendStatus();
 
 	//	qDebug()<<player.x<<player.y;
