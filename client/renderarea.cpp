@@ -8,8 +8,8 @@
 #ifndef min
     #define min( a, b ) ( ((a) < (b)) ? (a) : (b) )
 #endif
-#define SQUARE 30
-#define RADIUS (PLAYER_RADIUS*SQUARE)
+const double SQUARE=30;
+const double RADIUS = (PLAYER_RADIUS*SQUARE);
 const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
 
@@ -280,15 +280,16 @@ void RenderArea::drawBar(QPainter& painter)
             weaponstr);
 }
 
-int RenderArea::distance(QPointF a, QPointF b) {
-    int dx = a.x() - b.x();
-    int dy = a.y() - b.y();
-    return (int)sqrt(dx*dx+dy*dy);
+inline double distance(QPointF a, QPointF b) {
+    double dx = a.x() - b.x();
+    double dy = a.y() - b.y();
+    return sqrt(dx*dx+dy*dy);
 }
 
 QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
     qDebug()<<a<<b;
-    const int minDist = 20;
+//    const int minDist = 20;
+	const double minDist = 20.0/SQUARE;
     QList<QPointF> ret;
     if(distance(a,b) < minDist) {
         qDebug()<<"Moro";
@@ -300,22 +301,22 @@ QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
     const int odds [5] = {30,55,75,90,100};
     int xd = rand() % 2;
     int yd = rand() % 2;
-    int rx = rand() % 100;
-    int ry = rand() % 100;
+    double rx = (rand() % 100)/SQUARE;
+    double ry = (rand() % 100)/SQUARE;
 
     double nx = 0, ny = 0;
 
     for(int i = 0; i < 5; ++i) {
         if(rx < odds[i]) {
             nx = (a.x() + b.x()) / 2;
-            nx += xd ? i + 1 : -(i + 1);
+            nx += (xd ? i + 1 : -(i + 1)) / SQUARE;
         }
     }
 
     for(int i = 0; i < 5; ++i) {
         if(ry < odds[i]) {
             ny = (a.y() + b.y()) / 2;
-            ny += yd ? i + 1 : -(i + 1);
+            ny += (yd ? i + 1 : -(i + 1))/SQUARE;
         }
     }
 
@@ -327,7 +328,7 @@ QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
 void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 	if (points.size()==1) return;
 	qDebug()<<"drawing lightning"<<points.size();
-	qDebug()<<points;
+//	qDebug()<<points;
     // 0 is the beginning
     QList<int> picked;
     picked.append(0);
@@ -353,15 +354,21 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 
 	qDebug()<<graph;
 
-    QList<QPair<int,int> > newGraph;
+/*    QList<QPair<int,int> > newGraph;
     QPair<int,int> last;
 
     newGraph.append(graph[0]);
-
+*/
+	double midX = width/2 - centerx;
+	double midY = height/2 - centery;
 
     for(int a = 0; a < graph.size(); ++a) {
         QList<QPointF> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
-		qDebug()<<pts;
+		for(int i=0; i<pts.size(); ++i) {
+			pts[i].setX(midX + SQUARE*pts[i].x());
+			pts[i].setY(midY + SQUARE*pts[i].y());
+		}
+//		qDebug()<<pts.size()<<pts;
         painter.setPen(QPen(QColor(130,175,200),2)); 
         for(int i = 0; i < pts.size() - 1; ++i) {
             painter.drawLine(pts[i],pts[i+1]);

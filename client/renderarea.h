@@ -26,7 +26,6 @@ class RenderArea : public QGLWidget
         double width, height;
         void drawItemPix();
         void drawLightning(QPainter& painter, QList<QPointF> points);
-        int distance(QPointF a, QPointF b);
         QList<QPointF> pathBetween(QPointF a, QPointF b);
 
     protected:

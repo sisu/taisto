@@ -60,7 +60,7 @@ void Game::go() {
 	
 	// Remove old lightings
 	for(int i=0; i<engine.lightnings.size(); ++i) {
-		if (engine.lightnings[i].first.elapsed()>500) {
+		if (engine.lightnings[i].first.elapsed()>100) {
 			qDebug()<<"removing lighting";
 			engine.lightnings[0] = engine.lightnings.back();
 			engine.lightnings.pop_back();
