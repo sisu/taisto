@@ -56,6 +56,15 @@ void Game::go() {
 		qDebug()<<conn.state();
 		end();
 	}
+
+	
+	// Remove old lightings
+	for(int i=0; i<engine.lightnings.size(); ++i) {
+		if (engine.lightnings[0].first.elapsed()>100) {
+			engine.lightnings[0] = engine.lightnings.back();
+			engine.lightnings.pop_back();
+		}
+	}
 }
 void Game::end() {
 	qDebug()<<"disconnected";
