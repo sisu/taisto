@@ -30,6 +30,8 @@ Area::Area(int count): w(16)
 		startPlaces.append(startPlaces.back() + parts.back().data.size()/w);
 	}
 	makeConnected();
+	for(int i=0; i<w; ++i)
+		data[(startPlaces[count-2]+4)*w + i] = parts[count-2].data[w*4+i] = 1;
 
 	spawnIntervals = linearList(0, count, 10*1000, 5*1000);
 //	spawnCounts = linearList(0, count, 2, 8);
