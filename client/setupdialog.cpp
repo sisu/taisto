@@ -14,9 +14,9 @@ SetupDialog::SetupDialog(QWidget* parent):QDialog(parent)
 	hostEdit = new QLineEdit();
 	hostEdit->setText(settings.value("host","").toString());
 	lay->addRow("Host address",hostEdit);
-	soundCheck = new QCheckBox();
-	soundCheck->setChecked(settings.value("sound",true).toBool());
-	lay->addRow("Enable sound",soundCheck);
+	//soundCheck = new QCheckBox();
+	//soundCheck->setChecked(settings.value("sound",true).toBool());
+	//lay->addRow("Enable sound",soundCheck);
 	QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
 			                                      | QDialogButtonBox::Cancel);
 	lay->addWidget(buttonBox);
@@ -29,7 +29,7 @@ void SetupDialog::save()
     QSettings settings;
     settings.setValue("name",name());
     settings.setValue("host",hostAddress());
-    settings.setValue("sound",sound());
+//    settings.setValue("sound",sound());
 }
 QString SetupDialog::name()const
 {
@@ -42,7 +42,8 @@ QString SetupDialog::hostAddress()const
 
 bool SetupDialog::sound()const
 {
-	return soundCheck->isChecked();
+    return false;
+//	return soundCheck->isChecked();
 }
 
 

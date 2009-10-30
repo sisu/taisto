@@ -9,11 +9,11 @@ Connection::Connection(Player* obj, Engine& e): player(obj), engine(e) {
 }
 
 void Connection::connect(QString ip, int port) {
-	qDebug()<<"Connecting..."<<ip<<port;
+	//qDebug()<<"Connecting..."<<ip<<port;
     
 	connectToHost(ip, port);
 	bool res = waitForConnected(1000);
-	qDebug()<<"result"<<res;
+	//qDebug()<<"result"<<res;
 }
 void Connection::update()
 {
@@ -22,14 +22,14 @@ void Connection::update()
 		if (packetSize<0) {
 			if (bytesAvailable()<4) break;
 			s>>packetSize;
-			if (packetSize>1<<20) qDebug()<<"big packet"<<packetSize;
+//			if (packetSize>1<<20) //qDebug()<<"big packet"<<packetSize;
 		}
 		if (bytesAvailable()<packetSize) break;
-//		qDebug()<<"packet size"<<packetSize;
+//		//qDebug()<<"packet size"<<packetSize;
 		packetSize=-1;
 		quint8 type;
 		s>>type;
-//		qDebug()<<"available: "<<type;
+//		//qDebug()<<"available: "<<type;
 		switch(type) {
 			case MSG_INITIAL:
 				readInitial(s);
@@ -63,7 +63,7 @@ void Connection::update()
 				readStats(s);
 				break;
 			default:
-				qDebug()<<type;
+				//qDebug()<<type;
 				abort();
 		}
 		++packetCount;
@@ -74,7 +74,7 @@ void Connection::readInitial(QDataStream& s)
 	int w,h;
 	s>>w>>h;
 	engine.area.w = w;
-	qDebug()<<"map size"<<w<<h;
+	//qDebug()<<"map size"<<w<<h;
 	for(int i=0; i<h; ++i) {
 		for(int j=0; j<w; ++j) {
 			int a;
@@ -87,7 +87,7 @@ void Connection::readInitial(QDataStream& s)
     engine.area.part=p;
     engine.area.spawn=b;
 	s>>player->id;
-	qDebug()<<"got player id"<<player->id;
+	//qDebug()<<"got player id"<<player->id;
 }
 void Connection::readState(QDataStream& s)
 {
@@ -95,13 +95,13 @@ void Connection::readState(QDataStream& s)
 
 	int p;
 	s>>p;
-//	qDebug()<<"players"<<pl;
+//	//qDebug()<<"players"<<pl;
 	for(int i=0; i<p; ++i) {
 		Player pl;
 		s>>pl.id>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health;
-//		qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
+//		//qDebug()<<pl.x<<pl.y<<pl.my<<pl.mx;
 		engine.players.append(pl);
-//		qDebug()<<pl.id<<player->id;
+//		//qDebug()<<pl.id<<player->id;
 		if (pl.id==player->id) {
 			player->x = pl.x;
 			player->y = pl.y;
@@ -117,7 +117,7 @@ void Connection::readShoot(QDataStream& s)
 	s>>id>>weapon>>x>>y>>vx>>vy;
 
     engine.bullets.insert(id,Bullet(weapon,x,y,vx,vy));
-	qDebug()<<"got shoot"<<weapon<<x<<y<<vx<<vy;
+	//qDebug()<<"got shoot"<<weapon<<x<<y<<vx<<vy;
 }
 void Connection::readHit(QDataStream& s)
 {
@@ -137,7 +137,7 @@ void Connection::readEnemy(QDataStream& s) {
 	for(int i=0; i<p; ++i) {
 		Player pl;
 		s>>pl.x>>pl.y>>pl.direction>>pl.my>>pl.mx>>pl.turn>>pl.health>>pl.weapon;
-//		qDebug()<<"aaa"<<pl.x<<pl.y;
+//		//qDebug()<<"aaa"<<pl.x<<pl.y;
 		engine.bots.append(pl);
 	}
 }
@@ -168,7 +168,7 @@ void Connection::readLightning(QDataStream& s) {
 		s>>x>>y;
 		pts.append(QPointF(x,y));
 	}
-	qDebug()<<"ligthing pts"<<pts.size();
+	//qDebug()<<"ligthing pts"<<pts.size();
 	QPointF p = pts[0];
 	for(int i=0; i<engine.lightnings.size(); ++i) {
 		QPointF fst = engine.lightnings[0].second[0];
@@ -198,7 +198,7 @@ void Connection::readStats(QDataStream& s)
 		buf[2*namelen]=0;
 		QString name = QString::fromRawData((QChar*)buf, namelen);
 
-		qDebug()<<"jee"<<kills<<deaths<<damageDone<<name;
+		//qDebug()<<"jee"<<kills<<deaths<<damageDone<<name;
 
 		StatsPlayer pl(id,name,kills,deaths,damageDone);
 		engine.stats.players.append(pl);
@@ -208,7 +208,7 @@ void Connection::readStats(QDataStream& s)
 
 void Connection::sendStatus()
 {
-//	qDebug()<<"send"<<player->x<<player->y<<player->my<<player->mx;
+//	//qDebug()<<"send"<<player->x<<player->y<<player->my<<player->mx;
 	QDataStream s(this);
 	s << 1 + 4+4+4;
 	s << MSG_STATE;
@@ -217,7 +217,7 @@ void Connection::sendStatus()
 }
 void Connection::sendShoot()
 {
-	qDebug()<<"sending shoot";
+	//qDebug()<<"sending shoot";
 	QDataStream s(this);
 	s << 1 + 4;
 	s << MSG_SHOOT;
