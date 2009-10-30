@@ -349,23 +349,21 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
     picked.append(0);
 
     QList<QPair<int,int> > graph;
-    
-    while(picked.size() < points.size()) {
-        double cheapest = 1e9;
-        QPair<int,int> pr;
-        for(int i = 0; i < picked.size(); ++i) {
-            for(int j = 0; j < points.size(); ++j) {
-                if(picked.contains(j)) continue;
-                double dist = distance(points[picked[i]],points[j]);
-                if(dist < cheapest) {
-                    cheapest = dist;
-                    pr = QPair<int,int>(picked[i],j);
-                }
-            }
-        }
-        graph.append(pr); 
-        picked.append(pr.second);
-    }
+	QVector<bool> used(points.size(), 0);
+	QVector<QPair<double,int> > dists(points.size(), QPair<double,int>(1e9,-1));
+	for(int i=0; i<points.size(); ++i) {
+		QPair<double,int> choise(1e10, 0);
+		int ci=-1;
+		for(int j=0; j<points.size(); ++j)
+			if (!used[j] && dists[j]<choise) choise=dists[j], ci=j;
+		used[ci]=1;
+		for(int j=0; j<points.size(); ++j) {
+			if (used[j]) continue;
+			double d = distance(points[ci],points[j]);
+			if (d<dists[j].first) dists[j].first=d, dists[j].second=ci;
+		}
+		if (choise.second>=0) graph.append(QPair<int,int>(choise.second,ci));
+	}
 
 	qDebug()<<graph;
 
