@@ -312,6 +312,7 @@ void Server::addBullet(int weap, double x, double y, double vx, double vy, doubl
 }
 void Server::createBot(int place, int w)
 {
+	if (place>area.parts.size()) place=area.parts.size();
 	QPair<int,int> spawn = area.getSpawnPoint(place);
 	Bot b(spawn.first + .5, spawn.second+.5, w);
 	bots.append(b);
