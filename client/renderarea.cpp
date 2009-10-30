@@ -261,7 +261,7 @@ void RenderArea::drawBar(QPainter& painter)
 
     for(int i = 0; i < int(sizeof(weaponColors)/sizeof(weaponColors[0])); ++i) {
         painter.setBrush(QBrush(weaponColors[i])); 
-        if(engine.bulletCounts[i+1]==0&&i>1) {
+        if(engine.bulletCounts[i+1]==0&&i>0) {
             QColor q=weaponColors[i];
             painter.setBrush(QColor(q.red()/4,q.green()/4,q.blue()/4));
         }
@@ -611,7 +611,7 @@ void RenderArea::drawBulletPix() {
     p2.fill(QColor(0,0,0,0));
     QPainter p2p(&p2);
     p2p.setPen(QPen(QColor(15,15,15)));
-    p2p.setBrush(QBrush(QColor(80,80,80)));
+    p2p.setBrush(QBrush(QColor(220,220,220)));
     const QPointF points2[5] = {QPoint(1,0),QPoint(2,1),QPoint(2,4),QPoint(0,4),QPoint(0,1)};
     p2p.drawPolygon(points2,5);
     //   p2p.drawEllipse(0,0,beadwidth,beadheight);
