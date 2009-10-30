@@ -1,6 +1,9 @@
 #include <QtGui>
 #include "renderarea.h"
 #include "window.h"
+
+const int codeLength = 8;
+
 Window::Window(Engine& engine, Player& pl) : player(pl)
 {   
     resize(800,600);
@@ -9,6 +12,8 @@ Window::Window(Engine& engine, Player& pl) : player(pl)
 	layout->addWidget(renderArea);
 	setLayout(layout);
 	setWindowTitle("Taisto");
+
+	listOfCheats.append("ibeatyou");
 }
 
 void Window::draw(Player* player) {
@@ -16,8 +21,34 @@ void Window::draw(Player* player) {
 	//"Piirrä"
 }
 
+void Window::addToLetterBuffer(int event) {
+    if(event >= Qt::Key_A && event <= Qt::Key_Z) {
+        letterBuffer += 'a' + event - Qt::Key_A; 
+        if(letterBuffer.size() > codeLength) {
+            letterBuffer = letterBuffer.
+                mid(letterBuffer.size() - codeLength);
+        }
+    }
+}
+
+void Window::checkCheats() {
+    if(listOfCheats.contains(letterBuffer)) {
+        qDebug("Bileet");
+        activatedCheats.append(letterBuffer); 
+    }
+}
+
+QList<QString> Window::getActivatedCheats() {
+    QList<QString> ret = activatedCheats;
+    activatedCheats.clear();
+    return ret;
+}
+
 void Window::keyPressEvent(QKeyEvent* event) {
     this->keysHeld.append(event->key());
+    addToLetterBuffer(event->key());
+    checkCheats();
+
     if(event->key() >= Qt::Key_1 && event->key() <= Qt::Key_5) {
         player.weapon = event->key() - Qt::Key_1 + 1;
     }
