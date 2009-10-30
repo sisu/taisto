@@ -19,6 +19,6 @@ const double bulletSpeeds[1+WEAPONS] = {0,20,40,50,0,20};
 const double damages[1+WEAPONS] = {0,0.07,0.07,0.04,0.02,5};
 
 const double ROCKET_RADIUS = 4;
-const double LIGHTNING_RADIUS = 3;
+const double LIGHTNING_RADIUS = 5;
 
 #endif

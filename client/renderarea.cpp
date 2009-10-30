@@ -287,7 +287,7 @@ inline double distance(QPointF a, QPointF b) {
 }
 
 QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
-    qDebug()<<a<<b;
+//    qDebug()<<a<<b;
 //    const int minDist = 20;
 	const double minDist = 20.0/SQUARE;
     QList<QPointF> ret;
@@ -328,7 +328,7 @@ QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
 void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 	if (points.size()==1) return;
 	qDebug()<<"drawing lightning"<<points.size();
-//	qDebug()<<points;
+	qDebug()<<points;
     // 0 is the beginning
     QList<int> picked;
     picked.append(0);
@@ -336,12 +336,12 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
     QList<QPair<int,int> > graph;
     
     while(picked.size() < points.size()) {
-        int cheapest = (int)1e9;
+        double cheapest = (int)1e9;
         QPair<int,int> pr;
         for(int i = 0; i < picked.size(); ++i) {
             for(int j = 0; j < points.size(); ++j) {
                 if(picked.contains(j)) continue;
-                int dist = distance(points[picked[i]],points[j]);
+                double dist = distance(points[picked[i]],points[j]);
                 if(dist < cheapest) {
                     cheapest = dist;
                     pr = QPair<int,int>(picked[i],j);
@@ -363,6 +363,8 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 	double midY = height/2 - centery;
 
     for(int a = 0; a < graph.size(); ++a) {
+		QPointF& pa = points[graph[a].first], pb=points[graph[a].second];
+		qDebug()<<"getting path"<<pa<<pb;
         QList<QPointF> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
 		for(int i=0; i<pts.size(); ++i) {
 			pts[i].setX(midX + SQUARE*pts[i].x());
