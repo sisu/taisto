@@ -39,7 +39,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     QPainter painter(this);
     painter.setRenderHint(painter.Antialiasing,true);
     
-	painter.setBrush(QBrush(QColor(220,210,180)));
+	//painter.setBrush(QBrush(QColor(220,210,180)));
+	painter.setBrush(QBrush(QColor(50,50,50)));
     painter.drawRect(0,0,width,height);    
 	painter.translate(0, height);
 	painter.scale(1,-1);
@@ -52,7 +53,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     int endy = min(a.h()-1, (centery+h2)/SQUARE);
     
     //Borders
-	painter.setBrush(QBrush(QColor(40,40,40)));
+	//painter.setBrush(QBrush(QColor(40,40,40)));
+    painter.setBrush(QBrush(QColor(120,110,100)));
 
     if(centerx-width/2<0) {
         double over=width/2-centerx;
@@ -65,7 +67,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 
     //Spawn areas
-    painter.setBrush(QBrush(QColor(230,250,230)));
+    //painter.setBrush(QBrush(QColor(230,250,230)));
+    painter.setBrush(QBrush(QColor(50,60,70)));
     painter.setPen(Qt::NoPen);
     int k = (starty/a.part)*a.part;
     double x0=w2+startx*SQUARE-centerx;
@@ -113,7 +116,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     for(int y=starty; y<=endy; ++y) {
         for(int x=startx; x<=endx; ++x) {
             if (a.data[y*a.w+x]) {
-                painter.setBrush(QBrush(QColor(70,40,40)));
+                painter.setBrush(QBrush(QColor(130,120,110)));
+                //painter.setBrush(QBrush(QColor(70,40,40)));
                 //                painter.setPen(QPen(QColor(0,0,0)));
 
                 double x0 = w2 + x*SQUARE - centerx;
