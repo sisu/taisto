@@ -59,13 +59,13 @@ void Unit::shoot(int weap, Server& serv)
 			}
 			break;
 		case 3:
-			makeBullet(serv, weap, angle, 0.02);
+			makeBullet(serv, weap, angle, 0.1);
 			break;
 		case 4:
 			serv.hitLightning(*this);
 			break;
 		case 5:
-			makeBullet(serv, weap, angle, 0.05);
+			makeBullet(serv, weap, angle, 0.07);
 			break;
 		default:
 			qDebug()<<"unknown weapon"<<weap;
