@@ -67,6 +67,8 @@ void Server::update()
 		qDebug()<<"fps:"<<frames;
 		frames=0;
 		prevSec=t/1000;
+
+		sendStats();
 	}
 
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
@@ -232,6 +234,25 @@ void Server::sendHit(const Bullet& b)
 
 	s << 1+sizeof(b.id)+8+8;
 	s << MSG_HIT << b.id << b.x<<b.y;
+
+	sendToAll(msg);
+}
+void Server::sendStats()
+{
+	QByteArray msg;
+	QDataStream s(&msg, QIODevice::WriteOnly);
+
+	int lens=0;
+	for(int i=0; i<players.size(); ++i) lens+=players[i].name.size();
+	qDebug()<<"stats"<<lens;
+	s << 1+4+lens+players.size()*(4+4+4+4+4);
+	s << MSG_STATS << players.size();
+	for(int i=0; i<players.size(); ++i) {
+		Player& p = players[i];
+		qDebug()<<"str"<<p.name;
+		s << p.id << p.kills << p.deaths << p.damageDone << p.name.size();// << p.name;
+		s.writeRawData((char*)p.name.data(), p.name.size());
+	}
 
 	sendToAll(msg);
 }

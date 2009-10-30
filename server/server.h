@@ -52,6 +52,7 @@ private:
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);
+	void sendStats();
 	void spawnPlayer(Unit& p, bool bot=0);
 	void createBot(int place, int w);
 	void createItem(int type);

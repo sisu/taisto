@@ -59,6 +59,9 @@ void Connection::update()
 			case MSG_LIGHTNING:
 				readLightning(s);
 				break;
+			case MSG_STATS:
+				readStats(s);
+				break;
 			default:
 				qDebug()<<type;
 				abort();
@@ -178,6 +181,21 @@ void Connection::readLightning(QDataStream& s) {
 	QTime t;
 	t.start();
 	engine.lightnings.append(QPair<QTime,QList<QPointF> >(t,pts));
+}
+void Connection::readStats(QDataStream& s)
+{
+	int n;
+	s>>n;
+	for(int i=0; i<n; ++i) {
+		int id;
+		int kills,deaths,damageDone;
+		int namelen;
+		s>>id>>kills>>deaths>>damageDone>>namelen;
+		char* buf = new char[namelen+1];
+		s.readRawData(buf, namelen);
+		QString name(buf);
+		delete[] buf;
+	}
 }
 
 void Connection::sendStatus()
