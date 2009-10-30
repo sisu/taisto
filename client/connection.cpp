@@ -188,7 +188,8 @@ void Connection::readStats(QDataStream& s)
 	s>>n;
 	for(int i=0; i<n; ++i) {
 		int id;
-		int kills,deaths,damageDone;
+		int kills,deaths;
+		double damageDone;
 		int namelen;
 		s>>id>>kills>>deaths>>damageDone>>namelen;
 		char* buf = new char[namelen+1];

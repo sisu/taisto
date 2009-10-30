@@ -21,7 +21,8 @@ class Player : public Unit {
         QTcpSocket* socket;
         void update(Server& s);
 
-		int kills, deaths, damageDone;
+		int kills, deaths;
+		double damageDone;
 		QString name;
 
     private:

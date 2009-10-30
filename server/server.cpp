@@ -246,7 +246,7 @@ void Server::sendStats()
 	int lens=0;
 	for(int i=0; i<players.size(); ++i) lens+=players[i].name.size();
 	qDebug()<<"stats"<<lens;
-	s << 1+4+lens+players.size()*(4+4+4+4+4);
+	s << 1+4+lens+players.size()*(4+4+4+8+4);
 	s << MSG_STATS << players.size();
 	for(int i=0; i<players.size(); ++i) {
 		Player& p = players[i];
@@ -283,7 +283,7 @@ void Server::bulletHit(Unit* p, const Bullet& b)
 
 	p->health -= damages[b.type] / p->armor;
 	p->lastHitT = curT.elapsed();
-	if (b.shooter) b.shooter->damageDone += damages[b.type] / p->armor;
+	if (b.shooter) b.shooter->damageDone += damages[b.type] / p->armor, qDebug()<<"adding for"<<b.shooter->id<<damages[b.type]/p->armor;
 	p->lastShooter = b.shooter;
 	qDebug()<<"hit"<<p->health;
 }
