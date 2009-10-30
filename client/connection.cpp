@@ -164,6 +164,7 @@ void Connection::readLightning(QDataStream& s) {
 		s>>x>>y;
 		pts.append(QPointF(x,y));
 	}
+	qDebug()<<"ligthing pts"<<pts.size();
 	QPointF p = pts[0];
 	for(int i=0; i<engine.lightnings.size(); ++i) {
 		QPointF fst = engine.lightnings[0].second[0];
@@ -173,7 +174,9 @@ void Connection::readLightning(QDataStream& s) {
 			return;
 		}
 	}
-	engine.lightnings.append(QPair<QTime,QList<QPointF> >(QTime(),pts));
+	QTime t;
+	t.start();
+	engine.lightnings.append(QPair<QTime,QList<QPointF> >(t,pts));
 }
 
 void Connection::sendStatus()

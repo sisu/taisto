@@ -16,7 +16,7 @@ const double FRAME_TIME = 1./FPS;
 const int WEAPONS = 16;
 const int loadTimes[1+WEAPONS] = {0,300,350,50,0,1000};
 const double bulletSpeeds[1+WEAPONS] = {0,20,40,50,0,20};
-const double damages[1+WEAPONS] = {0,0.07,0.07,0.04,0,5};
+const double damages[1+WEAPONS] = {0,0.07,0.07,0.04,0.02,5};
 
 const double ROCKET_RADIUS = 4;
 const double LIGHTNING_RADIUS = 3;

@@ -325,6 +325,9 @@ QList<QPointF> RenderArea::pathBetween(QPointF a, QPointF b) {
 }
 
 void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
+	if (points.size()==1) return;
+	qDebug()<<"drawing lightning"<<points.size();
+	qDebug()<<points;
     // 0 is the beginning
     QList<int> picked;
     picked.append(0);
@@ -348,6 +351,7 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
         picked.append(pr.second);
     }
 
+	qDebug()<<graph;
 
     QList<QPair<int,int> > newGraph;
     QPair<int,int> last;
@@ -357,6 +361,7 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
 
     for(int a = 0; a < graph.size(); ++a) {
         QList<QPointF> pts = pathBetween(points[graph[a].first],points[graph[a].second]);
+		qDebug()<<pts;
         painter.setPen(QPen(QColor(130,175,200),2)); 
         for(int i = 0; i < pts.size() - 1; ++i) {
             painter.drawLine(pts[i],pts[i+1]);
