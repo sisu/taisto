@@ -10,7 +10,7 @@
 #endif
 const double SQUARE=30;
 const double RADIUS = (PLAYER_RADIUS*SQUARE);
-const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.3;
+const double EYE_SIZE = SQUARE*PLAYER_RADIUS*0.4;
 const double EYE_DIST = SQUARE*PLAYER_RADIUS*0.1;
 
 const QColor weaponColors[] = {
@@ -161,7 +161,8 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         if(x+RADIUS>=0&&y+RADIUS>=0&&x-RADIUS<width&&y-RADIUS<height) {
             painter.setBrush(QBrush(QColor(190,140,90)));
             painter.drawEllipse(x-RADIUS,y-RADIUS,RADIUS*2,RADIUS*2);
-            painter.setBrush(QBrush(QColor(90,240,90)));
+//            painter.setBrush(QBrush(QColor(90,240,90)));
+            painter.setBrush(QBrush(weaponColors[engine.bots[i].weapon-1]));
             double a=engine.bots[i].direction;
             painter.drawEllipse(
                     x+(RADIUS-EYE_DIST-EYE_SIZE)*cos(a)-EYE_SIZE,
@@ -336,7 +337,7 @@ void RenderArea::drawLightning(QPainter& painter, QList<QPointF> points) {
     QList<QPair<int,int> > graph;
     
     while(picked.size() < points.size()) {
-        double cheapest = (int)1e9;
+        double cheapest = 1e9;
         QPair<int,int> pr;
         for(int i = 0; i < picked.size(); ++i) {
             for(int j = 0; j < points.size(); ++j) {
