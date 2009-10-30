@@ -1,8 +1,9 @@
 #include <cstdlib>
 #include "game.h"
 #include "constants.h"
+#include "setupdialog.h"
 
-Game::Game(): conn(&player, engine), window(engine,player), player() {
+Game::Game(): conn(&player, engine), window(new Window(engine,player)), player() {
      timer = new QTimer(this);
      connect(timer, SIGNAL(timeout()), this, SLOT(go()));
      timer->start(FRAMETIME*1000);
@@ -20,20 +21,32 @@ void Game::start(QString ip, int port) {
     
     
     // Luo verkko
+	// 
     
     conn.connect(ip,port);
 	 conn.waitForConnected(3000);
 
     //Luo ikkuna + piirtopinta
-    window.show();
+    window->show();
 
+}
+void Game::start(){
+	qDebug()<<"start()\n";
+	SetupDialog* setup = new SetupDialog(window);
+	setup->show();
+	qDebug()<<setup->isVisible();
+	if(setup->exec())
+	{
+		qDebug()<<"start()\n";
+		start(setup->hostAddress(),32096);
+	}
 }
 
 void Game::go() {
 	conn.update();
     engine.go();
-    window.updatePlayerMovement(player);
-    window.draw(&player); //(player.x,player.y);
+    window->updatePlayerMovement(player);
+    window->draw(&player); //(player.x,player.y);
 	conn.sendStatus();
 
 //	qDebug()<<player.x<<player.y;
