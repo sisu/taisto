@@ -5,6 +5,7 @@
 
 int main(int argc, char* argv[])
 {
+	srand(QTime::currentTime().msec() + 1000*QDateTime::currentDateTime().toTime_t());
 	QCoreApplication a(argc, argv);
 	Server s(17);
 	s.listen(QHostAddress::Any, 32096);
