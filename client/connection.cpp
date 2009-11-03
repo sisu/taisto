@@ -159,7 +159,7 @@ void Connection::readGet(QDataStream& s) {
 	int item,pl;
 	s>>pl>>item;
 	int type = engine.items[item].itemNo;
-	if (item>0) engine.bulletCounts[type] += boxSizes[type];
+	if (pl==player->id && item>0) engine.bulletCounts[type] += boxSizes[type];
 	engine.items.remove(item);
 }
 void Connection::readLightning(QDataStream& s) {

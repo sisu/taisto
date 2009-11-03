@@ -138,13 +138,17 @@ void Server::updateItems()
 			double s=ITEM_RADIUS+PLAYER_RADIUS;
 			if (d2 < s*s) {
 				qDebug()<<"sending item";
-				QDataStream s(players[j].socket);
+				QByteArray msg;
+//				QDataStream s(players[j].socket);
+				QDataStream s(&msg, QIODevice::WriteOnly);
 				s << 1+4+4;
 //				s << MSG_GET << items[i].itemNo;
 				s << MSG_GET << players[j].id << items[i].id;
-				players[j].socket->flush();
+//				players[j].socket->flush();
+				sendToAll(msg);
 
 				if (items[i].itemNo==0) players[j].health=1;
+
 				items[i]=items.back();
 				items.pop_back();
 			} else ++i;
@@ -347,7 +351,8 @@ void Server::spawnStuff(bool next)
 	s = sqrt(s);
 
 	int itemCount=0;
-	for(int i=0; i<6; ++i) itemCount += area.itemCounts[i][curSpawn]*s;
+	for(int i=0; i<6; ++i) itemCount += ceil(area.itemCounts[i][curSpawn]*s);
+	qDebug()<<"itemcount"<<itemCount;
 
 	QByteArray msg;
 	QDataStream os(&msg, QIODevice::WriteOnly);
@@ -358,7 +363,7 @@ void Server::spawnStuff(bool next)
 		qDebug()<<"spawning"<<area.spawnCounts[j][curSpawn]*s<<"bots ;"<<next;
 		for(int i=0; i<area.spawnCounts[j][curSpawn] * s; ++i)
 			createBot(curSpawn+1+next, j);
-		if (area.itemCounts[j][curSpawn]) qDebug()<<"creating"<<j<<area.itemCounts[j][curSpawn];
+		if (area.itemCounts[j][curSpawn]) qDebug()<<"creating"<<j<<area.itemCounts[j][curSpawn]*s;
 		for(int i=0; i<area.itemCounts[j][curSpawn] * s; ++i) {
 			Item& i = createItem(j);
 			os << i.x << i.y << i.itemNo << i.id;

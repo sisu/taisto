@@ -13,6 +13,7 @@
 #include "stats.h"
 #include <QtOpenGL>
 
+#define USE_OPENGL
 #ifdef USE_OPENGL
 class RenderArea : public QGLWidget
 #else
