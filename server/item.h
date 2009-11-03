@@ -5,7 +5,8 @@ class Item {
     public:
         double x,y;
         int itemNo;
-        Item(double x, double y, int itemNo): x(x), y(y), itemNo(itemNo) {}
+		int id;
+        Item(double x, double y, int itemNo, int id): x(x), y(y), itemNo(itemNo), id(id) {}
         Item() {}
 };
 

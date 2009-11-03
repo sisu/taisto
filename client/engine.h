@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QTime>
 #include <QPair>
+#include <QHash>
 #include "stats.h"
 #include "object.h"
 #include "area.h"
@@ -21,7 +22,8 @@ class Engine : public QObject {
 
         QList<Player> players;
         QList<Player> bots;
-        QList<Item> items;
+//        QList<Item> items;
+		QHash<int,Item> items;
         QMap<int,Bullet> bullets;
 		QList<int> bulletCounts;
 		Stats stats;

@@ -143,21 +143,24 @@ void Connection::readEnemy(QDataStream& s) {
 }
 
 void Connection::readItem(QDataStream& s) {
-    engine.items.clear();
+//    engine.items.clear();
 
 	int p;
 	s>>p;
 	for(int i=0; i<p; ++i) {
 		Item it;
-		s>>it.x>>it.y>>it.itemNo;
-		engine.items.append(it);
+		s>>it.x>>it.y>>it.itemNo>>it.id;
+	//	engine.items.append(it);
+		engine.items.insert(it.id,it);
 	}
 }
 void Connection::readGet(QDataStream& s) {
 	static const int boxSizes[20] = {0,0,15,100,50,3};
-	int item;
-	s>>item;
-	if (item>0) engine.bulletCounts[item] += boxSizes[item];
+	int item,pl;
+	s>>pl>>item;
+	int type = engine.items[item].itemNo;
+	if (item>0) engine.bulletCounts[type] += boxSizes[type];
+	engine.items.remove(item);
 }
 void Connection::readLightning(QDataStream& s) {
 	int count;

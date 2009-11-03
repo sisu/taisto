@@ -200,8 +200,10 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
 
 	//Items
-	for(int i=0; i<engine.items.size(); ++i) {
-		Item& it = engine.items[i];
+//	for(int i=0; i<engine.items.size(); ++i) {
+//		Item& it = engine.items[i];
+	for(QHash<int,Item>::iterator i=engine.items.begin(); i!=engine.items.end(); ++i) {
+		Item& it = *i;
 		/*QColor c(255,255,255);
 		if (it.itemNo>0) c=weaponColors[it.itemNo-1];
 		painter.setBrush(QBrush(c));
@@ -210,7 +212,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 		double y = height/2 - centery + it.y*SQUARE;
 		int s=5;
 		painter.drawRect(x-s,y-s,2*s,2*s);*/
-        QPixmap& curr=itemPix[engine.items[i].itemNo];
+        QPixmap& curr=itemPix[it.itemNo];
 		double x = width/2 - centerx + it.x*SQUARE;
 		double y = height/2 - centery + it.y*SQUARE;
         painter.drawPixmap(x-curr.width()/2,y-curr.height()/2,curr);

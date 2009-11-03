@@ -7,7 +7,7 @@
 #include "bot.h"
 #include "physics.h"
 
-Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1)
+Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1), nextItem(0)
 {
 	connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
 	timer.start(1000/FPS);
@@ -57,7 +57,7 @@ void Server::update()
 		if (bots[i].y <= area.startPlaces[curSpawn+1]+area.parts[curSpawn+1].spawnH) botNext=1;
 
 	if (playerNext && !botNext) {
-		items.clear();
+//		items.clear();
 		++curSpawn;
 		spawnStuff();
 	}
@@ -73,7 +73,7 @@ void Server::update()
 	}
 
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
-	if (t > lastSpawn + area.spawnIntervals[curSpawn] && bots.size()<area.maxBots[curSpawn])
+	if (t > lastSpawn + area.spawnIntervals[curSpawn])
 		spawnStuff(playerNext);
 
 	for(int i=0; i<players.size(); ++i)
@@ -139,8 +139,9 @@ void Server::updateItems()
 			if (d2 < s*s) {
 				qDebug()<<"sending item";
 				QDataStream s(players[j].socket);
-				s << 1+4;
-				s << MSG_GET << items[i].itemNo;
+				s << 1+4+4;
+//				s << MSG_GET << items[i].itemNo;
+				s << MSG_GET << players[j].id << items[i].id;
 				players[j].socket->flush();
 
 				if (items[i].itemNo==0) players[j].health=1;
@@ -150,6 +151,7 @@ void Server::updateItems()
 		}
 	}
 
+	/*
 	QByteArray stateMsg;
 	QDataStream stream(&stateMsg, QIODevice::WriteOnly);
     stream << 1 + 4 + items.size()*(8+8+4);
@@ -160,6 +162,7 @@ void Server::updateItems()
         stream << it.x << it.y << it.itemNo;
     }
 	sendToAll(stateMsg);
+	*/
 }
 void Server::updateBullets()
 {
@@ -213,6 +216,14 @@ void Server::sendInitialInfo(QTcpSocket* sock, int id)
 	s<<area.parts[0].data.size()/area.w<<area.parts[0].spawnH;
 	s<<id;
 	qDebug()<<"sent player id"<<id;
+
+
+	s << 1+4+items.size()*(8+8+4+4);
+	s << MSG_ITEM << items.size();
+	for(int i=0; i<items.size(); ++i) {
+		Item& it = items[i];
+		s<<it.x<<it.y<<it.itemNo<<it.id;
+	}
 	sock->flush();
 }
 
@@ -313,32 +324,48 @@ void Server::addBullet(int weap, double x, double y, double vx, double vy, doubl
 }
 void Server::createBot(int place, int w)
 {
+	if (bots.size()>=area.maxBots[curSpawn]) return;
 	if (place>15 && curSpawn<15) place=15;
 	QPair<int,int> spawn = area.getSpawnPoint(place);
 	Bot b(spawn.first + .5, spawn.second+.5, w);
 	bots.append(b);
 }
-void Server::createItem(int type)
+Item& Server::createItem(int type)
 {
 	QPair<int,int> spawn = area.getSpawnPoint(curSpawn);
-	Item i(spawn.first + .5, spawn.second+.5, type);
+	Item i(spawn.first + .5, spawn.second+.5, type, nextItem++);
 	items.append(i);
 	qDebug()<<"item created"<<type;
+	return items.back();
 }
 void Server::spawnStuff(bool next)
 {
+
 	lastSpawn = curT.elapsed();
 	double s = players.size();
 	if (!s) s=1;
 	s = sqrt(s);
+
+	int itemCount=0;
+	for(int i=0; i<6; ++i) itemCount += area.itemCounts[i][curSpawn]*s;
+
+	QByteArray msg;
+	QDataStream os(&msg, QIODevice::WriteOnly);
+	os << 1+4+itemCount*(8+8+4+4);
+	os << MSG_ITEM << itemCount;
+
 	for(int j=0; j<6; ++j) {
 		qDebug()<<"spawning"<<area.spawnCounts[j][curSpawn]*s<<"bots ;"<<next;
 		for(int i=0; i<area.spawnCounts[j][curSpawn] * s; ++i)
 			createBot(curSpawn+1+next, j);
 		if (area.itemCounts[j][curSpawn]) qDebug()<<"creating"<<j<<area.itemCounts[j][curSpawn];
-		for(int i=0; i<area.itemCounts[j][curSpawn] * s; ++i)
-			createItem(j);
+		for(int i=0; i<area.itemCounts[j][curSpawn] * s; ++i) {
+			Item& i = createItem(j);
+			os << i.x << i.y << i.itemNo << i.id;
+		}
 	}
+
+	sendToAll(msg);
 }
 void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Player* player)
 {

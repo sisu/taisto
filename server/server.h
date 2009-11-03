@@ -49,13 +49,14 @@ private:
 	QTime curT;
 	int prevSec, frames;
 	int lastSpawn;
+	int nextItem;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
 	void sendHit(const Bullet& b);
 	void sendStats();
 	void spawnPlayer(Unit& p, bool bot=0);
 	void createBot(int place, int w);
-	void createItem(int type);
+	Item& createItem(int type);
 	void updatePlayers();
 	void updateBots();
 	void updateBullets();
