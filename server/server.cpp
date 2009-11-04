@@ -171,6 +171,7 @@ void Server::updateItems()
 void Server::updateBullets()
 {
 	QList<Unit*> common;
+	QList<Item> newitems;
 	for(int i=0; i<players.size(); ++i)
 		common.append(&players[i]);
 	for(int i=0; i<bots.size(); ++i)
@@ -202,89 +203,107 @@ void Server::updateBullets()
 			if (shooter) ++shooter->kills;
 //			qDebug()<<"killed by"<<bots[i].lastShooter;
 
+		    if(rand()%5==0) {
+		    	items.append(Item(bots[i].x,bots[i].y,0,nextItem++));
+		    	newitems.append(items.back());
+
+            }
 			bots[i]=bots.back();
 			bots.pop_back();
 		} else ++i;
 	}
+    if(!newitems.empty()) {
+        QByteArray msg;
+        QDataStream os(&msg, QIODevice::WriteOnly);
+        os << 1+4+newitems.size()*(8+8+4+4);
+        os << MSG_ITEM << newitems.size();
+
+        for(int j=0; j<newitems.size(); ++j) {
+                Item& i = newitems[j];
+                os << i.x << i.y << i.itemNo << i.id;
+        }
+
+        sendToAll(msg);
+    }
 }
 
 void Server::sendInitialInfo(QTcpSocket* sock, int id)
 {
-	QDataStream s(sock);
-	s << 1 + 4+4 + area.w*area.h*4 + 4+4 + 4;
-	s<<MSG_INITIAL;
-	s<<area.w<<area.h;
-	for(int i=0; i<area.parts.size(); ++i)
-		for(int j=0; j<area.parts[i].data.size(); ++j)
-			s<<area.parts[i].data[j];
-	s<<area.parts[0].data.size()/area.w<<area.parts[0].spawnH;
-	s<<id;
-	qDebug()<<"sent player id"<<id;
+    QDataStream s(sock);
+    s << 1 + 4+4 + area.w*area.h*4 + 4+4 + 4;
+    s<<MSG_INITIAL;
+    s<<area.w<<area.h;
+    for(int i=0; i<area.parts.size(); ++i)
+        for(int j=0; j<area.parts[i].data.size(); ++j)
+            s<<area.parts[i].data[j];
+    s<<area.parts[0].data.size()/area.w<<area.parts[0].spawnH;
+    s<<id;
+    qDebug()<<"sent player id"<<id;
 
 
-	s << 1+4+items.size()*(8+8+4+4);
-	s << MSG_ITEM << items.size();
-	for(int i=0; i<items.size(); ++i) {
-		Item& it = items[i];
-		s<<it.x<<it.y<<it.itemNo<<it.id;
-	}
-	sock->flush();
+    s << 1+4+items.size()*(8+8+4+4);
+    s << MSG_ITEM << items.size();
+    for(int i=0; i<items.size(); ++i) {
+        Item& it = items[i];
+        s<<it.x<<it.y<<it.itemNo<<it.id;
+    }
+    sock->flush();
 }
 
 void Server::sendToAll(QByteArray msg)
 {
 #if 1
-	int size;
-	QDataStream tmp(msg);
-	tmp>>size;
-	if (size+4 != msg.size()) qDebug()<<"asd"<<size+4<<msg.size();
-	Q_ASSERT(size+4 == msg.size());
+    int size;
+    QDataStream tmp(msg);
+    tmp>>size;
+    if (size+4 != msg.size()) qDebug()<<"asd"<<size+4<<msg.size();
+    Q_ASSERT(size+4 == msg.size());
 #endif
-	for(int i=0; i<players.size(); ++i)
-		players[i].socket->write(msg);
+    for(int i=0; i<players.size(); ++i)
+        players[i].socket->write(msg);
 }
 
 void Server::sendHit(const Bullet& b)
 {
-	QByteArray msg;
-	QDataStream s(&msg, QIODevice::WriteOnly);
+    QByteArray msg;
+    QDataStream s(&msg, QIODevice::WriteOnly);
 
-	s << int(1+sizeof(b.id)+8+8);
-	s << MSG_HIT << b.id << b.x<<b.y;
+    s << int(1+sizeof(b.id)+8+8);
+    s << MSG_HIT << b.id << b.x<<b.y;
 
-	sendToAll(msg);
+    sendToAll(msg);
 }
 void Server::sendStats()
 {
-	QByteArray msg;
-	QDataStream s(&msg, QIODevice::WriteOnly);
+    QByteArray msg;
+    QDataStream s(&msg, QIODevice::WriteOnly);
 
-	int lens=0;
-	for(int i=0; i<players.size(); ++i) lens+=players[i].name.size();
-	qDebug()<<"stats"<<lens;
-	s << 1+4+2*lens+players.size()*(4+4+4+8+4);
-	s << MSG_STATS << players.size();
-	for(int i=0; i<players.size(); ++i) {
-		Player& p = players[i];
-		qDebug()<<"name"<<p.name.size()<<p.name;
-		s << p.id << p.kills << p.deaths << p.damageDone << p.name.size();// << p.name;
-		s.writeRawData((char*)p.name.data(), 2*p.name.size());
-	}
+    int lens=0;
+    for(int i=0; i<players.size(); ++i) lens+=players[i].name.size();
+    qDebug()<<"stats"<<lens;
+    s << 1+4+2*lens+players.size()*(4+4+4+8+4);
+    s << MSG_STATS << players.size();
+    for(int i=0; i<players.size(); ++i) {
+        Player& p = players[i];
+        qDebug()<<"name"<<p.name.size()<<p.name;
+        s << p.id << p.kills << p.deaths << p.damageDone << p.name.size();// << p.name;
+        s.writeRawData((char*)p.name.data(), 2*p.name.size());
+    }
 
-	sendToAll(msg);
+    sendToAll(msg);
 }
 
 void Server::rocketDamage(Unit& u, const Bullet& b)
 {
-	double dx=u.x-b.x, dy=u.y-b.y;
-	double d2 = dx*dx + dy*dy;
-	if (d2 > ROCKET_RADIUS*ROCKET_RADIUS) return;
-	if (rayHitsWall(b.x,b.y,u.x,u.y,area)) return;
-	double d = sqrt(d2);
-	double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
-	u.health -= dmg / u.armor;
-	if (b.shooter) b.shooter->damageDone += dmg/u.armor;
-	u.lastShooter = b.shooter;
+    double dx=u.x-b.x, dy=u.y-b.y;
+    double d2 = dx*dx + dy*dy;
+    if (d2 > ROCKET_RADIUS*ROCKET_RADIUS) return;
+    if (rayHitsWall(b.x,b.y,u.x,u.y,area)) return;
+    double d = sqrt(d2);
+    double dmg = damages[b.type] * (1-d/ROCKET_RADIUS);
+    u.health -= dmg / u.armor;
+    if (b.shooter) b.shooter->damageDone += dmg/u.armor;
+    u.lastShooter = b.shooter;
 }
 void Server::bulletHit(Unit* p, const Bullet& b)
 {

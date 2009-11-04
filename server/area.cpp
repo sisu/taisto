@@ -18,12 +18,12 @@ AreaPart::AreaPart(int w, int h)
 		data.append(rand()%8==0);
 }
 
-Area::Area(int count): w(16)
+Area::Area(int count): w(20)
 {
 	h=0;
 	startPlaces.append(0);
 	for(int i=0; i<count; ++i) {
-		parts.append(AreaPart(w, 32)), h+=32;
+		parts.append(AreaPart(w, 52)), h+=52;
 		for(int j=0; j<parts[i].data.size(); ++j) {
 			data.append(parts[i].data[j]);
 		}
@@ -35,7 +35,7 @@ Area::Area(int count): w(16)
 
 	spawnIntervals = linearList(0, count, 10*1000, 5*1000);
 //	spawnCounts = linearList(0, count, 2, 8);
-	maxBots = linearList(0, count, 5, 40);
+	maxBots = linearList(0, count, 5, 80);
 //	itemCounts = linearList(0, count, 2, 8);
 
 	struct S {
@@ -54,12 +54,12 @@ Area::Area(int count): w(16)
 		spawnCounts[i] = linearList(s.s, count, s.x0, s.xn);
 	}
 	S iarr[] = {
-		{0,1,4},
+		{0,1,2},
 		{0,0,0},
-		{0,2,6},
-		{2,2,6},
+		{0,2,2},
+		{2,2,2},
 		{8,1,4},
-		{6,1,6}
+		{6,1,4}
 	};
 	for(unsigned i=0; i<sizeof(iarr)/sizeof(iarr[0]); ++i) {
 		S& s = iarr[i];

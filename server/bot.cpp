@@ -71,7 +71,7 @@ void Bot::runAI(Server& s, int t)
 	
 	int t1 = (vx<0) ^ (y<ply) ? -1 : 1;
 
-	if (rand()%16 < 6) {
+	if (rand()%16 < 7) {
 		turn = t1;
 	} else if (rand()%2) {
 		turn = -t1;
