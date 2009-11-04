@@ -12,7 +12,7 @@
 #include "bullet.h"
 #include "player.h"
 #include "item.h"
-
+#include "chatmessage.h"
 const double FRAMETIME=0.02;
 class Engine : public QObject {
     Q_OBJECT
@@ -32,5 +32,7 @@ class Engine : public QObject {
 		QList<QPair<QTime,QList<QPointF> > > lightnings;
         
 		Area area;
+
+		QList<ChatMessage> chatList;
 };
 #endif

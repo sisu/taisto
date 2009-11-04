@@ -12,13 +12,21 @@ Window::Window(Engine& engine, Player& pl) : player(pl)
 	layout->addWidget(renderArea);
 	setLayout(layout);
 	setWindowTitle("Taisto");
-
+    chatInput=new QLineEdit(this);
+    chatInput->setMaxLength(48);
+    chatInput->hide();
+    connect(chatInput,SIGNAL(editingFinished()),this,SLOT(chatFinish()));
 	listOfCheats.append("ibeatyou");
 }
 
 void Window::draw(Player* player,Stats* stats) {
-    if(keysHeld.contains(Qt::Key_Tab)) {renderArea->draw(player,stats);}
-    else renderArea->draw(player,0);
+    if(keysHeld.contains(Qt::Key_Tab)) {
+    	renderArea->draw(player,stats);
+    }
+    else {
+    	renderArea->draw(player,0);
+    }
+    chatInput->setGeometry(renderArea->x()+5,renderArea->y()+renderArea->height-46,400,18);
 	//"Piirrä"
 }
 
@@ -52,6 +60,13 @@ void Window::keyPressEvent(QKeyEvent* event) {
 
     if(event->key() >= Qt::Key_1 && event->key() <= Qt::Key_5) {
         player.weapon = event->key() - Qt::Key_1 + 1;
+    } else if(event->key() == Qt::Key_C) {
+    	chatInput->show();
+    	chatInput->setFocus();
+    } else if(event->key() == Qt::Key_Escape) {
+        chatInput->hide();
+        chatInput->clear();
+        renderArea->setFocus();
     }
 	switch(event->key()) {
 		case Qt::Key_Right:
@@ -102,3 +117,12 @@ void Window::updatePlayerMovement(Player& player) {
 		}
 	}
 }
+
+void Window::chatFinish() {
+    chat=chatInput->text();
+    chatInput->hide();
+    chatInput->clear();
+    renderArea->setFocus();
+
+}
+

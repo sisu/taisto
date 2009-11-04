@@ -248,6 +248,7 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
 
 	drawBar(painter);
     if(stats!=0) painter.drawPixmap(40,40,drawStats());
+    if(!engine.chatList.isEmpty())painter.drawPixmap(10,10,drawChat());
 }
 void RenderArea::drawBar(QPainter& painter)
 {
@@ -629,7 +630,7 @@ void RenderArea::drawBulletPix() {
 
 QPixmap RenderArea::drawStats() {
     QPixmap statswindow(500,60+14*stats->tostring.size());
-    statswindow.fill(QColor(20,20,20,80));
+    statswindow.fill(QColor(20,20,20,65));
     QPainter p(&statswindow);
  //   p.scale(1,-1);
  //   p.translate(0,100);
@@ -647,6 +648,29 @@ QPixmap RenderArea::drawStats() {
     return statswindow;
 }
 
+QPixmap RenderArea::drawChat() {
+	int maxMsg=10;
+    QPixmap chatwindow(600,20+14*min(maxMsg,engine.chatList.size()));
+    chatwindow.fill(QColor(20,20,20,65));
+    QPainter p(&chatwindow);
+ //   p.scale(1,-1);
+ //   p.translate(0,100);
+    p.setBrush(QColor(20,20,20,20));
+    p.setPen(QPen(QColor(245,245,245)));
+    //qDebug()<<stats->players.size();
+    p.setFont(QFont("Verdana",10));
+    for(int i=max(0,engine.chatList.size()-maxMsg);i<engine.chatList.size();i++) {
+    	QString str="<";
+    	str+=engine.chatList[i].name;
+    	str+="> ";
+    	str+=engine.chatList[i].msg;
+        p.drawText(20,20+(i-max(0,engine.chatList.size()-maxMsg))*14,str);
+    }
+    p.end();
+    return chatwindow;
+
+}
+
 void RenderArea::draw(Player* player,Stats* stats) {
     ////qDebug()<<"Health: "<<player->health;
     this->player = player;
@@ -655,3 +679,6 @@ void RenderArea::draw(Player* player,Stats* stats) {
     centery=player->y*SQUARE;
     update();
 }
+
+
+

@@ -75,7 +75,7 @@ void Server::update()
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
 	if (t > lastSpawn + area.spawnIntervals[curSpawn])
 		spawnStuff(playerNext);
-
+    updateChat();
 	for(int i=0; i<players.size(); ++i)
 		players[i].socket->flush();
 }
@@ -421,4 +421,22 @@ void Server::hitLightning(Unit& u)
 	for(int i=0; i<pts.size(); ++i)
 		s << pts[i].x() << pts[i].y();
 	sendToAll(msg);
+}
+void Server::updateChat()
+{
+    for(int i=0; i<players.size(); ++i) {
+        Player& pl = players[i];
+        if(!pl.chatMessage.isEmpty()) {
+            QByteArray msg;
+            QDataStream stream(&msg, QIODevice::WriteOnly);
+            stream << 1 + 4 + 4 + pl.name.size()*2+pl.chatMessage.size()*2;
+            stream << MSG_CHAT << pl.name.size();
+            stream.writeRawData((char*)pl.name.data(), 2*pl.name.size());
+
+            stream <<pl.chatMessage.size();
+            stream.writeRawData((char*)pl.chatMessage.data(), 2*pl.chatMessage.size());
+            sendToAll(msg);
+            pl.chatMessage.clear();
+        }
+    }
 }

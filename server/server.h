@@ -61,6 +61,7 @@ private:
 	void updateBots();
 	void updateBullets();
 	void updateItems();
+	void updateChat();
 	void spawnStuff(bool next=0);
 	void rocketDamage(Unit& u, const Bullet& b);
 	void lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Player* player);

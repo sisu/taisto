@@ -98,6 +98,17 @@ void Game::go() {
 			engine.lightnings.pop_back();
 		}
 	}
+
+    // Chat
+    if(!window.chat.isEmpty()) {
+    	conn.sendChat(window.chat);
+        window.chat.clear();
+    }
+    for(int i=0;i<engine.chatList.size();) {
+        if(engine.chatList[i].timestamp<QDateTime::currentDateTime().addSecs(-5)) engine.chatList.removeAt(i);
+        else i++;
+    }
+
 }
 void Game::end() {
 	qDebug()<<"disconnected";

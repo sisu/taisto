@@ -16,6 +16,7 @@ public:
 	void update();
 	void sendStatus();
 	void sendShoot();
+	void sendChat(QString);
 
 	int packetCount;
 
@@ -24,6 +25,7 @@ private:
 	Engine& engine;
 
 	void readInitial(QDataStream& s);
+	void readChat(QDataStream& s);
 	void readState(QDataStream& s);
 	void readShoot(QDataStream& s);
 	void readHit(QDataStream& s);

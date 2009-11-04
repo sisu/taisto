@@ -24,11 +24,13 @@ class Player : public Unit {
 		int kills, deaths;
 		double damageDone;
 		QString name;
+		QString chatMessage;
 
     private:
         void readState(QDataStream& s);
         void readShoot(QDataStream& s, Server& serv);
 		void readInfo(QDataStream& s);
+		void readChat(QDataStream& s);
 };
 
 #endif

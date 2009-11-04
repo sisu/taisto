@@ -29,6 +29,9 @@ void Player::update(Server& s)
 			case MSG_INFO:
 				readInfo(is);
 				break;
+		    case MSG_CHAT:
+		        readChat(is);
+		        break;
 			default:
 				qDebug()<<type;
 				abort();
@@ -63,4 +66,17 @@ void Player::readInfo(QDataStream& s)
 	qDebug()<<"got name"<<name<<len<<name.size();
 
 	qDebug()<<name;
+}
+void Player::readChat(QDataStream& s)
+{
+	int len;
+	s>>len;
+	char* buf = new char[2*len+1];
+	s.readRawData(buf, 2*len);
+	buf[2*len]=0;
+	chatMessage = QString::fromRawData((QChar*)buf, len);
+	for(int i=0; i<len; ++i) qDebug()<<int(buf[i]);
+	qDebug()<<"got chat message"<<chatMessage<<len<<chatMessage.size();
+    
+	//qDebug()<<msg;
 }

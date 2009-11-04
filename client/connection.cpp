@@ -62,6 +62,9 @@ void Connection::update()
 			case MSG_STATS:
 				readStats(s);
 				break;
+			case MSG_CHAT:
+			    readChat(s);
+			    break;
 			default:
 				//qDebug()<<type;
 				abort();
@@ -209,6 +212,25 @@ void Connection::readStats(QDataStream& s)
 	engine.stats.makestring();
 }
 
+void Connection::readChat(QDataStream& s)
+{
+    int a,b;
+    s>>a;
+    qDebug()<<"Hei "<<a;
+    char* buf = new char[2*a+1];
+    s.readRawData(buf,2*a);
+    buf[2*a]=0;
+    QString chatName=QString::fromRawData((QChar*)buf,a);
+    s>>b;
+    buf = new char[2*b+1];
+    s.readRawData(buf,2*b);
+    buf[2*b]=0;
+    QString chatMsg=QString::fromRawData((QChar*)buf,b);
+    engine.chatList.append(ChatMessage(QDateTime::currentDateTime(),chatName,chatMsg));
+
+}
+
+
 void Connection::sendStatus()
 {
 //	//qDebug()<<"send"<<player->x<<player->y<<player->my<<player->mx;
@@ -227,3 +249,17 @@ void Connection::sendShoot()
 	s << player->weapon;
 	flush();
 }
+
+void Connection::sendChat(QString msg)
+{
+	QDataStream s(this);
+	s << 1 + 4 + msg.size()*2;
+	s << MSG_CHAT;
+	s << msg.size();
+	s.writeRawData((char*)msg.data(),2*msg.size());
+	flush();
+}
+
+
+
+

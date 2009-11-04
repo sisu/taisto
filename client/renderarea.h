@@ -12,7 +12,6 @@
 #include "particle.h"
 #include "stats.h"
 #include <QtOpenGL>
-
 #define USE_OPENGL
 #ifdef USE_OPENGL
 class RenderArea : public QGLWidget
@@ -33,6 +32,7 @@ class RenderArea : public QWidget
         void drawItemPix();
         void drawBulletPix();
         QPixmap drawStats();
+        QPixmap drawChat();
         QList<QPoint> pathBetween(QPoint a, QPoint b);
         void drawLightning(QPainter& painter, QList<QPointF> points);
         QList<QPointF> pathBetween(QPointF a, QPointF b);
