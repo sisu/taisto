@@ -6,8 +6,7 @@
 
 int main(int argc, char *argv[])
 { 
-	QCoreApplication::setOrganizationName("MikkoMikaJussiSoft");
-//QCoreApplication::setOrganizationDomain("sisu.com");
+	QCoreApplication::setOrganizationName("Taisto");
 	QCoreApplication::setApplicationName("Taisto");
 
 	QApplication app(argc, argv);
@@ -15,7 +14,7 @@ int main(int argc, char *argv[])
 	qDebug()<<argc;
 
 	if(argc==3) game.start(argv[1],atoi(argv[2]));
-	else if(argc==2) game.start(argv[1],32096);
+	else if(argc==2) game.start(argv[1],8200);
 	else game.start();
 
 

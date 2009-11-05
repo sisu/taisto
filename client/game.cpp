@@ -45,7 +45,7 @@ void Game::start(QString ip, int port) {
 void Game::start(){
 	SetupDialog setup;
 	if(setup.exec()) {
-		start(setup.hostAddress(),32096);
+		start(setup.hostAddress(),8200);
 	}
 
 }
