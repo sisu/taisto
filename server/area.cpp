@@ -43,11 +43,11 @@ Area::Area(int count): w(17)
 	};
 	S barr[] = {
 		{0,0,0},
-		{0,2,2},
-		{1,1,3},
-		{6,1,3},
+		{0,2,1},
+		{1,2,1},
+		{6,2,1},
 		{12,0,0},
-		{12,1,2}
+		{12,1,1}
 	};
 	for(unsigned i=0; i<sizeof(barr)/sizeof(barr[0]); ++i) {
 		S& s = barr[i];
