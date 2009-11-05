@@ -14,9 +14,12 @@ Server::Server(int spawns): area(spawns), curSpawn(0), nextID(1), nextItem(0)
 	bulletID=1;
 	curT.start();
 	prevSec=frames=0;
-	lastSpawn=-1e9;
+	lastItemSpawn=-1e9;
+	lastBotSpawn=-1e9;
 
-	spawnStuff();
+	spawnBots();
+    spawnItems();
+
 }
 
 void Server::update()
@@ -59,7 +62,7 @@ void Server::update()
 	if (playerNext && !botNext) {
 //		items.clear();
 		++curSpawn;
-		spawnStuff();
+		spawnItems();
 	}
 
 	++frames;
@@ -73,8 +76,10 @@ void Server::update()
 	}
 
 //	qDebug()<<t<<lastSpawn+area.spawnIntervals[curSpawn];
-	if (t > lastSpawn + area.spawnIntervals[curSpawn])
-		spawnStuff(playerNext);
+	if (t > lastItemSpawn + area.spawnIntervals[curSpawn]*1.2)
+		spawnItems(playerNext);
+	if (t > lastBotSpawn + area.spawnIntervals[curSpawn])
+		spawnBots(playerNext);
     updateChat();
 	for(int i=0; i<players.size(); ++i)
 		players[i].socket->flush();
@@ -361,10 +366,24 @@ Item& Server::createItem(int type)
 	qDebug()<<"item created"<<type;
 	return items.back();
 }
-void Server::spawnStuff(bool next)
+void Server::spawnBots(bool next)
 {
 
-	lastSpawn = curT.elapsed();
+	lastBotSpawn = curT.elapsed();
+	double s = players.size();
+	if (!s) s=1;
+	s = sqrt(s);
+
+
+	for(int j=0; j<6; ++j) {
+		qDebug()<<"spawning"<<area.spawnCounts[j][curSpawn]*s<<"bots ;"<<next;
+		for(int i=0; i<area.spawnCounts[j][curSpawn] * s; ++i)
+			createBot(curSpawn+1+next, j);
+	}
+}
+
+void Server::spawnItems(bool next) {
+	lastItemSpawn = curT.elapsed();
 	double s = players.size();
 	if (!s) s=1;
 	s = sqrt(s);
@@ -379,9 +398,6 @@ void Server::spawnStuff(bool next)
 	os << MSG_ITEM << itemCount;
 
 	for(int j=0; j<6; ++j) {
-		qDebug()<<"spawning"<<area.spawnCounts[j][curSpawn]*s<<"bots ;"<<next;
-		for(int i=0; i<area.spawnCounts[j][curSpawn] * s; ++i)
-			createBot(curSpawn+1+next, j);
 		if (area.itemCounts[j][curSpawn]) qDebug()<<"creating"<<j<<area.itemCounts[j][curSpawn]*s;
 		for(int i=0; i<area.itemCounts[j][curSpawn] * s; ++i) {
 			Item& i = createItem(j);
@@ -390,7 +406,14 @@ void Server::spawnStuff(bool next)
 	}
 
 	sendToAll(msg);
+
+
+
+
 }
+
+
+
 void Server::lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Player* player)
 {
 	double dx=shooter.x-pl.x;

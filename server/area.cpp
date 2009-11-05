@@ -18,12 +18,12 @@ AreaPart::AreaPart(int w, int h)
 		data.append(rand()%8==0);
 }
 
-Area::Area(int count): w(20)
+Area::Area(int count): w(17)
 {
 	h=0;
 	startPlaces.append(0);
 	for(int i=0; i<count; ++i) {
-		parts.append(AreaPart(w, 52)), h+=52;
+		parts.append(AreaPart(w, 42)), h+=42;
 		for(int j=0; j<parts[i].data.size(); ++j) {
 			data.append(parts[i].data[j]);
 		}
@@ -33,7 +33,7 @@ Area::Area(int count): w(20)
 	for(int i=0; i<w; ++i)
 		data[(startPlaces[count-2]+4)*w + i] = parts[count-2].data[w*4+i] = 1;
 
-	spawnIntervals = linearList(0, count, 10*1000, 5*1000);
+	spawnIntervals = linearList(0, count, 7*1000, 5*1000);
 //	spawnCounts = linearList(0, count, 2, 8);
 	maxBots = linearList(0, count, 5, 80);
 //	itemCounts = linearList(0, count, 2, 8);
@@ -43,11 +43,11 @@ Area::Area(int count): w(20)
 	};
 	S barr[] = {
 		{0,0,0},
-		{0,2,4},
-		{1,1,6},
-		{6,1,5},
+		{0,2,2},
+		{1,1,3},
+		{6,1,3},
 		{12,0,0},
-		{12,1,3}
+		{12,1,2}
 	};
 	for(unsigned i=0; i<sizeof(barr)/sizeof(barr[0]); ++i) {
 		S& s = barr[i];
@@ -56,10 +56,10 @@ Area::Area(int count): w(20)
 	S iarr[] = {
 		{0,1,2},
 		{0,0,0},
-		{0,2,2},
-		{2,2,2},
-		{8,1,4},
-		{6,1,4}
+		{0,1,2},
+		{2,1,2},
+		{8,1,2},
+		{6,1,2}
 	};
 	for(unsigned i=0; i<sizeof(iarr)/sizeof(iarr[0]); ++i) {
 		S& s = iarr[i];

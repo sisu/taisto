@@ -48,7 +48,8 @@ private:
 	int nextID;
 	QTime curT;
 	int prevSec, frames;
-	int lastSpawn;
+	int lastBotSpawn;
+    int lastItemSpawn;
 	int nextItem;
 
 	void sendInitialInfo(QTcpSocket* sock, int id);
@@ -62,7 +63,8 @@ private:
 	void updateBullets();
 	void updateItems();
 	void updateChat();
-	void spawnStuff(bool next=0);
+	void spawnBots(bool next=0);
+	void spawnItems(bool next=0);
 	void rocketDamage(Unit& u, const Bullet& b);
 	void lightningDamage(Unit& shooter, Unit& pl, QList<QPointF>& pts, Player* player);
 };
