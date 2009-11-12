@@ -1,0 +1,64 @@
+\documentclass[a4paper,12pt,titlepage]{article}
+\usepackage[a4paper,backref]{hyperref}
+%\usepackage[utf8]{inputenc}
+\usepackage[margin=2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{moreverb}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath}
+\title{Taisto -- Final report}
+\author{Jussi Kokkala, Mika Laitinen, Mikko Sysikaski}
+\date{\today}
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Taisto is a 2D multiplayer top view shooter game over network. The objective of human players is to ultimately reach level 16. However, the path to gold and glory is bumby and rough and guarded by furious one-eyed monsters, who are not willing to compromise. 
+
+Fortunately to the brave humans, more weapons become available deeper in the dungeons. This plays a significant role in the success of the humans, since monsters are generally known for huge passion for warfare, but not for skilled usage of modern weapons. In other words, \textbf{you} are up to the task of beating an overwhelming number of monsters with a skilled usage of overwhelming weapons. Good luck, fellow.
+
+\section{Features and limitations}
+
+\section{User's guide}
+
+\subsection{Gameplay}
+The game commences with humans conquering base 1. Humans have access to five weapons, namely Bead Gun, Shotgun, Machine Gun, Electrogun and Rocket Launcher. However, humans have an unlimited supply of bullets for only one weapon, the Bead Gun. Bullets for every other weapon are available in bullet packs constanly popping to conquered bases. Also health packs pop up in conquered bases.
+
+\subsection{Conquering bases}
+In order to advance in the game, the objective of the humans is to conquer new bases. Bases can be conquered by advancing from an previously conquered base to a new one, and eliminating all monsters in the new base and before it. After conquering a base, new health and bullet packs will start to pop up the new base.
+
+\subsection{Losing bases}
+It is also possible to lose a conquered base in case an enemy arrives to an abandoned base. This only applies to the lastly conquered base; therefore it is not possible to lose multiple bases at once.
+
+\subsection{Playing instructions}
+The character the player is controlling is always pointing its gun at one direction. This direction is where the player is facing, so if the player is facing to right, and moves forward, the player moves right. The health bar is located in the lower left corner, and the boxes next to it illustrate the selected weapon, its name and the bullets remaining.
+
+Friendly fire is also enabled, so every bullet can harm every character in the game.
+\subsection{Controls}
+The following buttons control the gameplay:
+\begin{itemize}
+\item W - move player forward
+\item S - move player backward
+\item A - move player left
+\item D - move player right
+\item Right Arrow - turn the gun direction to right (clockwise)
+\item Left Arrow - turn the gun direction to left (counter-clockwise)
+\item Space - shoot
+\item Numbers 1-5 - changing weapons
+\end{itemize}
+
+\appendix
+\section{Gameplay images}
+\begin{center}
+\includegraphics[scale=0.4]{electrogun.png}
+\\
+Image 1: Electrogun in action, green player is a human player
+\end{center}
+\begin{center}
+\includegraphics[scale=0.4]{rocket.png}
+\\
+Image 2: Rocket launcher blasting off
+\end{center}
+
+\end{document}
