@@ -142,6 +142,17 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
     }
     painter.setPen(QPen(QColor(0,0,0)));
 
+
+	//Items
+	for(QHash<int,Item>::iterator i=engine.items.begin(); i!=engine.items.end(); ++i) {
+		Item& it = *i;
+        QPixmap& curr=itemPix[it.itemNo];
+		double x = width/2 - centerx + it.x*SQUARE;
+		double y = height/2 - centery + it.y*SQUARE;
+        painter.drawPixmap(x-curr.width()/2,y-curr.height()/2,curr);
+	}
+
+
     //Player
     for(int i=0;i<engine.players.size();i++) {
         double px = engine.players[i].x * SQUARE, py = engine.players[i].y * SQUARE;
@@ -201,25 +212,6 @@ void RenderArea::paintEvent(QPaintEvent * /* event */)
         painter.drawPixmap(x-cur.width()/2,y-cur.height()/2,cur);
  //       painter.rotate(-it.value().dir);
     }
-
-	//Items
-//	for(int i=0; i<engine.items.size(); ++i) {
-//		Item& it = engine.items[i];
-	for(QHash<int,Item>::iterator i=engine.items.begin(); i!=engine.items.end(); ++i) {
-		Item& it = *i;
-		/*QColor c(255,255,255);
-		if (it.itemNo>0) c=weaponColors[it.itemNo-1];
-		painter.setBrush(QBrush(c));
-
-		double x = width/2 - centerx + it.x*SQUARE;
-		double y = height/2 - centery + it.y*SQUARE;
-		int s=5;
-		painter.drawRect(x-s,y-s,2*s,2*s);*/
-        QPixmap& curr=itemPix[it.itemNo];
-		double x = width/2 - centerx + it.x*SQUARE;
-		double y = height/2 - centery + it.y*SQUARE;
-        painter.drawPixmap(x-curr.width()/2,y-curr.height()/2,curr);
-	}
 
     /*
     QList<QPoint> lPoints;
