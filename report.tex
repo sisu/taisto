@@ -77,6 +77,7 @@ As the game was made in very thigh schedule, our main design principle was to im
 \begin{itemize}
 \item Both client and server are \textbf{single threaded}. Usin multiple threads would have made the program design more complex, as we would have needed to worry about synchronization and possible hard-to-find bugs. The only area where we thought multiple threads might be handy was reading input from network, but using a single thread was no issue here either as QT has good support for non-blocking IO.
 \item All networking is done using \textbf{TCP protocol}. UDP would have been a natural choise for an interactive game where all places of players have to be updated many times every second, but using TCP exclusively allowed us to not have to worry about lost packets and packets arriving in different order than they were sent.
+\item Game uses \textbf{constant-size physics frame}. This choise was made so that we wouldn't have to think whether physics calculations yield different values if done with different frame times.
 \end{itemize}
 
 \subsection {Algorithmic solutions}
