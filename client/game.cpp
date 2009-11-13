@@ -13,7 +13,7 @@ Game::Game(): conn(&player, engine), window(engine,player), player() {
 	 startTime.start();
 	 prevSec=0;
 
-	connect(this, SIGNAL(disconnected()), this, SLOT(end()));
+//	connect(this, SIGNAL(disconnected()), this, SLOT(end()));
 }
 
 void Game::start(QString ip, int port) {

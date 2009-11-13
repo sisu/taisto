@@ -5,7 +5,7 @@ TEMPLATE = app
 TARGET = 
 DEPENDPATH += .
 INCLUDEPATH += . ../server
-CONFIG += debug
+#CONFIG += debug
 QT += network opengl
 
 # Input
