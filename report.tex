@@ -14,7 +14,7 @@
 \maketitle
 
 \section{Introduction}
-Taisto is a 2D multiplayer top view shooter game over network. The objective of human players is to ultimately reach level 16. However, the path to gold and glory is bumby and rough and guarded by furious one-eyed monsters, who are not willing to compromise. 
+Taisto is a 2D multiplayer top view shooting game over network. The objective of human players is to ultimately reach level 16. However, the path to gold and glory is bumby and rough and guarded by furious one-eyed monsters, who are not willing to compromise. 
 
 Fortunately to the brave humans, more weapons become available deeper in the dungeons. This plays a significant role in the success of the humans, since monsters are generally known for huge passion for warfare, but not for skilled usage of modern weapons. In other words, \textbf{you} are up to the task of beating an overwhelming number of monsters with a skilled usage of overwhelming weapons. Good luck, fellow.
 
@@ -46,6 +46,14 @@ The following buttons control the gameplay:
 \item Left Arrow - turn the gun direction to left (counter-clockwise)
 \item Space - shoot
 \item Numbers 1-5 - changing weapons
+\end{itemize}
+
+\section{Program design}
+
+As the game was made in very thigh schedule, our main design principle was to implement things in a way that is fast and easy to code, even at the cost of code clearness and maintainability. Based on this principle, we made the following design desicions in creating the game:
+\begin{itemize}
+\item Both client and server are \textbf{single threaded}. Usin multiple threads would have made the program design more complex, as we would have needed to worry about synchronization and possible hard-to-find bugs. The only area where we thought multiple threads might be handy was reading input from network, but using a single thread was no issue here either as QT has good support for non-blocking IO.
+\item All networking is done using \textbf{TCP protocol}. UDP would have been a natural choise for an interactive game where all places of players have to be updated many times every second, but using TCP exclusively allowed us to not have to worry about lost packets and packets arriving in different order than they were sent.
 \end{itemize}
 
 \appendix
