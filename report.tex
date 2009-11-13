@@ -22,9 +22,16 @@ Fortunately to the brave humans, more weapons become available deeper in the dun
 
 \subsection{Game features}
 
-As an important remark, the game, once started, does not block new players from
+The game is run in a server where multiple players can connect.
+As an important remark, the server, once started, does not block new players from
 joining at any point of the game. Instead, it is always possible to join into
 an ongoing game.
+
+The players have multiple weapons they can use to beat the enemies. Most weapons have limited amount of bullets, and players can gain bullets by collecting bullet packs that spawn to the game area. Also health packs appear in the game, and some enemies drop them when they die.
+
+Players have finite health, and health is lost when players are shot by enemies or other players. Players lose all their bullets and respawn to the map when they are killed.
+
+The game also contains a scoreboard of all players. The scoreboard displays name, kill count and death count of each player.
 
 \subsection {Limitations and known bugs}
 Currently, when the game ends, the player gets only slightly unclear indicator
@@ -134,13 +141,15 @@ edge to be processed is too short.
 Also a list of currently known bugs:
 \begin{itemize}
 \item A launched rocket can fly through walls sometimes.
-\item Sometimes enemies can push other enemies through walls from one-pixel thick
-walls.
+\item Sometimes enemies can push other enemies through walls.
 \item Statistics view does not like long nicknames currently.
 \end{itemize}
 
 
 \appendix
+\section{Cheat codes}
+The game has a cheat code to allow testing the guns easily. The cheat is activated by typing the word \emph{ibeatyou} during normal gameplay (not eg. to chat dialog). Doing this gives the player 1000000 bullets to every weapon.
+
 \section{Gameplay images}
 \begin{center}
 \includegraphics[scale=0.4]{electrogun.png}
