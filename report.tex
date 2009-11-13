@@ -67,7 +67,39 @@ The following buttons control the gameplay:
 \item Left Arrow - turn the gun direction to left (counter-clockwise)
 \item Space - shoot
 \item Numbers 1-5 - changing weapons
+\item Tab - Show stats
+\item C - Chat
 \end{itemize}
+
+\section{How to compile and run}
+
+The game is divided into two programs: Server and Client. Both programs have their own directories in the source code directory and only few source code files are shared among them.
+
+\subsection{Server}
+
+Server can be compiled with the following:
+    \begin{verbatimtab}[3]
+        cd server
+        qmake
+        make
+    \end{verbatimtab}
+
+To run the server, just run the compiled executable server(.exe). The game starts immediately, and the first players should join as soon as possible to maximize the gameplay experience.
+
+\subsection{Client}
+
+Client can be compiled with the following:
+    \begin{verbatimtab}[3]
+        cd client
+        qmake
+        make
+    \end{verbatimtab}
+If you want to use Qt's own painting system instead of OpenGL, edit file renderarea.h in Client folder and comment the following line out and compile again: 
+    \begin{verbatimtab}[3]
+        #define USE_OPENGL
+    \end{verbatimtab}
+Do this if your computer doesn't have OpenGL support.\\
+To run the client, run compiled executable client(.exe) and then enter the host address into the startup dialog.
 
 \section{Program design}
 
