@@ -43,8 +43,8 @@ struct Stats {
         for(int i=0;i<players.size();i++) {
             QString str="";
             StatsPlayer& p=players[i];
-            str+=QString::number(p.id);
-            str+="\t";
+//            str+=QString::number(p.id);
+//            str+="\t";
             str+=p.name;
             str+="\t";
             str+=QString::number(p.kills);

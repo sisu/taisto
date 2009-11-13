@@ -621,7 +621,8 @@ void RenderArea::drawBulletPix() {
 }
 
 QPixmap RenderArea::drawStats() {
-    QPixmap statswindow(500,60+14*stats->tostring.size());
+//    QPixmap statswindow(500,60+14*stats->tostring.size());
+    QPixmap statswindow(500,40+14*stats->tostring.size());
     statswindow.fill(QColor(20,20,20,65));
     QPainter p(&statswindow);
  //   p.scale(1,-1);
@@ -630,7 +631,8 @@ QPixmap RenderArea::drawStats() {
     p.setPen(QPen(QColor(245,245,245)));
     //qDebug()<<stats->players.size();
     p.setFont(QFont("Verdana",12,QFont::Bold));
-    p.drawText(20,20,"ID\tName\tKills\tDeaths\tRatio");
+//    p.drawText(20,20,"ID\tName\tKills\tDeaths\tRatio");
+    p.drawText(20,20,"Name\tKills\tDeaths\tRatio");
     p.setFont(QFont("Verdana",12));
     for(int i=0;i<stats->tostring.size();i++) { p.setPen(QPen(player_colors[stats->players[i].id%13]));p.drawText(20,40+i*14,stats->tostring[i]);}
 //    p.drawText(20,40,stats->tostring);
