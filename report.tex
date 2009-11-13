@@ -27,24 +27,23 @@ As an important remark, the server, once started, does not block new players fro
 joining at any point of the game. Instead, it is always possible to join into
 an ongoing game.
 
-The players have multiple weapons they can use to beat the enemies. Most weapons have limited amount of bullets, and players can gain bullets by collecting bullet packs that spawn to the game area. Also health packs appear in the game, and some enemies drop them when they die.
+The players have multiple weapons to beat the enemies with. Most weapons have limited amount of bullets, and players can gain bullets by collecting bullet packs that spawn to the game area. Also health packs appear in the game, and some enemies drop them when they die.
 
-Players have finite health, and health is lost when players are shot by enemies or other players. Players lose all their bullets and respawn to the map when they are killed.
+Players have finite health, and health is lost when players are shot by enemies or other players. Players lose all their bullets and respawn when they are killed.
 
 The game also contains a scoreboard of all players. The scoreboard displays name, kill count and death count of each player.
 
 \subsection {Limitations and known bugs}
-Currently, when the game ends, the player gets only slightly unclear indicator
+Currently, when the game is completed, the player gets only slightly unclear indicator
 of this: bullet and health packs emerge to the last base. The game still
 continues though, so the statistics still change and people can be killed - but
 if the game works as intended, there should not be any new enemies to be killed.
 
 Also a list of currently known bugs:
 \begin{itemize}
-\item A launched rocket can fly through walls sometimes.
-\item Sometimes enemies can push other enemies through walls from one-pixel thick
-walls.
-\item Statistics view does not like long nicknames currently.
+\item Bullets can fly through walls sometimes.
+\item Sometimes enemies can push other enemies through walls.
+\item Long nicknames break the statistics view currently.
 \end{itemize}
 
 
@@ -57,10 +56,10 @@ The game commences with humans conquering base 1. Humans have access to five wea
 In order to advance in the game, the objective of the humans is to conquer new bases. Bases can be conquered by advancing from an previously conquered base to a new one, and eliminating all monsters in the new base and before it. After conquering a base, new health and bullet packs will start to pop up the new base.
 
 \subsection{Losing bases}
-It is also possible to lose a conquered base in case an enemy arrives to an abandoned base. This only applies to the lastly conquered base; therefore it is not possible to lose multiple bases at once.
+It is also possible to lose a conquered base in case more enemies than human players are present in the base. This only applies to the lastly conquered base; therefore it is not possible to lose multiple bases at once.
 
 \subsection{Playing instructions}
-The character the player is controlling is always pointing its gun at one direction. This direction is where the player is facing, so if the player is facing to right, and moves forward, the player moves right. The health bar is located in the lower left corner, and the boxes next to it illustrate the selected weapon, its name and the bullets remaining.
+The character the player is controlling is always pointing its gun to one direction. This direction is where the player is facing, so if the player is facing to right, and moves forward, the player moves right. The health bar is located in the lower left corner, and the boxes next to it illustrate the selected weapon, its name and the bullets remaining.
 
 Friendly fire is also enabled, so every bullet can harm every character in the game.
 \subsection{Controls}
@@ -74,8 +73,8 @@ The following buttons control the gameplay:
 \item Left Arrow - turn the gun direction to left (counter-clockwise)
 \item Space - shoot
 \item Numbers 1-5 - changing weapons
-\item Tab - Show stats
-\item C - Chat
+\item Tab - show player statistics
+\item C - open chat dialog
 \end{itemize}
 
 \section{How to compile and run}
@@ -101,12 +100,12 @@ Client can be compiled with the following:
         qmake
         make
     \end{verbatimtab}
-If you want to use Qt's own painting system instead of OpenGL, edit file renderarea.h in Client folder and comment the following line out and compile again: 
+If you want to use Qt's own painting system instead of OpenGL, edit file renderarea.h in Client folder and remove the following line and compile again: 
     \begin{verbatimtab}[3]
         #define USE_OPENGL
     \end{verbatimtab}
 Do this if your computer doesn't have OpenGL support.\\
-To run the client, run compiled executable client(.exe) and then enter the host address into the startup dialog.
+To run the client, run compiled executable client(.exe) and then enter the server address into the startup dialog.
 
 \section{Program design}
 
